@@ -1,0 +1,11 @@
+{
+    "autoload": {
+        "psr-4": {
+            "": "Obullo"
+        }
+    },
+    "require": {
+    	"league/container": "^2.0",
+        "zendframework/zend-diactoros": "^1.3"
+    }
+}
