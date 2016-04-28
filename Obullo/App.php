@@ -28,6 +28,13 @@ class App
     protected $queue;
 
     /**
+     * Router
+     * 
+     * @var object
+     */
+    protected $router;
+
+    /**
      * Container
      * 
      * @var object
@@ -42,14 +49,15 @@ class App
      */
     public function __construct(Container $container, array $middlewares)
     {
-        $this->queue = new SplQueue;
         $this->container = $container;
+        $this->queue     = new SplQueue;
 
         foreach ($middlewares as $middleware) {
             $this->queue->enqueue($middleware);
         }
         $this->done  = new Http\Middleware\FinalHandler;
         $this->done->setContainer($container);
+
     }
 
     /**
@@ -62,35 +70,36 @@ class App
      */
     public function __invoke(Request $request, Response $response)
     {
-        $err = null;
         $middleware = null;
-        $done = $this->done;
+        $done   = $this->done;
+        
+        if ($this->router == null) {
+            $router = $this->router = new Router($request, $response);
+        }
+        $container = $this->container;
+        $container->share('request', $request);
+        $container->share('response', $response);
 
         try {
-
-            // Run route operations in here.
-            
-            // throw new Exception("testtds");
-
             if ($this->queue->isEmpty()) {
                 return $done($request, $response);
             }
+            
+            include APP. 'routes.php';
+
+            $result = $router->dispatch();
+            if ($result instanceof $response) {
+                return $result;
+            }
             $middleware = $this->getNext();
 
-            if ($middleware instanceof ErrorMiddlewareInterface) {
-                return $middleware($err, $request, $response, $this);
-            }
             return $middleware($request, $response, $this);
 
         }  catch (Exception $exception) {
 
-            if ($middleware == null) {  // If we have router errors middleware variable comes null.
-                $middleware = $this->getNext();
-            }
-            if ($middleware instanceof ErrorMiddlewareInterface) {
-                return $middleware($exception, $request, $response, $this);
-            }
-            return $middleware($request, $response, $this);
+            $middleware = new Http\Middleware\Error;
+
+            return $middleware($exception, $request, $response, $this);
         }
     }
 

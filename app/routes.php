@@ -7,7 +7,69 @@
 | corresponding ( folders / controller / method ).
 |
 */
-$router->setSubfolderLevel(3);
+// $router->map('GET', '/users/{any:.*}',
+//     function ($request, $response, $args) use($router) {
+
+//         $response->getBody()->write('Users group');
+
+//         // $this->add();
+
+//         return $response;
+//     }
+// );
+
+// $router->rewrite('GET', '/(?:en|de|es|tr)/(.*)', '$1');  // example.com/en/
+
+$router->map('GET', '/users/(\w+)/(\d+)', '/users/$1/$2');
+
+// $router->map('GET', '/users/(\w+)/(\d+)', function ($request, $response, $args) {
+//     var_dump($args);
+// });
+
+// $router->group(
+//     'users/',
+//     function () use ($router) {
+
+//         $router->group(
+//             'test',
+//             function () use ($router) {
+
+//                 $router->map('GET', '/users/(\w+)/(\d+)', function ($request, $response, $args) {
+//                     var_dump($args);
+//                 });
+//             }
+//         );
+
+//     }
+// );
+
+
+
+// echo preg_replace('#^/(?:en|de|es|tr)/(.*)$#', '$1', '/en/users/asd');
+
+// echo preg_replace('#^/{lang:(?:en|de)}/{any:.*}$#', '$1', '/en/users/asd');
+
+// die;
+
+// $router->map('GET', '/{lang:(?:en|de)}', 'welcome_controller');     // example.com/en
+// $router->map('GET', '/{lang:(?:en|de)/}', 'welcome_controller');  // example.com/en/
+
+// $router->map('GET', '/{lang:(?:en|de)}/{any:.*}', 'welcome_controller');  // example.com/en/
+
+
+
+// echo preg_replace('#^/(?:en|de|es|tr)/(.*)$#', '$1', '/en/users/asd');
+
+
+// $router->map('GET', '/user/{id:\d+}', function ($request, $response, $args) {
+
+//      $response->getBody()->write('Hello World');
+
+//      return $response;
+//  }
+// );
+
+// $router->setSubfolderLevel(3);
 
 // $router->get(
 //     '{name}/{id}/{any}', 'welcome/index/$1/$2/$3',
@@ -34,13 +96,13 @@ $router->setSubfolderLevel(3);
 /**
  * Default route
  */
-$router->match(
-    ['get', 'post'],
-    '/', 'welcome',
-    function () use ($container) {
-        // echo 'ok';
-    }
-)->add('Auth');
+// $router->match(
+//     ['get', 'post'],
+//     '/', 'welcome',
+//     function () use ($container) {
+//         // echo 'ok';
+//     }
+// )->add('Auth');
 
 // print_r($router->getRoute()->getAll());
 

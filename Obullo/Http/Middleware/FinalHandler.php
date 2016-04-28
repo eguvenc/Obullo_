@@ -31,9 +31,7 @@ class FinalHandler implements ContainerAwareInterface
     public function __invoke(Request $request, Response $response)
     {   
         $this->request = $request;
-
-        echo 'FinalHandler';
-
+        
         $response = $this->setCookies($response);
 
         return $response;

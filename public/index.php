@@ -4,13 +4,18 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 /**
+ * Define the root
+ */
+define('ROOT', dirname(__DIR__).'/');
+
+/**
  * Step 1: Require the Obullo using Composer's autoloader
  *
  * If you are not using Composer, you need to load Obullo with your own
  * PSR-4 autoloader.
  */
-require dirname(__DIR__).'/constants.php';
-require dirname(__DIR__).'/vendor/autoload.php';
+require ROOT.'constants.php';
+require ROOT.'vendor/autoload.php';
 
 /**
  * Step 2: Instantiate a Container to load your service providers.
@@ -27,7 +32,6 @@ $app = new App(
     $container,
     [
         new Http\Middleware\Application,
-        new Http\Middleware\Error,
     ]
 );
 
