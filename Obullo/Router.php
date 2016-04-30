@@ -6,14 +6,17 @@ use Psr\Http\Message\ResponseInterface as Response;
 class Router {
     
     protected $path;
+    protected $group;
+    protected $queue;
+    protected $handler;
     protected $request;
     protected $response;
     protected $routes = array();
-    protected $rewrites = array();
     
-    public function __construct(Request $request, Response $response)
+    public function __construct(Request $request, Response $response, SplQueue $queue)
     {
         $this->path     = $request->getUri()->getPath();
+        $this->queue    = $queue;
         $this->request  = $request;
         $this->response = $response;
     }
@@ -21,70 +24,79 @@ class Router {
     public function rewrite($method, $pattern, $rewrite)
     {
         $this->path = '/'.ltrim(preg_replace('#^'.$pattern.'$#', $rewrite, $this->path), '/');
-        $this->routes[$pattern] = [
-            'methods' => $method,
-            'pattern' => $pattern,
-            'handler' => $this->path,
-            'rewrite' => true,
-            'orig_path' => $this->request->getUri()->getPath(),
-        ];
+        $this->route($method, $pattern, $this->path, true);
     }
 
     public function map($method, $pattern, $handler = null)
     {
-        $this->routes[$pattern] = [
-            'methods' => $method,
-            'pattern' => $pattern,
-            'rewrite' => false,
-            'handler' => $handler,
-        ];
+        $this->route($method, $pattern, $handler);
+        return $this;
     }
 
-    public function group($pattern, $callback)
+    public function group($pattern, $callable)
     {   
-        $exp = explode("/", trim($this->path, "/"));
-        if (! in_array(trim($pattern, "/"), $exp, true)) {
-            return;
-        }
-        if (! is_callable($callback)) {
+        if (! is_callable($callable)) {
             throw new InvalidArgumentException("Group method second parameter must be callable.");
         }
-        $callback($this->request, $this->response);   
+        $this->group = ($this->group == null) ? new Group : $this->group;
+        $this->group->enqueue($pattern, $callable);
+        return $this->group;
     }
 
-
-    public function dispatch()
+    protected function route($method, $pattern, $handler, $rewrite = false)
     {
-        foreach ($this->routes as $map) {
-
-            $handler = $map['handler'];
-
-            if (! in_array($this->request->getMethod(), (array)$map['methods']) || $map['rewrite']) {
-                continue;
+        if (! in_array($this->request->getMethod(), (array)$method) || $rewrite) {
+            return;
+        }
+        if (preg_match('#^'.$pattern.'$#', $this->path, $params)) {
+            if (is_string($handler)) {
+                if (strpos($handler, '$') !== false && strpos($pattern, '(') !== false) {
+                    $handler = preg_replace('#^'.$pattern.'$#', $handler, $this->path);
+                }
+                $this->handler = $handler;
+                var_dump($handler);
+                // $dispatcher = new RouteDispatcher($handler);
             }
-            if (preg_match('#^'.$map['pattern'].'$#', $this->path, $params)) {
-
+            if (is_callable($handler)) {
                 array_shift($params);
-                $args = array_values($params);
-
-                if (is_string($handler)) {
-
-                    /**
-                     * Rewrite support for routes
-                     */
-                    if (strpos($handler, '$') !== false && strpos($map['pattern'], '(') !== false) {
-                        $handler = preg_replace('#^'.$map['pattern'].'$#', $handler, $this->path);
-                    }
-                    $dispatcher = new RouteDispatcher($handler);
-
-                    var_dump($dispatcher);
-                }
-                if (is_callable($handler)) {
-                    return $handler($this->request, $this->response, $args);
-                }
-
+                $this->handler = $handler($this->request, $this->response, array_values($params));
             }
         }
+    }
+
+    public function popGroup()
+    {
+        if ($this->group == null) {
+            return;
+        }
+        $exp   = explode("/", trim($this->path, "/"));
+        $group = $this->group->dequeue();
+
+        if (in_array(trim($group['pattern'], "/"), $exp, true)) {
+            $group['callable']($this->request, $this->response);
+
+            if (! empty($group['middlewares'])) {
+                foreach ($group['middlewares'] as $name) {
+                    $middleware = '\Http\Middleware\\'.$name;
+                    $this->queue->enqueue(new $middleware);
+                }
+            }
+        }
+        if (! $this->group->isEmpty()) {
+            $this->popGroup();
+        }
+    }
+
+    public function getHandler()
+    {
+        $this->popGroup();
+
+        return $this->handler;
+    }
+
+    public function add($middleware)
+    {
 
     }
+
 }

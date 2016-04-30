@@ -17,9 +17,9 @@ interface ErrorMiddlewareInterface
      * @param mixed         $err      error
      * @param Request       $request  request
      * @param Response      $response response
-     * @param null|callable $next     callable
+     * @param null|callable $out      final handler
      * 
      * @return null|Response
      */
-    public function __invoke($err, Request $request, Response $response, callable $next);
+    public function __invoke($err, Request $request, Response $response, callable $out = null);
 }

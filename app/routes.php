@@ -18,30 +18,36 @@
 //     }
 // );
 
-// $router->rewrite('GET', '/(?:en|de|es|tr)/(.*)', '$1');  // example.com/en/
+$router->rewrite('GET', '/(?:en|de|es|tr)|/(.*)', '$1');  // example.com/en/  (or) // example.com/en
+$router->map('GET', '/', 'welcome');
 
-$router->map('GET', '/users/(\w+)/(\d+)', '/users/$1/$2');
+// $router->map('GET', '/users/(\w+)/(\d+)', '/users/$1/$2');
 
 // $router->map('GET', '/users/(\w+)/(\d+)', function ($request, $response, $args) {
 //     var_dump($args);
 // });
 
-// $router->group(
-//     'users/',
-//     function () use ($router) {
+$router->group(
+    'users/',
+    function () use ($router) {
 
-//         $router->group(
-//             'test',
-//             function () use ($router) {
+        $router->group(
+            'test/',
+            function () use ($router) {
 
-//                 $router->map('GET', '/users/(\w+)/(\d+)', function ($request, $response, $args) {
-//                     var_dump($args);
-//                 });
-//             }
-//         );
+                // $router->map('GET', '/users/(\w+)/(\d+)', '/users/$1/$2');
 
-//     }
-// );
+                // throw new \Exception("cimcime");
+
+
+                $router->map('GET', '/users/(\w+)/(\d+)', function ($request, $response, $args) {
+                    var_dump($args);
+                });
+            }
+        )->add('Guest');
+
+    }
+)->add('Guest');
 
 
 

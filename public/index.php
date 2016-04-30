@@ -40,7 +40,8 @@ $app = new App(
  */
 $server = Zend\Diactoros\Server::createServerfromRequest(
     $app,
-    Zend\Diactoros\ServerRequestFactory::fromGlobals()
+    $container->get('request'),
+    $container->get('response')
 );
 
 /**

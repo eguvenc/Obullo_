@@ -51,6 +51,15 @@ class App
     {
         $this->container = $container;
         $this->queue     = new SplQueue;
+        $response        = new Zend\Diactoros\Response;
+        $request         = Zend\Diactoros\ServerRequestFactory::fromGlobals();
+        $router          = new Router($request, $response, $this->queue);
+        $this->router    = $router;
+ 
+        include APP. 'routes.php';
+
+        $container->share('response', $response);
+        $container->share('request', $request);
 
         foreach ($middlewares as $middleware) {
             $this->queue->enqueue($middleware);
@@ -71,27 +80,19 @@ class App
     public function __invoke(Request $request, Response $response)
     {
         $middleware = null;
-        $done   = $this->done;
-        
-        if ($this->router == null) {
-            $router = $this->router = new Router($request, $response);
-        }
-        $container = $this->container;
-        $container->share('request', $request);
-        $container->share('response', $response);
+        $done       = $this->done;
 
         try {
+
             if ($this->queue->isEmpty()) {
                 return $done($request, $response);
             }
-            
-            include APP. 'routes.php';
+            $handler = $this->router->getHandler();
 
-            $result = $router->dispatch();
-            if ($result instanceof $response) {
-                return $result;
+            if ($handler instanceof $response) {
+                return $handler;
             }
-            $middleware = $this->getNext();
+            $middleware = $this->queue->dequeue();
 
             return $middleware($request, $response, $this);
 
@@ -99,19 +100,8 @@ class App
 
             $middleware = new Http\Middleware\Error;
 
-            return $middleware($exception, $request, $response, $this);
+            return $middleware($exception, $request, $response, $done);
         }
-    }
-
-    /**
-     * Get next middleware
-     * 
-     * @return object
-     */
-    protected function getNext()
-    {
-        $layer = $this->queue->dequeue();
-        return $layer;
     }
 
     /**

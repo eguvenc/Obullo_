@@ -3,6 +3,7 @@
 namespace Http\Middleware;
 
 use Exception;
+use Zend\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -55,9 +56,9 @@ class Error implements ErrorMiddlewareInterface
             }
         }
         
-        // return \Zend\Diactoros\Response\HtmlResponse($json, 500, [], JSON_PRETTY_PRINT);
+        // return new JsonResponse($json, 500, [], JSON_PRETTY_PRINT);
 
-        return new \Zend\Diactoros\Response\HtmlResponse($html, 500);
+        return new HtmlResponse($html, 500);
     }
 
     /**
