@@ -44,10 +44,9 @@ class App
     /**
      * Constructor
      * 
-     * @param container $container   container
-     * @param array     $middlewares middlewares
+     * @param container $container container
      */
-    public function __construct(Container $container, array $middlewares)
+    public function __construct(Container $container)
     {
         $this->container = $container;
         $this->queue     = new SplQueue;
@@ -61,12 +60,25 @@ class App
         $container->share('response', $response);
         $container->share('request', $request);
 
-        foreach ($middlewares as $middleware) {
-            $this->queue->enqueue($middleware);
-        }
         $this->done  = new Http\Middleware\FinalHandler;
         $this->done->setContainer($container);
+    }
 
+    /**
+     * Add middleware
+     *
+     * @return object group
+     */
+    public function add()
+    {
+        $params = func_get_args();
+        $name   = $params[0];
+        unset($params[0]);
+
+        $middleware = '\Http\Middleware\\'.$name;
+        if (! class_exists($middleware, false)) {
+            $this->queue->enqueue(['callable' => new $middleware, 'params' => $params]);
+        }
     }
 
     /**
@@ -93,14 +105,20 @@ class App
                 return $handler;
             }
             $middleware = $this->queue->dequeue();
+            $parameters = $middleware['params'];
 
-            return $middleware($request, $response, $this);
+            if (count($parameters) > 0) {
+                array_push($parameters, array($request, $response, $this));   
+                return call_user_func_array($middleware['callable'], $parameters);
+            }
+
+            return $middleware['callable']($request, $response, $this);
 
         }  catch (Exception $exception) {
 
             $middleware = new Http\Middleware\Error;
 
-            return $middleware($exception, $request, $response, $done);
+            return $middleware['callable']($exception, $request, $response, $done);
         }
     }
 

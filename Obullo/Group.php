@@ -25,14 +25,16 @@ class Group {
 
     /**
      * Add middleware
-     * 
-     * @param string $middleware name
      *
      * @return object group
      */
-    public function add($middleware)
+    public function add()
     {
-        $this->groups[$this->count]['middlewares'][] = $middleware;
+        $args = func_get_args();
+        $name = $args[0];
+        unset($args[0]);
+
+        $this->groups[$this->count]['middlewares'][] = array('name' => $name, 'params' => $args);
         return $this;
     }
 

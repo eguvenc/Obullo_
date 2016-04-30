@@ -23,12 +23,17 @@ class Router {
 
     public function rewrite($method, $pattern, $rewrite)
     {
-        $this->path = '/'.ltrim(preg_replace('#^'.$pattern.'$#', $rewrite, $this->path), '/');
-        $this->route($method, $pattern, $this->path, true);
+        if (in_array($this->request->getMethod(), (array)$method)) {
+            $this->path = '/'.ltrim(preg_replace('#^'.$pattern.'$#', $rewrite, $this->path), '/');
+        }
     }
 
     public function map($method, $pattern, $handler = null)
     {
+        if (! in_array($this->request->getMethod(), (array)$method)) {
+            $this->queue->enqueue(['callable' => new Http\Middleware\NotAllowed, 'params' => (array)$method]);
+            return $this;
+        }
         $this->route($method, $pattern, $handler);
         return $this;
     }
@@ -43,12 +48,10 @@ class Router {
         return $this->group;
     }
 
-    protected function route($method, $pattern, $handler, $rewrite = false)
+    protected function route($method, $pattern, $handler)
     {
-        if (! in_array($this->request->getMethod(), (array)$method) || $rewrite) {
-            return;
-        }
         if (preg_match('#^'.$pattern.'$#', $this->path, $params)) {
+
             if (is_string($handler)) {
                 if (strpos($handler, '$') !== false && strpos($pattern, '(') !== false) {
                     $handler = preg_replace('#^'.$pattern.'$#', $handler, $this->path);
@@ -74,13 +77,7 @@ class Router {
 
         if (in_array(trim($group['pattern'], "/"), $exp, true)) {
             $group['callable']($this->request, $this->response);
-
-            if (! empty($group['middlewares'])) {
-                foreach ($group['middlewares'] as $name) {
-                    $middleware = '\Http\Middleware\\'.$name;
-                    $this->queue->enqueue(new $middleware);
-                }
-            }
+            $this->queue($group['middlewares']);
         }
         if (! $this->group->isEmpty()) {
             $this->popGroup();
@@ -94,9 +91,35 @@ class Router {
         return $this->handler;
     }
 
-    public function add($middleware)
+    /**
+     * Queue middlewares
+     * 
+     * @param array $middlewares middlewares
+     * 
+     * @return void
+     */
+    protected function queue($middlewares)
     {
+        if (empty($middlewares)) {
+            return;
+        }
+        foreach ((array)$middlewares as $value) {
+            $middleware = '\Http\Middleware\\'.$value['name'];
+            if (! class_exists($middleware, false)) {
+                $this->queue->enqueue(['callable' => new $middleware, 'params' => $value['params']]);
+            }
+        }
+    }
 
+    public function add()
+    {
+        // $params = func_get_args();
+        // $name   = $params[0];
+        // unset($params[0]);
+
+        // if (! class_exists($middleware, false)) {
+        //     $this->queue->enqueue(['callable' => new $middleware, 'params' => $value['params']]);
+        // }
     }
 
 }

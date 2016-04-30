@@ -23,20 +23,20 @@ require ROOT.'vendor/autoload.php';
 $container = new League\Container\Container;
 
 /**
- * Step 3: Instantiate a Obullo application and load your middlewares.
- *
+ * Step 3: Instantiate a Obullo application
+ * 
  * This example instantiates a Obullo application using
  * your default middlewares.
  */
-$app = new App(
-    $container,
-    [
-        new Http\Middleware\Application,
-    ]
-);
+$app = new App($container);
 
 /**
- * Step 4: Define your Obullo using Zend Diactoros
+ * Step 4: Add your middlewares
+ */
+$app->add('Application');
+
+/**
+ * Step 5: Define your Obullo using Zend Diactoros
  */
 $server = Zend\Diactoros\Server::createServerfromRequest(
     $app,
@@ -45,7 +45,7 @@ $server = Zend\Diactoros\Server::createServerfromRequest(
 );
 
 /**
- * Step 5: Run the Obullo application
+ * Step 6: Run the Obullo
  *
  * This method should be called last. This executes the Obullo application
  * and returns the HTTP response to the HTTP client.

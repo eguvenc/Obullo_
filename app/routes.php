@@ -39,12 +39,15 @@ $router->group(
 
                 // throw new \Exception("cimcime");
 
-
-                $router->map('GET', '/users/(\w+)/(\d+)', function ($request, $response, $args) {
-                    var_dump($args);
-                });
+                $router->map(
+                    'POST',
+                    '/users/(\w+)/(\d+)',
+                    function ($request, $response, $args) {
+                        var_dump($args);
+                    }
+                );
             }
-        )->add('Guest');
+        );
 
     }
 )->add('Guest');
