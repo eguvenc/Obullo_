@@ -54,15 +54,14 @@ class View implements ViewInterface
      * Constructor
      * 
      * @param object $container container
-     * @param object $logger    logger
      * @param array  $params    service provider parameters
      */
-    public function __construct(Container $container, Logger $logger, array $params)
+    public function __construct(Container $container, array $params)
     {
         $this->container = $container;
         $this->params = $params;
-        $this->logger = $logger;
-        $this->logger->debug('View Class Initialized');
+        // $this->logger = $logger;
+        // $this->logger->debug('View Class Initialized');
     }
 
     /**
@@ -171,7 +170,9 @@ class View implements ViewInterface
         } else {
             $router = &Controller::$instance->router;  // Use nested controller router ( @see the Layer package. )
         }
-        $path = $router->getAncestor('/') . $router->getFolder();
+        
+        // $path = $router->getAncestor('/') . $router->getFolder();
+        $path = null;
 
         $folder = (empty($path)) ? FOLDERS .'views' : FOLDERS .$path .'/views';
 

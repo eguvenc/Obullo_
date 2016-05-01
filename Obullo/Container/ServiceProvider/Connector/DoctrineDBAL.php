@@ -1,6 +1,6 @@
 <?php
 
-namespace Container\Provider\Connector;
+namespace Container\ServiceProvider\Connector;
 
 use RuntimeException;
 use UnexpectedValueException;
@@ -8,7 +8,7 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 
 use Database\Doctrine\DBAL\SQLLogger;
-use Container\Provider\AbstractServiceProvider;
+use Container\ServiceProvider\AbstractServiceProvider;
 use Interop\Container\ContainerInterface as Container;
 
 /**

@@ -3,7 +3,6 @@
 namespace Utils\Error;
 
 use Exception;
-use Utils\File;
 use Psr\Log\LoggerInterface as Logger;
 
 /**
@@ -45,7 +44,7 @@ class Log
             $this->logger->withName('system')->error(
                 $e->getMessage(),
                 [
-                    'file' => File::getSecurePath($e->getFile()),
+                    'file' => $e->getFile(),
                     'line' => $e->getLine()
                 ]
             );

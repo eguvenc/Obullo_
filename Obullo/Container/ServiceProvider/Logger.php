@@ -1,10 +1,10 @@
 <?php
 
-namespace Container\Provider;
+namespace Container\ServiceProvider;
 
 use Monolog\Logger as Log;
 use Monolog\Handler\StreamHandler;
-use Container\Provider\AbstractServiceProvider;
+use Container\ServiceProvider\AbstractServiceProvider;
 
 class Logger extends AbstractServiceProvider
 {

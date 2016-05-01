@@ -22,6 +22,11 @@ require ROOT.'vendor/autoload.php';
  */
 $container = new League\Container\Container;
 
+// $resolver = new Router\PathResolver('Ancestor/Folders/Class', ['subfolderLevel' => 3]);
+// 
+$container->share('response', new Zend\Diactoros\Response);
+$container->share('request', Zend\Diactoros\ServerRequestFactory::fromGlobals());
+$container->share('router', new Router\Router($container, $resolver = null));
 /**
  * Step 3: Instantiate a Obullo application
  * 
@@ -33,10 +38,24 @@ $app = new App($container);
 /**
  * Step 4: Add your middlewares
  */
-$app->add('Application');
+// $app->add('Translation');
+// $app->add('ParsedBody');
 
 /**
- * Step 5: Define your Obullo using Zend Diactoros
+ * Step 5: Add your service providers
+ */
+$app->addServiceProvider('Container\ServiceProvider\Cookie');
+$app->addServiceProvider('Container\ServiceProvider\View');
+$app->addServiceProvider('Container\ServiceProvider\Logger');
+
+// $app->addProvider('Container\ServiceProvider\Amqp');
+// $app->addProvider('Container\ServiceProvider\Database');
+// $app->addProvider('Container\ServiceProvider\Redis');
+// $app->addProvider('Container\ServiceProvider\Memcached');
+// $app->addProvider('Container\ServiceProvider\Mongo');
+
+/**
+ * Step 6: Define your server using Zend Diactoros
  */
 $server = Zend\Diactoros\Server::createServerfromRequest(
     $app,
@@ -45,7 +64,7 @@ $server = Zend\Diactoros\Server::createServerfromRequest(
 );
 
 /**
- * Step 6: Run the Obullo
+ * Step 7: Emit output
  *
  * This method should be called last. This executes the Obullo application
  * and returns the HTTP response to the HTTP client.

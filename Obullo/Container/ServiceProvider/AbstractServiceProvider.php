@@ -20,33 +20,6 @@ abstract class AbstractServiceProvider extends LeagueAbstractServiceProvider imp
     protected $connections = array();
 
     /**
-     * Load service parameters
-     * 
-     * @param string $name name
-     * 
-     * @return object|null
-     */
-    public function getConfiguration($name = null)
-    {
-        if ($name == null) {
-            $class = get_class($this);
-            $namespace = explode('\\', $class);
-            $name = end($namespace);
-            $name = strtolower($name);
-        }
-        $container  = $this->getContainer();
-        $parameters = $container->get('config')->get('providers::'.$name);
-
-        if (is_array($parameters)) {
-
-            $config = new Configuration($parameters);
-            $container->add($name.'.params', $config->getParams());  // Inject service parameters to container
-
-            return $config;
-        }
-    }
-
-    /**
      * Creates connection id using class name & key values
      * 
      * @param string $key string

@@ -1,8 +1,8 @@
 <?php
 
-namespace Container\Provider;
+namespace Container\ServiceProvider;
 
-use Container\Provider\AbstractServiceProvider;
+use Container\ServiceProvider\AbstractServiceProvider;
 
 class View extends AbstractServiceProvider
 {
@@ -33,7 +33,6 @@ class View extends AbstractServiceProvider
 
         $container->share('view', 'View\View')
             ->withArgument($container)
-            ->withArgument($container->get('logger'))
             ->withArgument(
                 [
                     'engine' => 'View\Native', // 'View\Plates\Plates',

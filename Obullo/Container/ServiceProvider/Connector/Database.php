@@ -1,11 +1,11 @@
 <?php
 
-namespace Container\Provider\Connector;
+namespace Container\ServiceProvider\Connector;
 
 use RuntimeException;
 use UnexpectedValueException;
 use Database\SQLLogger;
-use Container\Provider\AbstractServiceProvider;
+use Container\ServiceProvider\AbstractServiceProvider;
 use Interop\Container\ContainerInterface as Container;
 
 /**

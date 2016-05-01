@@ -1,13 +1,13 @@
 <?php
 
-namespace Container\Provider\Connector;
+namespace Container\ServiceProvider\Connector;
 
 use RuntimeException;
 use UnexpectedValueException;
 
 use PhpAmqpLib\Connection\AMQPConnection;
 use Interop\Container\ContainerInterface as Container;
-use Container\Provider\AbstractServiceProvider;
+use Container\ServiceProvider\AbstractServiceProvider;
 
 /**
  * AMQPLib Service Connection Provider

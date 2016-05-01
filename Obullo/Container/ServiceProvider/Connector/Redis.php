@@ -1,12 +1,12 @@
 <?php
 
-namespace Container\Provider\Connector;
+namespace Container\ServiceProvider\Connector;
 
 use ReflectionClass;
 use RuntimeException;
 use UnexpectedValueException;
 use Interop\Container\ContainerInterface as Container;
-use Container\Provider\AbstractServiceProvider;
+use Container\ServiceProvider\AbstractServiceProvider;
 
 /**
  * Redis Connector

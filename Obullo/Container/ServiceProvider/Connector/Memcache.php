@@ -1,23 +1,22 @@
 <?php
 
-namespace Container\Provider\Connector;
+namespace Container\ServiceProvider\Connector;
 
-use AmqpConnection;
 use RuntimeException;
 use UnexpectedValueException;
 use Interop\Container\ContainerInterface as Container;
-use Container\Provider\AbstractServiceProvider;
+use Container\ServiceProvider\AbstractServiceProvider;
 
 /**
- * AMQP Service Provider
+ * Memcache Connection Provider
  * 
  * @copyright 2009-2015 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
-class Amqp extends AbstractServiceProvider
+class Memcache extends AbstractServiceProvider
 {
     /**
-     * Amqp config array
+     * Memcache config array
      * 
      * @var array
      */
@@ -31,11 +30,11 @@ class Amqp extends AbstractServiceProvider
     protected $container;
 
     /**
-     * AMQP extension
+     * Memcache extension
      * 
-     * @var string
+     * @var object
      */
-    protected $AMQPClass;
+    protected $memcache;
 
     /**
      * Constructor
@@ -50,17 +49,16 @@ class Amqp extends AbstractServiceProvider
         $this->params = $params;
         $this->container = $container;
 
-        if (! extension_loaded('AMQP')) {
+        if (! extension_loaded('memcache')) {
             throw new RuntimeException(
-                'The AMQP extension has not been installed or enabled.'
+                'The memcache extension has not been installed or enabled.'
             );
         }
-        $this->AMQPClass = 'AMQPConnection';
         $this->register();
     }
 
     /**
-     * Register all connections as shared ( It should run one time )
+     * Register all connections as shared services
      * 
      * @return void
      */
@@ -80,65 +78,85 @@ class Amqp extends AbstractServiceProvider
     }
 
     /**
-     * Creates AMQP connections
+     * Creates Memcache connections
      * 
-     * @param array $val connection parameters
+     * @param array $val current connection array
      * 
-     * @return void
+     * @return object
      */
     protected function createConnection(array $val)
     {
-        if (empty($val['host']) || empty($val['password'])) {
+        if (empty($val['host']) || empty($val['port'])) {
             throw new RuntimeException(
-                'Check your queue configuration "host" or "password" key seems empty.'
+                'Check your memcache configuration, "host" or "port" key seems empty.'
             );
         }
-        $val['port']  = empty($val['port']) ? "5672" : $val['port'];
-        $val['vhost'] = empty($val['vhost']) ? "/" : $val['vhost'];
+        $this->memcache = new \Memcache;
 
-        $connection = new $this->AMQPClass;
-        $connection->setHost($val['host']); 
-        $connection->setPort($val['port']); 
-        $connection->setLogin($val['username']);
-        $connection->setPassword($val['password']); 
-        $connection->setVHost($val['vhost']); 
-        $connection->connect();
-        return $connection;
+        // http://php.net/manual/tr/memcache.connect.php
+        // If you have pool of memcache servers, do not use the connect() function. 
+        // If you have only single memcache server then there is no need to use the addServer() function.
+
+        // Check single server connection
+
+        if (empty($this->params['nodes'][0]['host'])) {  // If we haven't got any nodes use connect() method
+
+            $connect = true;
+            if ($val['options']['persistent']) {
+                $connect = $this->memcache->pconnect($val['host'], $val['port'], $val['options']['timeout']);
+            } else {
+                $connect = $this->memcache->connect($val['host'], $val['port'], $val['options']['timeout']);
+            }
+            if (! $connect) {
+                throw new RuntimeException(
+                    sprintf(
+                        "Memcache connection error could not connect to host: %s.",
+                        $val['host']
+                    )
+                );
+            }
+        }
+        return $this->memcache;
     }
 
     /**
-     * Retrieve shared AMQP connection instance from connection pool
+     * Retrieve shared Memcache connection instance from connection pool
      *
      * @param array $params provider parameters
      * 
-     * @return object AMQP
+     * @return object Memcache
      */
     public function shared($params = array())
     {
-        if (! isset($params['connection'])) {
-            $params['connection'] = array_keys($this->params['connections'])[0]; //  Set default connection
+        if (empty($params['connection'])) {
+            throw new RuntimeException(
+                sprintf(
+                    "Memcache provider requires connection parameter. <pre>%s</pre>",
+                    "\$container->get('memcache')->shared(['connection' => 'default']);"
+                )
+            );
         }
         if (! isset($this->params['connections'][$params['connection']])) {
             throw new UnexpectedValueException(
                 sprintf(
-                    'Connection key %s does not exist in your queue.php config file.',
+                    'Connection key %s does not exist in your memcache configuration.',
                     $params['connection']
                 )
             );
         }
         $key = $this->getConnectionKey($params['connection']);
 
-        return $this->container->get($key);  // return to shared connection
+        return $this->container->get($key);  // Return to shared connection
     }
 
     /**
-     * Create a new AMQP connection
+     * Create a new Memcache connection
      * 
-     * If you don't want to add it config file and you want to create new one.
+     * If you don't want to add it to config file and you want to create new one.
      * 
      * @param array $params connection parameters
      * 
-     * @return object AMQP client
+     * @return object Memcache client
      */
     public function factory($params = array())
     {
@@ -166,8 +184,9 @@ class Amqp extends AbstractServiceProvider
             $key = $this->getConnectionKey($key);
 
             if ($this->container->hasShared($key, true)) {
-                $this->container->get($key)->disconnect();
+                $this->container->get($key)->close();
             }
         }
     }
+
 }

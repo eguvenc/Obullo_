@@ -50,18 +50,56 @@ class App
     {
         $this->container = $container;
         $this->queue     = new SplQueue;
-        $response        = new Zend\Diactoros\Response;
-        $request         = Zend\Diactoros\ServerRequestFactory::fromGlobals();
-        $router          = new Router($request, $response, $this->queue);
-        $this->router    = $router;
+        $this->router    = $container->get('router');
+
+        $this->router->setQueue($this->queue);
+        $router = $this->router;
  
         include APP. 'routes.php';
 
-        $container->share('response', $response);
-        $container->share('request', $request);
-
-        $this->done  = new Http\Middleware\FinalHandler;
+        $this->done  = new Http\Middleware\FinalHandler($this, $router);
         $this->done->setContainer($container);
+    }
+
+    /**
+     * Invoke application
+     * 
+     * @param Request  $request  request
+     * @param Response $response response
+     * 
+     * @return void
+     */
+    public function __invoke(Request $request, Response $response)
+    {
+        $middleware = null;
+        $done       = $this->done;
+
+        try {
+
+            $handler = $this->router->getHandler();
+
+            if ($this->queue->isEmpty()) {
+                return $done($request, $response, null, $handler);
+            }
+
+            $middleware = $this->queue->dequeue();
+
+            if (! empty($middleware['params'])) {
+                
+                $args = array($request, $response, $this);
+                array_push($args, $middleware['params']);
+
+                return call_user_func_array($middleware['callable'], $args);
+            }
+
+            return $middleware['callable']($request, $response, $this);
+
+        }  catch (Exception $exception) {
+
+            $error = new Http\Middleware\Error;
+
+            return $error($exception, $request, $response, $done);
+        }
     }
 
     /**
@@ -82,44 +120,15 @@ class App
     }
 
     /**
-     * Invoke application
+     * Add service provider
      * 
-     * @param Request  $request  request
-     * @param Response $response response
-     * 
+     * @param string $class name
+     *
      * @return void
      */
-    public function __invoke(Request $request, Response $response)
+    public function addServiceProvider($class)
     {
-        $middleware = null;
-        $done       = $this->done;
-
-        try {
-
-            if ($this->queue->isEmpty()) {
-                return $done($request, $response);
-            }
-            $handler = $this->router->getHandler();
-
-            if ($handler instanceof $response) {
-                return $handler;
-            }
-            $middleware = $this->queue->dequeue();
-            $parameters = $middleware['params'];
-
-            if (count($parameters) > 0) {
-                array_push($parameters, array($request, $response, $this));   
-                return call_user_func_array($middleware['callable'], $parameters);
-            }
-
-            return $middleware['callable']($request, $response, $this);
-
-        }  catch (Exception $exception) {
-
-            $middleware = new Http\Middleware\Error;
-
-            return $middleware['callable']($exception, $request, $response, $done);
-        }
+        $this->container->addServiceProvider($class);
     }
 
     /**
@@ -131,5 +140,56 @@ class App
     {
         return $this->container;
     }
+
+    public function call($request, $response)
+    {
+        $this->container->share('response', $response);  // Refresh objects
+        $this->container->share('request', $request);
+
+        return $response->getBody()->write('Hello World !');
+    }
+
+    // public function call($request, $response)
+    // {
+    //     $router = $this->container->get('router');
+
+    //     $file      = FOLDERS .$router->getAncestor('/').$router->getFolder('/').$router->getClass().'.php';
+    //     $className = '\\'.$router->getNamespace().$router->getClass();
+
+    //     if (! is_file($file)) {
+    //         $router->clear();  // Fix layer errors.
+    //         return false;
+
+    //     } else {
+
+    //         include $file;
+
+    //         $controller = new $className($this->container);
+    //         $controller->container = $this->container;
+
+    //         if (method_exists($controller, '__invoke')) {  // Assign layout variables
+    //             $controller();
+    //         }
+    //         if (! method_exists($controller, $router->getMethod())
+    //             || substr($router->getMethod(), 0, 1) == '_'
+    //         ) {
+    //             $router->clear();  // Fix layer errors.
+    //             return false;
+    //         }
+    //     }
+    //     $this->container->share('response', $response);  // Refresh objects
+    //     $this->container->share('request', $request);
+
+    //     $result = call_user_func_array(
+    //         array(
+    //             $controller,
+    //             $router->getMethod()
+    //         ),
+    //         array_slice($controller->request->getUri()->getRoutedSegments(), $router->getArity())
+    //     );
+    //     if ($result instanceof Response) {
+    //         return $result;
+    //     }
+    // }
 
 }

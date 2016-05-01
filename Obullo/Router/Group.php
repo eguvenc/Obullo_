@@ -1,9 +1,34 @@
 <?php
 
-class Group {
+namespace Router;
+
+use Router\Filter\FilterTrait;
+use Psr\Http\Message\RequestInterface as Request;
+
+/**
+ * Route group
+ * 
+ * @copyright 2009-2016 Obullo
+ * @license   http://opensource.org/licenses/MIT MIT license
+ */
+class Group
+{
+    use AddTrait;
+    use FilterTrait;
 
     protected $count  = 0;
+    protected $request;
     protected $groups = array();
+
+    /**
+     * Constructor
+     * 
+     * @param object $request request
+     */
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
 
     /**
      * Queue group
@@ -24,21 +49,6 @@ class Group {
     }
 
     /**
-     * Add middleware
-     *
-     * @return object group
-     */
-    public function add()
-    {
-        $args = func_get_args();
-        $name = $args[0];
-        unset($args[0]);
-
-        $this->groups[$this->count]['middlewares'][] = array('name' => $name, 'params' => $args);
-        return $this;
-    }
-
-    /**
      * Dequeue the group array
      * 
      * @return array|null
@@ -56,6 +66,19 @@ class Group {
     public function isEmpty()
     {
         return empty($this->groups);
+    }
+
+    /**
+     * Add middleware
+     * 
+     * @param string $name middleware name
+     * @param array  $args arguments
+     *
+     * @return void
+     */
+    protected function middleware($name, array $args)
+    {
+        $this->groups[$this->count]['middlewares'][] = array('name' => $name, 'params' => $args);
     }
 
 }

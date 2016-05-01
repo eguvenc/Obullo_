@@ -1,9 +1,9 @@
 <?php
 
-namespace Container\Provider\Connector;
+namespace Container\ServiceProvider\Connector;
 
 use Database\Doctrine\DBAL\QueryBuilder;
-use Container\Provider\AbstractServiceProvider;
+use Container\ServiceProvider\AbstractServiceProvider;
 use Interop\Container\ContainerInterface as Container;
 
 /**
