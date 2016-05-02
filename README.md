@@ -27,3 +27,8 @@ Put the latest version to your web root (<kbd>/var/www/project/</kbd>). Create y
         DocumentRoot /var/www/project/public
 </VirtualHost>
 ```
+
+#### License
+
+<a href="http://obullo.com/license.txt" targe="_blank">http://obullo.com/license.txt</a>
+
