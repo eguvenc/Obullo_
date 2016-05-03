@@ -27,6 +27,11 @@ class FinalHandler implements ContainerAwareInterface
      */
     protected $request;
 
+    /**
+     * Construct
+     * 
+     * @param object $app app
+     */
     public function __construct($app)
     {
         $this->app = $app;
@@ -38,6 +43,7 @@ class FinalHandler implements ContainerAwareInterface
      * @param ServerRequestInterface $request  request
      * @param ResponseInterface      $response response
      * @param Exception              $err      error
+     * @param Callable               $handler  handler
      * 
      * @return object ResponseInterface
      */

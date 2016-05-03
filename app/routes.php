@@ -41,7 +41,7 @@ $router->group(
 
                 $router->map(
                     'GET',
-                    '/users/(\w+)/(\d+)',
+                    '/users/(\w+)/(\d+).*',
                     function ($request, $response, $args) {
                         
                         // var_dump($args);
@@ -50,16 +50,16 @@ $router->group(
 
                         return $response;
                     }
-                )->filter('ifEquals', ['/users/test/45'])->add('Guest');
+                )->add('Guest');
 
-                //->filter('ifNotContains', ['/users/teZ'])->add('Guest');;
+                // ->filter('contains', ['/users/test/45'])->add('Guest');
+
+                //->filter('notContains', ['/users/teZ'])->add('Guest');;
                 //
                 // ->ifContains(['login'])
                 // ->ifNotContains(['login', 'payment'])
                 // ->ifRegExp(['welcome/path/index'])
                 // ->ifNotRegExp(['welcome/path/index'])
-                // ->ifHasQueryParams(['a', 'b']);
-                // ->ifHasNotQueryParams(['a', 'b']);
 
             }
         );

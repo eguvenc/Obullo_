@@ -2,6 +2,7 @@
 
 namespace Router\Filter;
 
+use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface as Request;
 
 /**
@@ -32,10 +33,11 @@ class Condition
      * 
      * @return object
      */
-    public function ifContains($path)
+    public function contains($path)
     {
         foreach ((array)$path as $value) {
-            if (stripos($this->path, "/".trim($value, "/")) !== false) {
+            $result = stripos($this->path, "/".trim($value, "/"));
+            if ($result !== false) {
                 $this->match = true;
                 continue;
             }
@@ -50,10 +52,11 @@ class Condition
      * 
      * @return object
      */
-    public function ifNotContains($path)
+    public function notContains($path)
     {
         foreach ((array)$path as $value) {
-            if (stripos($this->path, "/".trim($value, "/")) === false) {
+            $result = stripos($this->path, "/".trim($value, "/"));
+            if ($result === false) {
                 $this->match = true;
                 continue;
             }
@@ -62,37 +65,37 @@ class Condition
     }
 
     /**
-     * If uri equal to path(s)
+     * If uri match with regex
      * 
-     * @param strig|array $path path
+     * @param string $pattern pattern
      * 
-     * @return object
+     * @return void
      */
-    public function ifEquals($path)
+    public function regExp($pattern)
     {
-        foreach ((array)$path as $value) {
-            if ($this->path == "/".trim($value, "/")) {
-                $this->match = true;
-                continue;
-            }
+        if (! is_string($pattern)) {
+            throw new InvalidArgumentException("Regex pattern must be string.");
+        }
+        if (preg_match('#^'.$pattern.'$#', $this->path)) {
+            $this->match = true;
         }
         return $this;
     }
 
     /**
-     * If uri NOT equal to path(s)
+     *  If uri NOT match with regex
      * 
-     * @param strig|array $path path
+     * @param string $pattern pattern
      * 
-     * @return object
+     * @return void
      */
-    public function ifNotEquals($path)
+    public function notRegExp($pattern)
     {
-        foreach ((array)$path as $value) {
-            if ($this->path != "/".trim($value, "/")) {
-                $this->match = true;
-                continue;
-            }
+        if (! is_string($pattern)) {
+            throw new InvalidArgumentException("Regex pattern must be string.");
+        }
+        if (! preg_match('#^'.$pattern.'$#', $this->path)) {
+            $this->match = true;
         }
         return $this;
     }
