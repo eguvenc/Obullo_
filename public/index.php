@@ -14,15 +14,15 @@ define('ROOT', dirname(__DIR__).'/');
  * If you are not using Composer, you need to load Obullo with your own
  * PSR-4 autoloader.
  */
-require ROOT.'constants.php';
-require ROOT.'vendor/autoload.php';
+require ROOT .'constants.php';
+require ROOT .'vendor/autoload.php';
 
 /**
  * Step 2: Instantiate a Container to load your service providers.
  */
 $container = new League\Container\Container;
 
-// $resolver = new Router\PathResolver('Ancestor/Folders/Class', ['subfolderLevel' => 3]);
+// $resolver = new Router\PathResolver('Ancestor/CONTROLLERS/Class', ['subfolderLevel' => 3]);
 // 
 $container->share('response', new Zend\Diactoros\Response);
 $container->share('request', Zend\Diactoros\ServerRequestFactory::fromGlobals());

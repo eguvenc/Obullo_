@@ -1,7 +1,0 @@
-<?php
-
-namespace Container\ServiceProvider;
-
-use League\Container\ServiceProvider\BootableServiceProviderInterface as LeagueBootableServiceProviderInterface;
-
-interface BootableServiceProviderInterface extends LeagueBootableServiceProviderInterface {}
