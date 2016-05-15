@@ -146,7 +146,13 @@ class App
         return $this->container;
     }
 
-    public function call($request, $response)
+    /**
+     * [call description]
+     * @param  [type] $request  [description]
+     * @param  [type] $response [description]
+     * @return [type]           [description]
+     */
+    public function dispatch($request, $response)
     {
         $this->container->share('response', $response);  // Refresh objects
         $this->container->share('request', $request);

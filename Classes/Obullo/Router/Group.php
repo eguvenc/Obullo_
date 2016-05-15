@@ -2,7 +2,7 @@
 
 namespace Obullo\Router;
 
-use Router\Filter\FilterTrait;
+use Obullo\Router\Filter\FilterTrait;
 use Psr\Http\Message\RequestInterface as Request;
 
 /**

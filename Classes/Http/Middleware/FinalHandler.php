@@ -11,8 +11,8 @@ use Exception;
 use ErrorException;
 use LogicException;
 use RuntimeException;
-use Container\ContainerAwareTrait;
-use Container\ContainerAwareInterface;
+use Obullo\Container\ContainerAwareTrait;
+use Obullo\Container\ContainerAwareInterface;
 
 class FinalHandler implements ContainerAwareInterface
 {
@@ -55,7 +55,7 @@ class FinalHandler implements ContainerAwareInterface
         if ($handler instanceof Response) {
             return $handler;
         }
-        $result = $this->app->call($request, $response);
+        $result = $this->app->dispatch($request, $response);
 
         if (! $result) {
             // $this->create404();
