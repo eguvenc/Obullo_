@@ -1,6 +1,6 @@
 <?php
 
-use Http\Controller;
+use Obullo\Controller;
 
 class Welcome extends Controller
 {
