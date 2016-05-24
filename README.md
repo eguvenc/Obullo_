@@ -3,7 +3,7 @@
 
 Small, fast & expandable.
 
-* Small because we are just use 6 core components.
+* Small because we are just use 7 core components.
 * Obullo core supports Http Middlewares, Psr7 HTTP Standarts, Container, Dependency Injection, Service Providers. 
 * Fast because of our router contains just 300 lines of code.
 * Expandable because of you can install extra packages (HMVC, Authentication, Validator ..) using composer.
