@@ -147,10 +147,12 @@ class App
     }
 
     /**
-     * [call description]
-     * @param  [type] $request  [description]
-     * @param  [type] $response [description]
-     * @return [type]           [description]
+     * Dispatch controller
+     * 
+     * @param object $request  request
+     * @param object $response response
+     * 
+     * @return object response
      */
     public function dispatch($request, $response)
     {
