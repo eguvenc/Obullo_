@@ -25,7 +25,5 @@ return array(
             'key' => 'write-your-secret-key',
         ],
     ],
-    'extra' => [
-        'debugger' => false,
-    ],
+    'extra' => [],
 );
