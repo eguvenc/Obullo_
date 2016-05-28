@@ -1,9 +1,4 @@
-<?php
-if (defined('STDIN')) {
-	echo Obullo\Cli\Console::fail("Service Unavailable");
-	return;
-}
-?>
+
 <html>
 <head>
 <title>Service Unavailable</title>

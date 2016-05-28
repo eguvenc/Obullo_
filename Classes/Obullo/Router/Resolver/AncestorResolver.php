@@ -2,6 +2,7 @@
 
 namespace Obullo\Router\Resolver;
 
+use Obullo\Utils\Route as RouteHelper;
 use Obullo\Router\RouterInterface as Router;
 
 /**
@@ -34,13 +35,22 @@ class AncestorResolver
     protected $segments;
 
     /**
+     * Subfolder level
+     * 
+     * @var int
+     */
+    protected $subfolderLevel;
+
+    /**
      * Constructor
      * 
-     * @param Router $router router
+     * @param Router  $router         router
+     * @param Integer $subfolderLevel integer
      */
-    public function __construct(Router $router)
+    public function __construct(Router $router, $subfolderLevel)
     {
         $this->router = $router;
+        $this->subfolderLevel = (int)$subfolderLevel;
     }
 
     /**
@@ -52,7 +62,7 @@ class AncestorResolver
      */
     public function resolve(array $segments)
     {
-        $ancestor = $this->router->getAncestor('/');
+        $ancestor     = $this->router->getAncestor('/');
         $CONTROLLERS  = $this->getSubfolder($ancestor, $segments);
 
         $this->router->setFolder(implode("/", $CONTROLLERS));
@@ -65,7 +75,7 @@ class AncestorResolver
         if (empty($segments[1])) {
             $segments[1] = $folder;
         }
-        $file = CONTROLLERS .$ancestor.$folder.'/'.$this->router->ucwordsUnderscore($segments[1]).'.php';
+        $file = CONTROLLERS .$ancestor.$folder.'/'.RouteHelper::ucwords($segments[1]).'.php';
 
         // Support for e.g "/examples/forms/Ajax"
     
@@ -101,7 +111,7 @@ class AncestorResolver
         $temp = [];
         foreach ($segments as $key => $folder) {
 
-            if ($key > $this->router->getSubfolderLevel()) {  // Subfolder level limit
+            if ($key > $this->subfolderLevel) {  // Subfolder level limit
                 continue;
             }
             if (isset($temp[$key - 1])) {

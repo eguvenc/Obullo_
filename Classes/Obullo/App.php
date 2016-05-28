@@ -62,7 +62,7 @@ class App
  
         include APP. 'routes.php';
 
-        $this->done  = new FinalHandler($this, $router);
+        $this->done  = new FinalHandler;
         $this->done->setContainer($container);
     }
 
@@ -145,64 +145,5 @@ class App
     {
         return $this->container;
     }
-
-    /**
-     * Dispatch controller
-     * 
-     * @param object $request  request
-     * @param object $response response
-     * 
-     * @return object response
-     */
-    public function dispatch($request, $response)
-    {
-        $this->container->share('response', $response);  // Refresh objects
-        $this->container->share('request', $request);
-
-        return $response->getBody()->write('Hello World !');
-    }
-
-    // public function call($request, $response)
-    // {
-    //     $router = $this->container->get('router');
-
-    //     $file      = FOLDERS .$router->getAncestor('/').$router->getFolder('/').$router->getClass().'.php';
-    //     $className = '\\'.$router->getNamespace().$router->getClass();
-
-    //     if (! is_file($file)) {
-    //         $router->clear();  // Fix layer errors.
-    //         return false;
-
-    //     } else {
-
-    //         include $file;
-
-    //         $controller = new $className($this->container);
-    //         $controller->container = $this->container;
-
-    //         if (method_exists($controller, '__invoke')) {  // Assign layout variables
-    //             $controller();
-    //         }
-    //         if (! method_exists($controller, $router->getMethod())
-    //             || substr($router->getMethod(), 0, 1) == '_'
-    //         ) {
-    //             $router->clear();  // Fix layer errors.
-    //             return false;
-    //         }
-    //     }
-    //     $this->container->share('response', $response);  // Refresh objects
-    //     $this->container->share('request', $request);
-
-    //     $result = call_user_func_array(
-    //         array(
-    //             $controller,
-    //             $router->getMethod()
-    //         ),
-    //         array_slice($controller->request->getUri()->getRoutedSegments(), $router->getArity())
-    //     );
-    //     if ($result instanceof Response) {
-    //         return $result;
-    //     }
-    // }
-
+    
 }

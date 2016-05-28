@@ -1,9 +1,4 @@
-<?php
-if (defined('STDIN')) {
-	echo Obullo\Cli\Console::fail("404 Page Not Found");
-	return;
-}
-?>
+
 <html>
 <head>
 <title>404 Page Not Found</title>
@@ -41,7 +36,7 @@ font-weight:        normal;
 <body>
 
 <div id="content">
-    <h1>Page Not Found</h1>
+    <h1>404 Not Found</h1>
     <p>The page you are looking for could not be found.</p>
 </div>
 

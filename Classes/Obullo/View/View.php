@@ -171,10 +171,8 @@ class View implements ViewInterface
             $router = &Controller::$instance->router;  // Use nested controller router ( @see the Layer package. )
         }
         
-        // $path = $router->getAncestor('/') . $router->getFolder();
-        $path = null;
-
-        $folder = (empty($path)) ? FOLDERS .'views' : FOLDERS .$path .'/views';
+        $path   = $router->getAncestor('/') . $router->getFolder();
+        $folder = (empty($path)) ? CONTROLLERS .'views' : CONTROLLERS .$path .'/views';
 
         /**
          * End layer package support

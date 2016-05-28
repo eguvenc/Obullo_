@@ -2,15 +2,16 @@
 
 namespace Obullo\Router\Resolver;
 
+use Obullo\Utils\Route as RouteHelper;
 use Obullo\Router\RouterInterface as Router;
 
 /**
- * Resolve class
+ * Resolve folder
  * 
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
-class ClassResolver
+class FolderResolver
 {
     /**
      * Router
@@ -45,6 +46,21 @@ class ClassResolver
      */
     public function resolve(array $segments)
     {
+        $folder = $this->router->getFolder();
+        $hasSegmentOne = empty($segments[1]) ? false : true;
+
+        $file = CONTROLLERS .$folder.'/'.RouteHelper::ucwords($folder).'.php';
+
+        if (is_file($file)) {
+
+            $index = ($hasSegmentOne && $segments[1] == 'index');
+
+            if ($hasSegmentOne == false || $index) {  // welcome/hello support
+                array_unshift($segments, $folder);
+            }
+            $this->segments = $segments;
+            return $this;
+        }
         $this->segments = $segments;
         return $this;
     }
@@ -56,17 +72,17 @@ class ClassResolver
      */
     public function getArity()
     {
-        return -1;
+        return 0;
     }
 
     /**
-     * Uri segments
+     * Get uri segments
      * 
      * @return array
      */
     public function getSegments()
     {
         return $this->segments;
-    }    
+    }
 
 }

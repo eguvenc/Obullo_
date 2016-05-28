@@ -1,0 +1,225 @@
+/* Space out content a bit */
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.footer {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+/* Custom page footer */
+.footer {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+
+.welcome .header p {
+  font-weight: 300;
+  color: #777575;
+  font-size: 1.17em;
+  margin: 2em 0;
+}
+
+label {
+  font-weight: normal;
+}
+
+.small-text {
+  font-size: 12px;
+  color: #777575;
+}
+
+.layer {
+  margin-top:8px;
+}
+
+.example-gray {
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+  padding:9.5px;
+  font-size: 13px;
+  line-height: 1.42857;
+  color: #333;
+  background-color:#F5F5F5;
+  padding:8px;
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  margin-bottom:10px;
+}
+.example-white {
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+  padding:9.5px;
+  font-size: 13px;
+  line-height: 1.42857;
+  color: #333;
+  background-color:#FFF;
+  padding:8px;
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  margin-bottom:10px;
+}
+
+form {
+  width: 350px;
+}
+.form-control:focus
+{
+    outline: none !important;
+    border-color: #828282 !important;
+    box-shadow: none !important;
+}
+
+/* Custom page header */
+.header {
+  padding-bottom: 20px;
+  padding-top: 10px;
+  border-bottom: 1px solid #e5e5e5;
+}
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 15px;
+}
+
+.welcome .header p {
+  font-weight: 300;
+  color: #777575;
+  font-size: 1.17em;
+  margin: 2em 0;
+}
+
+/* Custom page footer */
+.footer {
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+
+a {
+  color: #BF342A;
+  background-color: transparent;
+}
+a:hover,
+a:focus {
+  color: #BF342A;
+  outline: 0;
+}
+
+.nav-pills > li > a {
+  color: #5B5B5B;
+}
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+  color: #5B5B5B;
+  background: none;
+  /* background-color: #5B5B5B; */
+}
+
+.tests ul, li {
+  padding: 0.10px;
+  margin: 0;
+  list-style: none;
+}
+
+.tests ul {
+  color: gray;
+  font-size: 16px;
+/*  margin: 2em 0;*/
+}
+
+.tests li {
+  list-style: none;
+  margin: 0.2em;
+  margin-left: 0em;
+}
+
+.tests li a {
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.tests p {
+  font-size: 16px;
+}
+
+.content {
+
+}
+
+.content ul, li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.content ul {
+  font-size: 16px;
+/*  margin: 2em 0;*/
+}
+.content li {
+  list-style: circle;
+  margin: 1em;
+  margin-left: 1em;
+}
+
+.link {
+  font-size: 0.45em;
+}
+
+/* Customize container */
+@media (min-width: 768px) {
+  .container {
+    max-width: 730px;
+  }
+}
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+.welcome {
+  text-align: center;
+  margin-bottom: 100px;
+}
+.welcome .btn {
+  padding: 14px 24px;
+  font-size: 21px;
+}
+
+.jumbotron {
+  text-align: left;
+  border-bottom: 1px solid #e5e5e5;
+}
+.jumbotron .btn {
+  padding: 14px 24px;
+  font-size: 21px;
+}
+
+.description p {
+  font-weight: 300;
+  color: #777575;
+  font-size: 1.17em;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  /* Remove the padding we set earlier */
+  .header,
+  .footer {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 30px;
+  }
+  /* Remove the bottom border on the jumbotron for visual effect */
+  .jumbotron {
+    border-bottom: 0;
+  }
+}

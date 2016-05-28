@@ -9,6 +9,7 @@ use SplQueue;
 use Obullo\Router\Group;
 use InvalidArgumentException;
 use Http\Middleware\NotAllowed;
+use Obullo\Utils\Route as RouteHelper;
 use Obullo\Router\Filter\FilterTrait;
 use Interop\Container\ContainerInterface as Container;
 
@@ -18,30 +19,33 @@ use Interop\Container\ContainerInterface as Container;
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
-class Router
+class Router implements RouterInterface
 {
     use AddTrait;
     use FilterTrait;
 
     protected $path;
     protected $group;
+    protected $class;
     protected $queue;
+    protected $folder;
+    protected $method;
     protected $handler;
     protected $request;
+    protected $ancestor;
     protected $response;
     protected $count = 0;
     protected $routes = array();
     protected $dispatched = false;
-    
+
     /**
      * Constructor
      * 
-     * @param Container    $container container
-     * @param PathResolver $resolver  resolver
+     * @param Container $container container
      *
      * @return void
      */
-    public function __construct(Container $container, $resolver = null)
+    public function __construct(Container $container)
     {
         $this->path     = $container->get('request')->getUri()->getPath();
         $this->request  = $container->get('request');
@@ -140,15 +144,10 @@ class Router
                         $handler = preg_replace('#^'.$pattern.'$#', $handler, $this->path);
                     }
                     $this->handler = $handler;
-                    // var_dump($handler);
-                    // $dispatcher = new RouteDispatcher($handler);
                 }
                 if (is_callable($handler)) {
                     array_shift($params);
                     $this->handler = $handler($this->request, $this->response, array_values($params));
-
-                    // $this->handler = ['callable' => $handler, 'args' => array_values($params)];
-                    // var_dump($handler);
                 }
             }
         }
@@ -222,6 +221,130 @@ class Router
     protected function middleware($name, array $args)
     {
         $this->routes[$this->count]['middlewares'][] = array('name' => $name, 'params' => $args);
+    }
+
+    /**
+     * Set the class name
+     * 
+     * @param string $class classname segment 1
+     *
+     * @return object Router
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+        return $this;
+    }
+
+    /**
+     * Set current method
+     * 
+     * @param string $method name
+     *
+     * @return object Router
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
+        return $this;
+    }
+
+    /**
+     * Set the folder name : It must be lowercase otherwise folder does not work
+     *
+     * @param string $folder folder
+     * 
+     * @return object Router
+     */
+    public function setFolder($folder)
+    {
+        $this->folder = $folder;
+        return $this;
+    }
+
+    /**
+     * Sets top folder http://example.com/api/user/delete/4
+     * 
+     * @param string $folder sets top folder
+     *
+     * @return void
+     */
+    public function setAncestor($folder)
+    {
+        $this->ancestor = $folder;
+    }
+
+    /**
+     * Get primary folder
+     *
+     * @param string $separator get folder seperator
+     * 
+     * @return void
+     */
+    public function getAncestor($separator = '')
+    {
+        return (empty($this->ancestor)) ? '' : htmlspecialchars($this->ancestor).$separator;
+    }
+
+    /**
+     * Get folder
+     *
+     * @param string $separator get folder seperator
+     * 
+     * @return string
+     */
+    public function getFolder($separator = '')
+    {
+        return (empty($this->folder)) ? '' : htmlspecialchars($this->folder).$separator;
+    }
+
+    /**
+     * Returns to current routed class name
+     *
+     * @return string
+     */
+    public function getClass()
+    {
+        return htmlspecialchars(RouteHelper::ucwords($this->class));
+    }
+
+    /**
+     * Returns to current method
+     * 
+     * @return string
+     */
+    public function getMethod()
+    {
+        return htmlspecialchars($this->method);
+    }
+
+    /**
+     * Returns php namespace of the current route
+     * 
+     * @return string
+     */
+    public function getNamespace()
+    {
+        $folder = $this->getFolder();
+        if (strpos($folder, "/") > 0) {  // Converts "Tests\Authentication/storage" to Tests\Authentication\Storage
+            $exp = explode("/", $folder);
+            $folder = trim(implode("\\", $exp), "\\");
+        }
+        $namespace = RouteHelper::ucwords($this->getAncestor()).'\\'.RouteHelper::ucwords($folder);
+        $namespace = trim($namespace, '\\');
+        return (empty($namespace)) ? '' : $namespace.'\\';
+    }
+
+    /**
+     * Clean all data for Layers
+     *
+     * @return void
+     */
+    public function clear()
+    {
+        $this->class = '';
+        $this->folder = '';
+        $this->ancestor = '';
     }
 
 }

@@ -48,15 +48,8 @@ class View extends AbstractServiceProvider
             ->withMethodCall(
                 'addFolder',
                 [
-                    'tests',
-                    CONTROLLERS.'tests/views/'
-                ]
-            )
-            ->withMethodCall(
-                'addFolder',
-                [
-                    'examples',
-                    CONTROLLERS.'examples/views/'
+                    'views',
+                    APP.'views/'
                 ]
             );
     }

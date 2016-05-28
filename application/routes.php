@@ -7,7 +7,7 @@
 | corresponding ( folders / controller / method ).
 |
 */
-// $router->map('GET', '/users/{any:.*}',
+// $router->map('GET', '/users/(.*)',
 //     function ($request, $response, $args) use($router) {
 
 //         $response->getBody()->write('Users group');
@@ -19,7 +19,8 @@
 // );
 
 $router->rewrite('GET', '/(?:en|de|es|tr)|/(.*)', '$1');  // example.com/en/  (or) // example.com/en
-$router->map(['GET','POST'], '/', 'welcome');
+
+$router->map('GET', '/', 'welcome');
 
 // $router->map('GET', '/users/(\w+)/(\d+)', '/users/$1/$2');
 

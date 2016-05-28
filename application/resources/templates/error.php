@@ -1,9 +1,4 @@
-<?php
-if (defined('STDIN')) {
-	echo Obullo\Cli\Console::fail($error);
-	return;
-}
-?>
+
 <html>
 <head>
 <title>Error</title>

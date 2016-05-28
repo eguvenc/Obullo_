@@ -11,6 +11,7 @@ use Exception;
 use ErrorException;
 use LogicException;
 use RuntimeException;
+use Obullo\Router\ControllerResolver;
 use Obullo\Container\ContainerAwareTrait;
 use Obullo\Container\ContainerAwareInterface;
 
@@ -18,24 +19,12 @@ class FinalHandler implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
-    protected $app;
-
     /**
      * Request
      * 
      * @var object
      */
     protected $request;
-
-    /**
-     * Construct
-     * 
-     * @param object $app app
-     */
-    public function __construct($app)
-    {
-        $this->app = $app;
-    }
 
     /**
      * Invoke middleware
@@ -55,27 +44,16 @@ class FinalHandler implements ContainerAwareInterface
         if ($handler instanceof Response) {
             return $handler;
         }
-        $result = $this->app->dispatch($request, $response);
+        $resolver = new ControllerResolver($this->container, $request, $response);
+        $resolver->setSubfolderLevel(3);
+        $result   = $resolver->dispatch($handler);
 
         if (! $result) {
-            // $this->create404();
+            return $this->create404($response);
         }
         if ($result instanceof $response) {
             $response = $result;
         }
-
-        // if (! $result) {
-
-        //     $stream = new Stream(fopen('php://temp', 'r+'));
-        //     $stream->write($this->container->get('view')->get('templates::404'));
-                
-        //     return $response
-        //         ->withStatus(404)
-        //         ->withHeader('Content-Type', 'text/html')
-        //         ->withBody($stream);
-
-        // }
-
         $this->request = $request;
         $response = $this->sendCookieHeaders($response);
         return $response;
@@ -263,6 +241,24 @@ class FinalHandler implements ContainerAwareInterface
         } while ($exception = $exception->getPrevious());
     
         return $error;
+    }
+
+    /**
+     * Create 404 page
+     * 
+     * @param Response $response response
+     * 
+     * @return response
+     */
+    protected function create404(Response $response)
+    {
+        $stream = new Stream(fopen('php://temp', 'r+'));
+        $stream->write($this->container->get('view')->get('templates::404'));
+                
+        return $response
+            ->withStatus(404)
+            ->withHeader('Content-Type', 'text/html')
+            ->withBody($stream);
     }
 
 }

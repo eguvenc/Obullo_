@@ -26,7 +26,7 @@ $container = new League\Container\Container;
 // 
 $container->share('response', new Zend\Diactoros\Response);
 $container->share('request', Zend\Diactoros\ServerRequestFactory::fromGlobals());
-$container->share('router', new Obullo\Router\Router($container, $resolver = null));
+$container->share('router', new Obullo\Router\Router($container));
 /**
  * Step 3: Instantiate a Obullo application
  * 
