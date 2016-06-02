@@ -18,9 +18,10 @@
 //     }
 // );
 
-$router->rewrite('GET', '/(?:en|de|es|tr)|/(.*)', '$1');  // example.com/en/  (or) // example.com/en
+$router->rewrite('GET', '(?:en|de|es|tr)|/(.*)', '$1');  // example.com/en/  (or) // example.com/en
 
-$router->map('GET', '/', 'welcome');
+$router->map('GET', '/', 'welcome/index');
+// $router->map('GET', '/|welcome', 'welcome/index');
 
 // $router->map('GET', '/users/(\w+)/(\d+)', '/users/$1/$2');
 

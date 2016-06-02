@@ -1,6 +1,6 @@
 <?php
 
-namespace Config;
+namespace Obullo\Config;
 
 /**
  * ConfigInterface Class

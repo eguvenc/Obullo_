@@ -22,11 +22,9 @@ require ROOT .'vendor/autoload.php';
  */
 $container = new League\Container\Container;
 
-// $resolver = new Router\PathResolver('Ancestor/CONTROLLERS/Class', ['subfolderLevel' => 3]);
-// 
+$container->share('request', Obullo\Http\ServerRequestFactory::fromGlobals());
 $container->share('response', new Zend\Diactoros\Response);
-$container->share('request', Zend\Diactoros\ServerRequestFactory::fromGlobals());
-$container->share('router', new Obullo\Router\Router($container));
+$container->share('router', new Obullo\Router\Router($container, ['defaultHandler' => true]));
 /**
  * Step 3: Instantiate a Obullo application
  * 
@@ -44,6 +42,7 @@ $app = new Obullo\App($container);
 /**
  * Step 5: Add your service providers
  */
+$app->addServiceProvider('Obullo\Container\ServiceProvider\Config');
 $app->addServiceProvider('Obullo\Container\ServiceProvider\Cookie');
 $app->addServiceProvider('Obullo\Container\ServiceProvider\View');
 $app->addServiceProvider('Obullo\Container\ServiceProvider\Logger');

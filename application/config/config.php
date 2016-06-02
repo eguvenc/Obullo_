@@ -3,7 +3,7 @@
 return array(
 
     'log' => [
-        'enabled' => true,
+        'enabled' => false,
     ],
     'locale' => [
         'timezone' => 'gmt',

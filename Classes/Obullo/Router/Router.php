@@ -37,31 +37,23 @@ class Router implements RouterInterface
     protected $count = 0;
     protected $routes = array();
     protected $dispatched = false;
+    protected $defaultHandler = false;
 
     /**
      * Constructor
      * 
      * @param Container $container container
+     * @param array     $options   options
      *
      * @return void
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container, array $options)
     {
         $this->path     = $container->get('request')->getUri()->getPath();
         $this->request  = $container->get('request');
         $this->response = $container->get('response');
-    }
 
-    /**
-     * Set queue for middlewares
-     * 
-     * @param SplQueue $queue queue
-     *
-     * @return void
-     */
-    public function setQueue(SplQueue $queue)
-    {
-        $this->queue = $queue;
+        $this->defaultHandler = $options['defaultHandler'];
     }
 
     /**
@@ -76,7 +68,9 @@ class Router implements RouterInterface
     public function rewrite($method, $pattern, $rewrite)
     {
         if (in_array($this->request->getMethod(), (array)$method)) {
-            $this->path = '/'.ltrim(preg_replace('#^'.$pattern.'$#', $rewrite, $this->path), '/');
+            $pattern    = "/".ltrim($pattern, "/");
+            $path       = preg_replace('#^'.$pattern.'$#', $rewrite, $this->path);
+            $this->path = '/'.ltrim($path, '/');
         }
     }
 
@@ -94,7 +88,7 @@ class Router implements RouterInterface
         ++$this->count;
         $this->routes[$this->count] = [
             'method' => (array)$method,
-            'pattern' => $pattern,
+            'pattern' => "/".ltrim($pattern, "/"),
             'handler' => $handler,
             'middlewares' => array()
         ];
@@ -151,7 +145,20 @@ class Router implements RouterInterface
                 }
             }
         }
+        $this->setDefaultHandler();
         $this->dispatched = true;
+    }
+
+    /**
+     * Set default path as handler
+     *
+     * @return void
+     */
+    protected function setDefaultHandler()
+    {
+        if ($this->handler == null && $this->defaultHandler) {
+            $this->handler = $this->path;
+        }
     }
 
     /**
@@ -188,6 +195,18 @@ class Router implements RouterInterface
             $this->dispatch();
         }
         return $this->handler;
+    }
+
+    /**
+     * Set queue for middlewares
+     * 
+     * @param SplQueue $queue queue
+     *
+     * @return void
+     */
+    public function setQueue(SplQueue $queue)
+    {
+        $this->queue = $queue;
     }
 
     /**

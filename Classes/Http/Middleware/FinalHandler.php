@@ -69,18 +69,12 @@ class FinalHandler implements ContainerAwareInterface
     protected function sendCookieHeaders(Response $response)
     {
         if ($this->container->hasShared('cookie')) {
-
             $headers = $this->container->get('cookie')->getHeaders();
             if (! empty($headers)) {
                 foreach ($headers as $value) {
-                    // sprintf("%s: %s", 'Set-Cookie', $value);
                     $response = $response->withAddedHeader('Set-Cookie', $value);
                 }
             }
-            // if (! empty($headers)) {
-            //     $response->setCookies($headers);
-            //     return $response;
-            // }
         }
         return $response;
     }

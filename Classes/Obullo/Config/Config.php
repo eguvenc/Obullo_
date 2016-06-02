@@ -1,8 +1,8 @@
 <?php
 
-namespace Config;
+namespace Obullo\Config;
 
-use Config\Writer\PhpArray;
+use Obullo\Config\Writer\PhpArray;
 use Interop\Container\ContainerInterface as Container;
 
 /**

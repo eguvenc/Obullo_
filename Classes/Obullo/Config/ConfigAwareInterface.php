@@ -1,8 +1,8 @@
 <?php
 
-namespace Config;
+namespace Obullo\Config;
 
-use Config\ConfigInterface as Config;
+use Obullo\Config\ConfigInterface as Config;
 
 /**
  * Config Aware Interface

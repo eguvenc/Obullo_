@@ -11,6 +11,8 @@ class Welcome extends Controller
      */
     public function index()
     {
+    	// $this->logger->debug('Cookie Class Initialized');
+
         $this->view->load('views::welcome');
     }
 }

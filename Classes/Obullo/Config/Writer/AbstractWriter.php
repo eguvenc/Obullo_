@@ -1,6 +1,6 @@
 <?php
 
-namespace Config\Writer;
+namespace Obullo\Config\Writer;
 
 use Traversable;
 use RuntimeException;

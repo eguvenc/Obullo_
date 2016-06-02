@@ -3,6 +3,7 @@
 namespace Obullo\Container\ServiceProvider;
 
 use Monolog\Logger as Log;
+use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
@@ -19,7 +20,6 @@ class Logger extends AbstractServiceProvider
      */
     protected $provides = [
         'logger',
-        // 'debugger'
     ];
 
     /**
@@ -35,11 +35,6 @@ class Logger extends AbstractServiceProvider
         $container = $this->getContainer();
         $config    = $container->get('config')->get('config');
 
-        if (false == $config['log']['enabled']) {
-            $container->share('logger', 'Obullo\Log\NullLogger');
-            return;
-        }
-
         $filename = 'http.log';
         if (defined('STDIN')) {
             $filename = 'cli.log';
@@ -49,20 +44,18 @@ class Logger extends AbstractServiceProvider
         }
 
         $logger = $container->share('logger', 'Monolog\Logger')
-            ->withArgument('system')
-            ->withMethodCall(
+            ->withArgument('system');
+
+        if (false == $config['log']['enabled']) {
+            $logger->withMethodCall(
                 'pushHandler',
-                [new StreamHandler(DATA .'logs/'.$filename, Log::DEBUG, true, 0666)]
+                [new NullHandler]
             );
-
-        // if ($config['extra']['debugger']) {
-
-        //     $container->share('debugger', 'Debugger\LogHandler');
-
-        //     $logger->withMethodCall(
-        //         'pushHandler',
-        //         [$container->get('debugger')]
-        //     );
-        // }
+            return;
+        }
+        $logger->withMethodCall(
+            'pushHandler',
+            [new StreamHandler(RESOURCES.'data/logs/'.$filename, Log::DEBUG, true, 0666)]
+        );
     }
 }
