@@ -95,52 +95,9 @@ class Native implements ContainerAwareInterface
      */
     public function render($name, array $data = array())
     {
-        $name = $this->renderFilename($name);
+        $name = $this->normalizeFilename($name);
 
         return $this->make($name, $data);
-    }
-    
-    /**
-     * Render filename
-     * 
-     * @param string $name filename
-     * 
-     * @return string
-     */
-    protected function renderFilename($name)
-    {
-        if (strpos($name, '::') > 0) {  // Folder support.
-
-            $this->path = '';  // Reset path variable.
-            $parts = explode('::', $name);
-
-            return rtrim($this->getFolderPath($parts[0]), '/').'/'.$parts[1];
-        }
-        return $name;
-    }
-
-    /**
-     * Returns to folder path
-     * 
-     * @param string $name filename
-     * 
-     * @return string path
-     */
-    protected function getFolderPath($name)
-    {
-        $folders = $this->getFolders();
-
-        return $folders[$name];
-    }
-
-    /**
-     * Returns to default view path
-     * 
-     * @return string
-     */
-    protected function getDefaultPath()
-    {
-        return $this->path;
     }
 
     /**
@@ -174,6 +131,49 @@ class Native implements ContainerAwareInterface
     public function __get($key)
     {
         return $this->getContainer()->get($key);
+    }
+
+    /**
+     * Normalize filename
+     * 
+     * @param string $name filename
+     * 
+     * @return string
+     */
+    protected function normalizeFilename($name)
+    {
+        if (strpos($name, '::') > 0) {  // Folder support.
+
+            $this->path = '';  // Reset path variable.
+            $parts = explode('::', $name);
+
+            return rtrim($this->getFolderPath($parts[0]), '/').'/'.$parts[1];
+        }
+        return $name;
+    }
+
+    /**
+     * Returns to folder path
+     * 
+     * @param string $name filename
+     * 
+     * @return string path
+     */
+    protected function getFolderPath($name)
+    {
+        $folders = $this->getFolders();
+
+        return $folders[$name];
+    }
+
+    /**
+     * Returns to default view path
+     * 
+     * @return string
+     */
+    protected function getDefaultPath()
+    {
+        return $this->path;
     }
 
 }

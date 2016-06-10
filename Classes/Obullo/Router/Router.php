@@ -34,10 +34,11 @@ class Router implements RouterInterface
     protected $request;
     protected $ancestor;
     protected $response;
+    protected $container;
     protected $count = 0;
     protected $routes = array();
     protected $dispatched = false;
-    protected $defaultHandler = false;
+    protected $resolveCurrentPath = false;
 
     /**
      * Constructor
@@ -49,11 +50,12 @@ class Router implements RouterInterface
      */
     public function __construct(Container $container, array $options)
     {
-        $this->path     = $container->get('request')->getUri()->getPath();
-        $this->request  = $container->get('request');
-        $this->response = $container->get('response');
+        $this->path      = $container->get('request')->getUri()->getPath();
+        $this->request   = $container->get('request');
+        $this->response  = $container->get('response');
+        $this->container = $container;
 
-        $this->defaultHandler = $options['defaultHandler'];
+        $this->resolveCurrentPath = $options['resolveCurrentPath'];
     }
 
     /**
@@ -150,13 +152,13 @@ class Router implements RouterInterface
     }
 
     /**
-     * Set default path as handler
+     * Set default path as handler ( Resolves current path if has no route match )
      *
      * @return void
      */
     protected function setDefaultHandler()
     {
-        if ($this->handler == null && $this->defaultHandler) {
+        if ($this->handler == null && $this->resolveCurrentPath) {
             $this->handler = $this->path;
         }
     }
@@ -352,6 +354,19 @@ class Router implements RouterInterface
         $namespace = RouteHelper::ucwords($this->getAncestor()).'\\'.RouteHelper::ucwords($folder);
         $namespace = trim($namespace, '\\');
         return (empty($namespace)) ? '' : $namespace.'\\';
+    }
+
+    /**
+     * Get master request router
+     * 
+     * @return object
+     */
+    public function getMaster()
+    {
+        if ($this->container->has('router.master')) {
+            return $this->container->get('router.master');   
+        }
+        return $this->container->get('router');
     }
 
     /**

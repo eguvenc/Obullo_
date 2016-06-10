@@ -11,8 +11,14 @@ class Welcome extends Controller
      */
     public function index()
     {
-    	// $this->logger->debug('Cookie Class Initialized');
+        // echo $this->layer->get('views/controllers', 'header');
+        // echo $this->layer->get('controllers', 'examples/layers/dummy/index/1/2/3');
+        // echo $this->layer->get('views/controllers', 'header');
 
-        $this->view->load('views::welcome');
+        // echo $this->layer->get('controllers', 'examples/layers/dummy/index/1/2/3');
+        // echo $this->layer->get('controllers', 'welcomes/dummy/index/4/5/6');
+        // echo $this->layer->get('controllers', 'examples/layers/dummy/index/7/8/9');
+
+        $this->view->render('views::welcome');
     }
 }

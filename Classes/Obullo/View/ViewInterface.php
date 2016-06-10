@@ -35,7 +35,7 @@ interface ViewInterface
      * 
      * @return string                      
      */
-    public function load($filename, $data = array());
+    public function render($filename, $data = array());
 
     /**
      * Get nested view files as string from current module /view folder
@@ -57,15 +57,5 @@ interface ViewInterface
      */
     public function assign($key, $val = null);
 
-    /**
-     * Render view
-     * 
-     * @param string $filename filename
-     * @param string $path     path
-     * @param array  $data     data
-     * 
-     * @return string
-     */
-    public function render($filename, $path, $data = array());
    
 }

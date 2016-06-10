@@ -54,14 +54,15 @@ class View implements ViewInterface
      * Constructor
      * 
      * @param object $container container
+     * @param object $logger    logger
      * @param array  $params    service provider parameters
      */
-    public function __construct(Container $container, array $params)
+    public function __construct(Container $container, $logger, array $params)
     {
         $this->container = $container;
         $this->params = $params;
-        // $this->logger = $logger;
-        // $this->logger->debug('View Class Initialized');
+        $this->logger = $logger;
+        $this->logger->debug('View Class Initialized');
     }
 
     /**
@@ -95,7 +96,7 @@ class View implements ViewInterface
      * 
      * @return string                      
      */
-    public function load($filename, $data = array())
+    public function render($filename, $data = array())
     {
         return $this->renderNestedView($filename, $data, true);
     }
@@ -177,7 +178,7 @@ class View implements ViewInterface
         /**
          * End layer package support
          */
-        $body = $this->render($filename, $folder, $data);
+        $body = $this->renderFile($filename, $folder, $data);
 
         if ($include === false) {
             return $body;
@@ -197,7 +198,7 @@ class View implements ViewInterface
      * 
      * @return string
      */
-    public function render($filename, $path, $data = array())
+    protected function renderFile($filename, $path, $data = array())
     {
         $data = array_merge($this->data, $data);
 

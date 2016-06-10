@@ -5,9 +5,9 @@ namespace Obullo\Router;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Obullo\Router\Resolver\AncestorResolver;
-use Obullo\Router\Resolver\FolderResolver;
 use Obullo\Router\Resolver\ClassResolver;
+use Obullo\Router\Resolver\FolderResolver;
+use Obullo\Router\Resolver\AncestorResolver;
 
 /**
  * Resolve controller
@@ -17,18 +17,8 @@ use Obullo\Router\Resolver\ClassResolver;
  */
 class ControllerResolver
 {
-    /**
-     * Router
-     * 
-     * @var object
-     */
     protected $router;
-
-    /**
-     * Set subfolder nested level
-     * 
-     * @var integer
-     */
+    protected $folder = 'controllers';
     protected $subfolderLevel;
 
     /**
@@ -85,6 +75,18 @@ class ControllerResolver
     }
 
     /**
+     * Set dispatch folder
+     * 
+     * @param string $folder folder
+     *
+     * @return void
+     */
+    public function setFolder($folder)
+    {
+        $this->folder = $folder;
+    }
+
+    /**
      * Set sub directory level
      * 
      * @param int $level level
@@ -127,7 +129,7 @@ class ControllerResolver
             $resolver = new AncestorResolver($this->router, $this->getSubfolderLevel());
             return $resolver->resolve($segments);
         }
-        if (is_dir(CONTROLLERS .$this->router->getFolder())) {
+        if (is_dir(APP .$this->folder.'/'.$this->router->getFolder())) {
             $resolver = new FolderResolver($this->router);
             return $resolver->resolve($segments);
         }
@@ -147,7 +149,7 @@ class ControllerResolver
     {
         if (! empty($segments[1])
             && strtolower($segments[1]) != 'views'  // http://example/debugger/view/index bug fix
-            && is_dir(CONTROLLERS .$segments[0].'/'. $segments[1].'/')  // Detect ancestor folder and change folder !!
+            && is_dir(APP .$this->folder.'/'.$segments[0].'/'. $segments[1].'/')  // Detect ancestor folder and change folder !!
         ) {
             $this->router->setAncestor($segments[0]);
             array_shift($segments);
@@ -172,7 +174,7 @@ class ControllerResolver
      */
     public function getFilename()
     {
-        return CONTROLLERS.$this->router->getAncestor('/').$this->router->getFolder('/').$this->router->getClass().'.php';
+        return APP .$this->folder.'/'.$this->router->getAncestor('/').$this->router->getFolder('/').$this->router->getClass().'.php';
     }
 
     /**
@@ -204,8 +206,9 @@ class ControllerResolver
 
         } else {
 
-            include $file;
-
+            if (! class_exists($className, false)) {  // Hmvc request support
+                include $file;
+            }
             $controller = new $className($this->container);
             $controller->container = $this->container;
 

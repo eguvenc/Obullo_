@@ -22,9 +22,9 @@ require ROOT .'vendor/autoload.php';
  */
 $container = new League\Container\Container;
 
-$container->share('request', Obullo\Http\ServerRequestFactory::fromGlobals());
+$container->share('request', Obullo\ServerRequestFactory::fromGlobals());
 $container->share('response', new Zend\Diactoros\Response);
-$container->share('router', new Obullo\Router\Router($container, ['defaultHandler' => true]));
+$container->share('router', new Obullo\Router\Router($container, ['resolveCurrentPath' => true]));
 /**
  * Step 3: Instantiate a Obullo application
  * 
@@ -44,14 +44,15 @@ $app = new Obullo\App($container);
  */
 $app->addServiceProvider('Obullo\Container\ServiceProvider\Config');
 $app->addServiceProvider('Obullo\Container\ServiceProvider\Cookie');
+$app->addServiceProvider('Obullo\Container\ServiceProvider\Layer');
 $app->addServiceProvider('Obullo\Container\ServiceProvider\View');
 $app->addServiceProvider('Obullo\Container\ServiceProvider\Logger');
 
-// $app->addProvider('Obullo\Container\ServiceProvider\Amqp');
-// $app->addProvider('Obullo\Container\ServiceProvider\Database');
-// $app->addProvider('Obullo\Container\ServiceProvider\Redis');
-// $app->addProvider('Obullo\Container\ServiceProvider\Memcached');
-// $app->addProvider('Obullo\Container\ServiceProvider\Mongo');
+// $app->addServiceProvider('Obullo\Container\ServiceProvider\Amqp');
+// $app->addServiceProvider('Obullo\Container\ServiceProvider\Database');
+// $app->addServiceProvider('Obullo\Container\ServiceProvider\Redis');
+// $app->addServiceProvider('Obullo\Container\ServiceProvider\Memcached');
+// $app->addServiceProvider('Obullo\Container\ServiceProvider\Mongo');
 
 /**
  * Step 6: Define your server using Zend Diactoros

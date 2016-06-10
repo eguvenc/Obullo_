@@ -19,9 +19,6 @@ class HeaderController implements UIControllerInterface
     public function __construct(Container $container)
     {
         $this->view = $container->get('view');
-
-        // $this->layer = new LayerRequest($container);
-        // $this->layer->setFolder('views/controllers');
     }
 
     /**
@@ -31,7 +28,7 @@ class HeaderController implements UIControllerInterface
      */
     public function create()
     {
-        // $header = $this->layer->get('header');
+        // $header = $this->layer->get('views/controllers', header');
 
         $this->view->assign('header', "Example header");
     }

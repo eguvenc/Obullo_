@@ -33,6 +33,7 @@ class View extends AbstractServiceProvider
 
         $container->share('view', 'Obullo\View\View')
             ->withArgument($container)
+            ->withArgument($container->get('logger'))
             ->withArgument(
                 [
                     'engine' => 'Obullo\View\Native', // 'Obullo\View\Plates\Plates',

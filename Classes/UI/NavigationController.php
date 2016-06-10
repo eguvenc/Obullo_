@@ -19,9 +19,6 @@ class NavigationController implements UIControllerInterface
     public function __construct(Container $container)
     {
         $this->view = $container->get('view');
-
-        // $this->layer = new LayerRequest($container);
-        // $this->layer->setFolder('views/controllers');
     }
 
     /**
@@ -31,7 +28,7 @@ class NavigationController implements UIControllerInterface
      */
     public function create()
     {
-        // $header = $this->layer->get('navbar');
+        // $header = $this->layer->get('views/controllers', 'navbar');
 
         $this->view->assign('navbar', "Example navbar");
     }
