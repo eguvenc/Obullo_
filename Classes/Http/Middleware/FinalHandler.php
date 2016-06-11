@@ -11,7 +11,7 @@ use Exception;
 use ErrorException;
 use LogicException;
 use RuntimeException;
-use Obullo\Router\ControllerResolver;
+use Obullo\ControllerResolver;
 use Obullo\Container\ContainerAwareTrait;
 use Obullo\Container\ContainerAwareInterface;
 

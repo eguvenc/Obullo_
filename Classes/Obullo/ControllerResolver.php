@@ -1,6 +1,6 @@
 <?php
 
-namespace Obullo\Router;
+namespace Obullo;
 
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;

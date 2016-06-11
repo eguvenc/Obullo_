@@ -1,12 +1,12 @@
 <?php
 
-namespace Container\ServiceProvider\Connector;
+namespace Obullo\Container\ServiceProvider\Connector;
 
 use RuntimeException;
-use UnexpectedValueException;
 use Database\SQLLogger;
-use Container\ServiceProvider\AbstractServiceProvider;
+use UnexpectedValueException;
 use Interop\Container\ContainerInterface as Container;
+use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 /**
  * Database Service Connection Provider

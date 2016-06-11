@@ -1,12 +1,12 @@
 <?php
 
-namespace Container\ServiceProvider\Connector;
+namespace Obullo\Container\ServiceProvider\Connector;
 
 use ReflectionClass;
 use RuntimeException;
 use UnexpectedValueException;
 use Interop\Container\ContainerInterface as Container;
-use Container\ServiceProvider\AbstractServiceProvider;
+use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 /**
  * Redis Connector

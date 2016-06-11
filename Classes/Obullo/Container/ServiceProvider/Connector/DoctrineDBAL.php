@@ -1,14 +1,13 @@
 <?php
 
-namespace Container\ServiceProvider\Connector;
+namespace Obullo\Container\ServiceProvider\Connector;
 
 use RuntimeException;
 use UnexpectedValueException;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
-
 use Database\Doctrine\DBAL\SQLLogger;
-use Container\ServiceProvider\AbstractServiceProvider;
+use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 use Interop\Container\ContainerInterface as Container;
 
 /**

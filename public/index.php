@@ -14,8 +14,8 @@ define('ROOT', dirname(__DIR__).'/');
  * If you are not using Composer, you need to load Obullo with your own
  * PSR-4 autoloader.
  */
-require ROOT .'constants.php';
-require ROOT .'vendor/autoload.php';
+require ROOT . 'constants.php';
+require ROOT . 'vendor/autoload.php';
 
 /**
  * Step 2: Instantiate a Container to load your service providers.
@@ -42,17 +42,17 @@ $app = new Obullo\App($container);
 /**
  * Step 5: Add your service providers
  */
-$app->addServiceProvider('Obullo\Container\ServiceProvider\Config');
-$app->addServiceProvider('Obullo\Container\ServiceProvider\Cookie');
-$app->addServiceProvider('Obullo\Container\ServiceProvider\Layer');
-$app->addServiceProvider('Obullo\Container\ServiceProvider\View');
-$app->addServiceProvider('Obullo\Container\ServiceProvider\Logger');
+$container->addServiceProvider('Obullo\Container\ServiceProvider\Config');
+$container->addServiceProvider('Obullo\Container\ServiceProvider\Cookie');
+$container->addServiceProvider('Obullo\Container\ServiceProvider\Layer');
+$container->addServiceProvider('Obullo\Container\ServiceProvider\View');
+$container->addServiceProvider('Obullo\Container\ServiceProvider\Logger');
 
-// $app->addServiceProvider('Obullo\Container\ServiceProvider\Amqp');
-// $app->addServiceProvider('Obullo\Container\ServiceProvider\Database');
-// $app->addServiceProvider('Obullo\Container\ServiceProvider\Redis');
-// $app->addServiceProvider('Obullo\Container\ServiceProvider\Memcached');
-// $app->addServiceProvider('Obullo\Container\ServiceProvider\Mongo');
+$container->addServiceProvider('Obullo\Container\ServiceProvider\Amqp');
+// $container->addServiceProvider('Obullo\Container\ServiceProvider\Database');
+// $container->addServiceProvider('Obullo\Container\ServiceProvider\Redis');
+// $container->addServiceProvider('Obullo\Container\ServiceProvider\Memcached');
+// $container->addServiceProvider('Obullo\Container\ServiceProvider\Mongo');
 
 /**
  * Step 6: Define your server using Zend Diactoros

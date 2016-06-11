@@ -125,18 +125,6 @@ class App
     }
 
     /**
-     * Add service provider
-     * 
-     * @param string $class name
-     *
-     * @return void
-     */
-    public function addServiceProvider($class)
-    {
-        $this->container->addServiceProvider($class);
-    }
-
-    /**
      * Returns to container
      * 
      * @return object
