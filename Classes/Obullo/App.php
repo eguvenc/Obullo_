@@ -60,7 +60,7 @@ class App
         $this->router->setQueue($this->queue);
         $router = $this->router;
  
-        include APP. 'routes.php';
+        include APP . 'routes.php';
 
         $this->done  = new FinalHandler;
         $this->done->setContainer($container);

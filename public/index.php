@@ -18,20 +18,37 @@ require ROOT . 'constants.php';
 require ROOT . 'vendor/autoload.php';
 
 /**
- * Step 2: Instantiate a Container to load your service providers.
+ * Step 2: Instantiate the Container
  */
 $container = new League\Container\Container;
 
 $container->share('request', Obullo\ServerRequestFactory::fromGlobals());
 $container->share('response', new Zend\Diactoros\Response);
 $container->share('router', new Obullo\Router\Router($container, ['resolveCurrentPath' => true]));
+
 /**
- * Step 3: Instantiate a Obullo application
- * 
- * This example instantiates a Obullo application using
- * your default middlewares.
+ * Step 3: Add config service & Create configuration variables
  */
-$app = new Obullo\App($container);
+$container->addServiceProvider('Obullo\Container\ServiceProvider\Config');
+
+/**
+ * Create configuration variables
+ */
+$container->get('config')
+    ->set(
+        'app.config',
+        array(
+            'log' => true,
+            'cookie' => [
+                'domain' => '',
+                'path' => '/',
+                'secure' => false,
+                'httpOnly' => true,
+                'expire' => 604800,
+                'prefix' => '',
+            ],
+        )
+    );
 
 /**
  * Step 4: Add your middlewares
@@ -42,23 +59,20 @@ $app = new Obullo\App($container);
 /**
  * Step 5: Add your service providers
  */
-$container->addServiceProvider('Obullo\Container\ServiceProvider\Config');
 $container->addServiceProvider('Obullo\Container\ServiceProvider\Cookie');
 $container->addServiceProvider('Obullo\Container\ServiceProvider\Layer');
 $container->addServiceProvider('Obullo\Container\ServiceProvider\View');
 $container->addServiceProvider('Obullo\Container\ServiceProvider\Logger');
-
 $container->addServiceProvider('Obullo\Container\ServiceProvider\Amqp');
-// $container->addServiceProvider('Obullo\Container\ServiceProvider\Database');
 // $container->addServiceProvider('Obullo\Container\ServiceProvider\Redis');
 // $container->addServiceProvider('Obullo\Container\ServiceProvider\Memcached');
 // $container->addServiceProvider('Obullo\Container\ServiceProvider\Mongo');
 
 /**
- * Step 6: Define your server using Zend Diactoros
+ * Step 6: Define your server using Zend Diactoros & Instantiate the Obullo application
  */
 $server = Zend\Diactoros\Server::createServerfromRequest(
-    $app,
+    new Obullo\App($container),
     $container->get('request'),
     $container->get('response')
 );

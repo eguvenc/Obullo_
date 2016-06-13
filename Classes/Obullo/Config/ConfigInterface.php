@@ -11,13 +11,23 @@ namespace Obullo\Config;
 interface ConfigInterface
 {
     /**
-     * Load Config File
+     * Load configuration file
      *
      * @param string $filename the config file name
      * 
      * @return array if the file was loaded correctly
      */
     public function get($filename);
+
+    /**
+     * Set configuration variables
+     * 
+     * @param string $key  name
+     * @param array  $data data
+     *
+     * @return void
+     */
+    public function set($key, array $data);
 
     /**
      * Save array data config file

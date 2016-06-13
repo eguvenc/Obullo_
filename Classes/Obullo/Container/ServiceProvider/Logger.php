@@ -33,7 +33,6 @@ class Logger extends AbstractServiceProvider
     public function register()
     {
         $container = $this->getContainer();
-        $config    = $container->get('config')->get('config');
 
         $filename = 'http.log';
         if (defined('STDIN')) {
@@ -46,7 +45,7 @@ class Logger extends AbstractServiceProvider
         $logger = $container->share('logger', 'Monolog\Logger')
             ->withArgument('system');
 
-        if (false == $config['log']['enabled']) {
+        if (false == $container->get('config')->get('app.config')['log']) {
             $logger->withMethodCall(
                 'pushHandler',
                 [new NullHandler]

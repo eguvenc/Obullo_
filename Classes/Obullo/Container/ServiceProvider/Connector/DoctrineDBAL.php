@@ -7,8 +7,8 @@ use UnexpectedValueException;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Database\Doctrine\DBAL\SQLLogger;
-use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 use Interop\Container\ContainerInterface as Container;
+use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 /**
  * Doctrine DBAL Connection Provider
@@ -93,7 +93,7 @@ class DoctrineDBAL extends AbstractServiceProvider
 
             $config->setSQLLogger(new SQLLogger($this->container->get('logger')));
         }
-        $params['wrapperClass'] = '\Database\Doctrine\DBAL\Adapter';
+        $params['wrapperClass'] = '\Obullo\Database\Doctrine\DBAL\Adapter';
 
         return DriverManager::getConnection($params, $config, $eventManager);
     }

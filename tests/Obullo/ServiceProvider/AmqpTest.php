@@ -1,11 +1,5 @@
 <?php
 
-namespace ServiceProvider\Test;
-
-use AMQPConnection;
-use RuntimeException;
-use PHPUnit_Framework_TestCase;
-
 class AmqpTest extends PHPUnit_Framework_TestCase
 {
     protected $container;

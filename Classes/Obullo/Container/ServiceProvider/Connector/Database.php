@@ -49,7 +49,7 @@ class Database extends AbstractServiceProvider
     {
         $this->container = $container;
         $this->params    = $params;
-        $this->adapterClass = '\Database\Pdo\Adapter';
+        $this->adapterClass = '\Obullo\Database\Pdo\Adapter';
         $this->register();
     }
 
@@ -81,7 +81,7 @@ class Database extends AbstractServiceProvider
     protected function createConnection(array $params)
     {
         $params['dsn'] = str_replace('pdo_', '', $params['dsn']);
-        $Class = '\\Database\Pdo\Drivers\\'.ucfirst(strstr($params['dsn'], ':', true));
+        $Class = '\\Obullo\Database\Pdo\Drivers\\'.ucfirst(strstr($params['dsn'], ':', true));
 
         if ($this->params['sql']['log']) {
             $params['logger'] = new SQLLogger($this->container->get('logger'));

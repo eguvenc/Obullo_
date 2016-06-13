@@ -66,6 +66,19 @@ class Config implements ConfigInterface
     }
 
     /**
+     * Set configuration variables
+     * 
+     * @param string $key  name
+     * @param array  $data data
+     *
+     * @return void
+     */
+    public function set($key, array $data)
+    {
+        $this->array[$key] = $data;
+    }
+
+    /**
      * Save array data config file
      *
      * @param string $filename full path of the file
