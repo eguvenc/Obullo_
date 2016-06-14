@@ -37,8 +37,8 @@ class Database extends AbstractServiceProvider
                     'username' => 'root',
                     'password' => '123456',
                     'options'  => [
-                        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
-                        PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
+                        \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+                        \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
                     ]
                 ],
                 'failed' => [
@@ -46,8 +46,8 @@ class Database extends AbstractServiceProvider
                     'username' => 'root',
                     'password' => '123456',
                     'options'  => [
-                        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
-                        PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
+                        \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+                        \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
                     ]
                 ],
             ],

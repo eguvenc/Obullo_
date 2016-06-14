@@ -6,7 +6,7 @@ use RuntimeException;
 use UnexpectedValueException;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
-use Database\Doctrine\DBAL\SQLLogger;
+use Obullo\Database\Doctrine\DBAL\SQLLogger;
 use Interop\Container\ContainerInterface as Container;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
@@ -90,7 +90,6 @@ class DoctrineDBAL extends AbstractServiceProvider
         $eventManager = isset($params['eventManager']) ? $params['eventManager'] : null;
 
         if ($this->params['sql']['log']) {
-
             $config->setSQLLogger(new SQLLogger($this->container->get('logger')));
         }
         $params['wrapperClass'] = '\Obullo\Database\Doctrine\DBAL\Adapter';
@@ -108,9 +107,9 @@ class DoctrineDBAL extends AbstractServiceProvider
     public function shared($params = array())
     {
         if (! isset($params['connection'])) {
-            $params['connection'] = array_keys($this->config['connections'])[0];  //  Set default connection
+            $params['connection'] = array_keys($this->params['connections'])[0];  //  Set default connection
         }
-        if (! isset($this->config['connections'][$params['connection']])) {
+        if (! isset($this->params['connections'][$params['connection']])) {
             throw new UnexpectedValueException(
                 sprintf(
                     'Connection key %s does not exist in your database.php config file.',

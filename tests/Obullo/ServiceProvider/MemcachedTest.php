@@ -20,16 +20,6 @@ class MemcachedTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test extension
-     * 
-     * @return void
-     */
-    public function testExtensionIsLoaded()
-    {
-        $this->assertInstanceOf('Memcached', $this->connection);
-    }
-
-    /**
      * Shared
      * 
      * @return void
@@ -65,23 +55,6 @@ class MemcachedTest extends PHPUnit_Framework_TestCase
             ]
         );
         $this->assertNotSame($this->connection, $connectionFactory, "I expect that the shared and factory instances are not the same object.");
-
-        $connectionNewFactory = $this->container->get('memcached')->factory(
-            [
-                'host' => '127.0.0.1',
-                'port' => 11211,
-                'weight' => 1,
-                'options' => array(
-                    'persistent' => false,
-                    'pool' => 'connection_pool',
-                    'timeout' => 30,
-                    'attempt' => 100,
-                    'serializer' => 'php',    // php, json, igbinary
-                    'prefix' => "test_123"
-                )
-            ]
-        );
-        $this->assertNotSame($connectionFactory, $connectionNewFactory, "I expect that the old factory and new factory instances are not the same object.");
     }
 
 }

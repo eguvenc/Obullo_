@@ -3,7 +3,7 @@
 
 Small, fast & expandable.
 
-* Small because of it has 7 core components.
+* Small because of it has 8 core components.
 * Easy to run your application from index.php in 7 steps.
 * Modern because the core supports Http Middlewares, Psr7 HTTP Standarts, Container, Dependency Injection, Service Providers & composer.
 * The router contains just 400 lines of code.

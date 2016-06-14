@@ -13,6 +13,20 @@ use Zend\Diactoros\ServerRequestFactory as ZendServerRequestFactory;
  */
 class ServerRequestFactory extends ZendServerRequestFactory
 {
+    protected static $container;
+
+    /**
+     * Set container
+     * 
+     * @param object $container container
+     *
+     * @return void
+     */
+    public static function setContainer($container)
+    {
+        self::$container = $container;
+    }
+
     /**
      * Create a request from the supplied superglobal values.
      *
@@ -38,13 +52,11 @@ class ServerRequestFactory extends ZendServerRequestFactory
         array $cookies = null,
         array $files = null
     ) {
-        global $container;
-        
         $server  = static::normalizeServer($server ?: $_SERVER);
         $files   = static::normalizeFiles($files ?: $_FILES);
         $headers = static::marshalHeaders($server);
 
-        $request =  new ServerRequest(
+        $request = new ServerRequest(
             $server,
             $files,
             static::marshalUriFromServer($server, $headers),
@@ -56,7 +68,7 @@ class ServerRequestFactory extends ZendServerRequestFactory
             $body ?: $_POST,
             static::marshalProtocolVersion($server)
         );
-        $request->setContainer($container);
+        $request->setContainer(self::$container);
         return $request;
     }
 

@@ -3,7 +3,7 @@
 namespace Obullo\Container\ServiceProvider\Connector;
 
 use RuntimeException;
-use Database\SQLLogger;
+use Obullo\Database\SQLLogger;
 use UnexpectedValueException;
 use Interop\Container\ContainerInterface as Container;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;

@@ -22,16 +22,6 @@ class AmqpTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test extension
-     * 
-     * @return void
-     */
-    public function testExtensionIsLoaded()
-    {
-        $this->assertInstanceOf($this->AMQPClass, $this->AMQPConnection);
-    }
-
-    /**
      * Shared
      * 
      * @return void
@@ -61,18 +51,6 @@ class AmqpTest extends PHPUnit_Framework_TestCase
             ]
         );
         $this->assertNotSame($this->AMQPConnection, $AMQPConnectionFactory, "I expect that the shared and factory instances are not the same object.");
-
-        $AMQPConnectionNewFactory = $this->container->get('amqp')->factory(
-            [
-                'host'  => '127.0.0.1',
-                'port'  => 5672,
-                'username'  => 'root',
-                'password'  => '123456',
-                'vhost' => '/',
-                'test' => null  // Change something
-            ]
-        );
-        $this->assertNotSame($AMQPConnectionFactory, $AMQPConnectionNewFactory, "I expect that the old factory and new factory instances are not the same object.");
     }
 
 }

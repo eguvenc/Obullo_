@@ -54,7 +54,7 @@ class Logger extends AbstractServiceProvider
         }
         $logger->withMethodCall(
             'pushHandler',
-            [new StreamHandler(RESOURCES.'data/logs/'.$filename, Log::DEBUG, true, 0666)]
+            [new StreamHandler(RESOURCES .'data/logs/'. $filename, Log::DEBUG, true, 0666)]
         );
     }
 }

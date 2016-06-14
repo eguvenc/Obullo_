@@ -43,14 +43,14 @@ class View extends AbstractServiceProvider
                 'addFolder',
                 [
                     'templates',
-                    RESOURCES.'templates/'
+                    RESOURCES .'templates/'
                 ]
             )
             ->withMethodCall(
                 'addFolder',
                 [
                     'views',
-                    APP.'views/'
+                    APP .'views/'
                 ]
             );
     }
