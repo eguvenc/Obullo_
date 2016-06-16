@@ -1,5 +1,8 @@
 <?php
 
+phpinfo();
+die;
+
 use Obullo\Controller;
 
 class Welcome extends Controller
@@ -11,6 +14,10 @@ class Welcome extends Controller
      */
     public function index()
     {
+
+        // $this->container->addServiceProvider('Obullo\Container\ServiceProvider\Mongo');
+        // $this->container->get('mongo')->shared(['connection' => 'default']);
+
         // echo $this->layer->get('views/controllers', 'header');
         // echo $this->layer->get('controllers', 'examples/layers/dummy/index/1/2/3');
         // echo $this->layer->get('views/controllers', 'header');

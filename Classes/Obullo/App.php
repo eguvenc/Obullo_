@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Interop\Container\ContainerInterface as Container;
 
 use SplQueue;
+use Exception;
 use Http\Middleware\FinalHandler;
 
 /**
@@ -86,7 +87,6 @@ class App
             if ($this->queue->isEmpty()) {
                 return $done($request, $response, null, $handler);
             }
-
             $middleware = $this->queue->dequeue();
 
             if (! empty($middleware['params'])) {
@@ -101,7 +101,7 @@ class App
 
         }  catch (Exception $exception) {
 
-            $error = new Http\Middleware\Error;
+            $error = new \Http\Middleware\Error;
 
             return $error($exception, $request, $response, $done);
         }
