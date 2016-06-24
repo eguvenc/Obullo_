@@ -28,10 +28,15 @@ Put the latest version to your web root (<kbd>/var/www/project/</kbd>). Create y
 
 ```xml
 <VirtualHost *:80>
-        ServerName project.example.com
 
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/project/public
+	DocumentRoot /var/www/project/public
+
+	ServerAdmin webmaster@localhost
+	ServerName project
+
+	SetEnv APPLICATION_ENV dev
+	DirectoryIndex app_dev.php
+
 </VirtualHost>
 ```
 

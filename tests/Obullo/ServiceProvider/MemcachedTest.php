@@ -14,7 +14,7 @@ class MemcachedTest extends PHPUnit_Framework_TestCase
     {
         global $container;
         $this->container = $container;
-        $this->container->addServiceProvider('Obullo\Container\ServiceProvider\Memcached');
+        $this->container->addServiceProvider('App\ServiceProvider\Memcached');
         $this->connection = $this->container->get('memcached')->shared(['connection' => 'default']);
 
     }

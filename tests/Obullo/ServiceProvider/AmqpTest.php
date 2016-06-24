@@ -15,7 +15,7 @@ class AmqpTest extends PHPUnit_Framework_TestCase
     {
         global $container;
         $this->container = $container;
-        $this->container->addServiceProvider('Obullo\Container\ServiceProvider\Amqp');
+        $this->container->addServiceProvider('App\ServiceProvider\Amqp');
         $this->AMQPConnection = $this->container->get('amqp')->shared(['connection' => 'default']);
         $this->AMQPClass = (get_class($this->AMQPConnection) == 'AMQPConnection') ? 'AMQPConnection' : 'PhpAmqpLib\Connection\AMQPConnection';
 

@@ -15,7 +15,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     {
         global $container;
         $this->container = $container;
-        $this->container->addServiceProvider('Obullo\Container\ServiceProvider\Database');
+        $this->container->addServiceProvider('App\ServiceProvider\Database');
         $this->connection = $this->container->get('database')->shared(['connection' => 'default']);
         
         $this->adapterClass = ($this->connection instanceof \Obullo\Database\Pdo\Adapter) ? 'Obullo\Database\Pdo\Adapter' : 'Obullo\Database\Doctrine\DBAL\Adapter';
