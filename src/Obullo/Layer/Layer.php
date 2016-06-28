@@ -45,7 +45,7 @@ class Layer
      * @param array  $params    config parameters
      * @param string $folder    folder
      */
-    public function __construct(Container $container, array $params, $folder = 'controllers')
+    public function __construct(Container $container, array $params, $folder = 'Controller')
     {
         $this->params = $params;
         $this->folder = $folder;

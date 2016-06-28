@@ -12,7 +12,7 @@ use Interop\Container\ContainerInterface as Container;
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
-class Request
+class HmvcRequest implements HmvcRequestInterface
 {
     protected $logger;
     protected $params;
@@ -36,18 +36,18 @@ class Request
     /**
      * Create new request
      * 
-     * @param string $uri request uri
+     * @param string $path request uri
      * 
      * @return object
      */
-    protected function createRequest($uri)
+    protected function createRequest($path)
     {
         $_SERVER = $_GET = $_POST = array();
 
         $_SERVER['LAYER_REQUEST'] = true;
-        $_SERVER['REQUEST_URI'] = $uri;
-        $_SERVER['SCRIPT_NAME'] = 'index.php';
-        $_SERVER['QUERY_STRING'] = '';
+        $_SERVER['REQUEST_URI']   = $path;
+        $_SERVER['SCRIPT_NAME']   = 'index.php';
+        $_SERVER['QUERY_STRING']  = '';
 
         $request = ServerRequestFactory::fromGlobals(
             $_SERVER,
@@ -59,41 +59,41 @@ class Request
     }
 
     /**
-     * Layers GET Request
+     * GET Request
      * 
-     * @param string  $folder     folder
-     * @param string  $uri        uri string
+     * @param string  $path       uri string
      * @param array   $data       get data
      * @param integer $expiration cache ttl
+     * @param string  $folder     folder
      * 
      * @return string
      */
-    public function get($folder = 'Controller', $uri = '/', $data = array(), $expiration = '')
+    public function get($path = '/', $data = array(), $expiration = '', $folder = 'Controller')
     {
         if (is_numeric($data)) { // Set expiration as second param if data not provided
             $expiration = $data;
             $data = array();
         }
-        return $this->newRequest($folder, 'GET', $uri, $data, $expiration);
+        return $this->newRequest($folder, 'GET', $path, $data, $expiration);
     }
 
     /**
-     * Layers POST Request
+     * POST Request
      *
-     * @param string  $folder     folder
-     * @param string  $uri        uri string
+     * @param string  $path       uri string
      * @param array   $data       post data
      * @param integer $expiration cache ttl
+     * @param string  $folder     folder
      * 
      * @return string
      */
-    public function post($folder = 'Controller', $uri = '/', $data = array(), $expiration = '')
+    public function post($path = '/', $data = array(), $expiration = '', $folder = 'Controller')
     {
         if (is_numeric($data)) {  // Set expiration as second param if data not provided
             $expiration = $data;
             $data = array();
         }
-        return $this->newRequest($folder, 'POST', $uri, $data, $expiration);
+        return $this->newRequest($folder, 'POST', $path, $data, $expiration);
     }
 
     /**
@@ -103,13 +103,13 @@ class Request
      *
      * @param string  $folder     folder
      * @param string  $method     request method
-     * @param string  $uri        uri string
+     * @param string  $path       uri string
      * @param array   $data       request data
      * @param integer $expiration ttl
      * 
      * @return string
      */
-    public function newRequest($folder, $method, $uri = '/', $data = array(), $expiration = '')
+    protected function newRequest($folder, $method, $path = '/', $data = array(), $expiration = '')
     {
         $layer = new Layer(
             $this->container,
@@ -117,8 +117,9 @@ class Request
             $folder
         );
         $layer->clear();
+
         $layer->newRequest(
-            $this->createRequest($uri),
+            $this->createRequest($path),
             $method,
             $data
         );
@@ -139,7 +140,7 @@ class Request
             return base64_decode($response);
         }
 
-        $response = $layer->execute($uri); // Execute the process
+        $response = $layer->execute($path); // Execute the process
 
         /**
          * Cache support
@@ -152,20 +153,20 @@ class Request
         if (is_array($response) && isset($response['error'])) {
             return Error::getError($response);  // Error template support
         }
-        $this->log($uri, $id, $response);
+        $this->log($path, $id, $response);
 
         return (string)$response;
     }
 
     /**
-     * Call helpers ( flush class .. ) $this->c['layer']->flush('views/header');
+     * Flush cache
      * 
-     * @param string $uri  string
+     * @param string $path uri string
      * @param array  $data params
      * 
      * @return boolean
      */
-    public function flush($uri, $data = array())
+    public function flush($path, $data = array())
     {
         $flush = new Flush(
             $this->logger,
@@ -177,18 +178,18 @@ class Request
     /**
      * Log response data
      * 
-     * @param string $uri      uri string
+     * @param string $path      uri string
      * @param string $id       layer id
      * @param string $response data
      * 
      * @return void
      */
-    protected function log($uri, $id, $response)
+    protected function log($path, $id, $response)
     {
         $uriString = md5($this->container->get('request')->getMaster()->getUri()->getPath());
 
         $this->logger->debug(
-            'Layer: '.strtolower($uri), 
+            'Layer: '.strtolower($path), 
             array(
                 'id' => $id, 
                 'output' => '<div class="obullo-layer" data-unique="u'.uniqid().'" data-id="'.$id.'" data-uristring="'.$uriString.'">' .$response. '</div>',

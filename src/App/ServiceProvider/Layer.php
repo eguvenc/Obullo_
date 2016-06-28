@@ -31,7 +31,7 @@ class Layer extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->share('layer', 'Obullo\Layer\Request')
+        $container->share('layer', 'Obullo\Layer\HmvcRequest')
             ->withArgument($container)
             ->withArgument($container->get('logger'))
             ->withArgument(

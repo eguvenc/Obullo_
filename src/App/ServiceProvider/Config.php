@@ -31,7 +31,6 @@ class Config extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->share('config', 'Obullo\Config\Config')
-            ->withArgument($container);
+        $container->share('config', new \Obullo\Config\Config(include APP . 'Config/config.php', true));
     }
 }

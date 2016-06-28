@@ -21,25 +21,6 @@ $container->share('request', Obullo\ServerRequestFactory::fromGlobals());
 $container->addServiceProvider('Obullo\Container\ServiceProvider\Logger');
 $container->addServiceProvider('Obullo\Container\ServiceProvider\Config');
 
-/**
- * Create configuration variables
- */
-$container->get('config')
-    ->set(
-        'app.config',
-        array(
-            'log' => false,
-            'cookie' => [
-                'domain' => '',
-                'path' => '/',
-                'secure' => false,
-                'httpOnly' => true,
-                'expire' => 604800,
-                'prefix' => '',
-            ],
-        )
-    );
-
 
 // require dirname(__FILE__) . '/getallheaders.php';
 

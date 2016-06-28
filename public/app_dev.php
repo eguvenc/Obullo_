@@ -39,25 +39,6 @@ $container->share('router', new Obullo\Router\Router($container, ['resolveCurren
 $container->addServiceProvider('App\ServiceProvider\Config');
 
 /**
- * Create configuration variables
- */
-$container->get('config')
-    ->set(
-        'app.config',
-        array(
-            'log' => true,
-            'cookie' => [
-                'domain' => '',
-                'path' => '/',
-                'secure' => false,
-                'httpOnly' => true,
-                'expire' => 604800,
-                'prefix' => '',
-            ],
-        )
-    );
-
-/**
  * Step 4: Add your middlewares
  */
 // $app->add('Translation');

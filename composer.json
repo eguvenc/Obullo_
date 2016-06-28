@@ -9,6 +9,8 @@
         "zendframework/zend-diactoros": "^1.3",
         "monolog/monolog": "^1.19",
         "phpunit/phpunit": "^4.8",
-        "doctrine/dbal": "^2.5"
+        "doctrine/dbal": "^2.5",
+        "zendframework/zend-config": "^2.6",
+        "league/plates": "^3.1"
     }
 }

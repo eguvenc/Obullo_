@@ -11,6 +11,15 @@ namespace Obullo\View;
 interface ViewInterface
 {
     /**
+     * Set the template file extension.
+     * 
+     * @param string|null $fileExtension Pass null to manually set it.+
+     * 
+     * @return Engine
+     */
+    public function setFileExtension($fileExtension);
+
+    /**
      * Register view folder
      * 
      * @param string $name folder name
@@ -46,16 +55,5 @@ interface ViewInterface
      * @return string
      */
     public function get($filename, $data = array());
-    
-    /**
-     * Set variables
-     * 
-     * @param mixed $key key
-     * @param mixed $val mixed
-     * 
-     * @return void
-     */
-    public function assign($key, $val = null);
-
    
 }

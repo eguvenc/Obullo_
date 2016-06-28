@@ -25,6 +25,17 @@ class Controller
     public static $instance = null;
     
     /**
+     * Constructor
+     * 
+     * @param object $container container
+     */
+    public function __construct($container)
+    {
+        self::$instance = &$this;
+        $this->container = $container;
+    }
+
+    /**
      * Container proxy
      * 
      * @param string $key key
@@ -36,7 +47,7 @@ class Controller
         /**
          * Create new layer for each core classes ( Otherwise HMVC does not work )
          */
-        if (self::$instance == null || in_array($key, ['request', 'router', 'view'])) {
+        if (in_array($key, ['request', 'router', 'view'])) {
             self::$instance = &$this;
         }
         return $this->container->get($key);

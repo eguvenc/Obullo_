@@ -38,6 +38,13 @@ class Native implements ContainerAwareInterface
     protected $folders = array();
 
     /**
+     * File extension
+     * 
+     * @var string|null
+     */
+    protected $fileExtension;
+
+    /**
      * Constructor
      * 
      * @param stirng $path default
@@ -45,6 +52,20 @@ class Native implements ContainerAwareInterface
     public function __construct($path)
     {
         $this->path = $path.'/';
+    }
+
+    /**
+     * Set the template file extension.
+     * 
+     * @param string|null $fileExtension Pass null to manually set it.+
+     * 
+     * @return Engine
+     */
+    public function setFileExtension($fileExtension)
+    {
+        $this->fileExtension = $fileExtension;
+
+        return $this;
     }
 
     /**
@@ -116,7 +137,7 @@ class Native implements ContainerAwareInterface
         unset($name);
 
         ob_start();
-        include $this->getDefaultPath() . $this->filename;
+        include $this->getDefaultPath() . $this->filename . $this->fileExtension;
         $body = ob_get_clean();
         
         return $body;

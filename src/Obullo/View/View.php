@@ -51,6 +51,13 @@ class View implements ViewInterface
     protected $folders = array();
 
     /**
+     * File extension
+     * 
+     * @var string
+     */
+    protected $fileExtension = null;
+
+    /**
      * Constructor
      * 
      * @param object $container container
@@ -63,6 +70,19 @@ class View implements ViewInterface
         $this->params = $params;
         $this->logger = $logger;
         $this->logger->debug('View Class Initialized');
+    }
+
+    /**
+     * Set the template file extension.
+     * 
+     * @param string|null $fileExtension Pass null to manually set it.+
+     * 
+     * @return Engine
+     */
+    public function setFileExtension($fileExtension)
+    {
+        $this->fileExtension = $fileExtension;
+        return $this;
     }
 
     /**
@@ -115,26 +135,6 @@ class View implements ViewInterface
     }
 
     /**
-     * Set variables
-     * 
-     * @param mixed $key key
-     * @param mixed $val val
-     * 
-     * @return object
-     */
-    public function assign($key, $val = null)
-    {
-        if (is_array($key)) {
-            foreach ($key as $k => $v) {
-                $this->data($k, $v);
-            }
-        } else {
-            $this->data($key, $val);
-        }
-        return $this;
-    }
-
-    /**
      * Set view variables
      * 
      * @param string $key key
@@ -153,9 +153,31 @@ class View implements ViewInterface
      * 
      * @return object
      */
-    protected function data($key, $val)
+    public function data($key, $val = null)
     {
-        $this->data[$key] = $val;
+        if (is_array($key)) {
+            foreach ($key as $k => $v) {
+                $this->data[$k] = $v;
+            }
+        } else {
+            $this->data[$key] = $val;
+        }
+        return $this;
+    }
+
+    /**
+     * Set model
+     * 
+     * @param string $name model name
+     * 
+     * @return object of view
+     */
+    public function model($name)
+    {
+        $modelClass = '\App\View\Model\\' . ucfirst($name) . 'Model';
+        $viewModel  = new $modelClass($this->container);
+        $viewModel->setTemplate();
+
         return $this;
     }
 
@@ -217,6 +239,8 @@ class View implements ViewInterface
 
         $engineClass = "\\".trim($this->params['engine'], '\\');
         $engine = new $engineClass($path);
+
+        $engine->setFileExtension($this->fileExtension);
         $engine->setContainer($this->container);
 
         if ($folders = $this->getFolders()) {

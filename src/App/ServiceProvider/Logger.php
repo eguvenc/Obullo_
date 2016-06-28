@@ -45,7 +45,7 @@ class Logger extends AbstractServiceProvider
         $logger = $container->share('logger', 'Monolog\Logger')
             ->withArgument('system');
 
-        if (false == $container->get('config')->get('app.config')['log']) {
+        if (false == $container->get('config')->log) {
             $logger->withMethodCall(
                 'pushHandler',
                 [new NullHandler]

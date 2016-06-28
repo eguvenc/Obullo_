@@ -15,27 +15,7 @@ interface ConfigInterface
      *
      * @param string $filename the config file name
      * 
-     * @return array if the file was loaded correctly
+     * @return object config
      */
-    public function get($filename);
-
-    /**
-     * Set configuration variables
-     * 
-     * @param string $key  name
-     * @param array  $data data
-     *
-     * @return void
-     */
-    public function set($key, array $data);
-
-    /**
-     * Save array data config file
-     *
-     * @param string $filename full path of the file
-     * @param array  $data     config data
-     * 
-     * @return void
-     */
-    public function write($filename, array $data);
+    public function load($filename, $reader = 'php');
 }

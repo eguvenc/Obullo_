@@ -184,7 +184,7 @@ class ControllerResolver
      */
     public function getNamespace()
     {
-        return '\\'. $this->router->getNamespace() . $this->router->getClass() . 'Controller';
+        return '\\App\\' . str_replace('/', '\\', $this->folder) . '\\'. $this->router->getNamespace() . $this->router->getClass() . 'Controller';
     }
 
     /**
@@ -198,7 +198,7 @@ class ControllerResolver
     {
         $file      = $this->getFilename();
         $className = $this->getNamespace();
-        
+
         if (! is_file($file)) {
 
             $this->router->clear();  // Fix layer errors.
@@ -206,13 +206,8 @@ class ControllerResolver
 
         } else {
 
-            $method = $this->router->getMethod();
-
-            if (! class_exists($className, false)) {  // Hmvc request support
-                include $file;
-            }
+            $method     = $this->router->getMethod();
             $controller = new $className($this->container);
-            $controller->container = $this->container;
 
             if (! method_exists($controller, $method)
                 || substr($method, 0, 1) == '_'
@@ -233,6 +228,5 @@ class ControllerResolver
         }
         return true;
     }
-
 
 }
