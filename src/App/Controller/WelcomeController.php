@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
-use Obullo\Controller;
+use Obullo\Mvc\Controller;
+// use Obullo\View\Model\ViewModel;
+// use App\View\Template\IndexTemplate;
 
 class WelcomeController extends Controller
 {
@@ -11,21 +13,15 @@ class WelcomeController extends Controller
      * 
      * @return void
      */
-    public function index()
+    public function indexAction()
     {
-        // var_dump($this->config->cookie->path);
+        // var_dump($this->config->database->connections->default->dsn);
 
-        // $this->container->addServiceProvider('App\ServiceProvider\Mongo');
-        // $this->container->get('mongo')->shared(['connection' => 'default']);
+        // $model = new ViewModel(['foo' => 'bar']);
+        // $model->setTemplate(new IndexTemplate('welcome.phtml'));
+        
+        // $this->view->render($model);
 
-        // echo $this->layer->get('View/Controller', 'header');
-        // echo $this->layer->get('Controller', 'examples/layers/dummy/index/1/2/3');
-        // echo $this->layer->get('View/Controller', 'header');
-
-        // echo $this->layer->get('Controller', 'examples/layers/dummy/index/1/2/3');
-        // echo $this->layer->get('Controller', 'welcomes/dummy/index/4/5/6');
-        // echo $this->layer->get('Controller', 'examples/layers/dummy/index/7/8/9');
-
-        $this->view->model('base')->render('welcome.phtml');
+        $this->view->render('welcome.phtml');
     }
 }

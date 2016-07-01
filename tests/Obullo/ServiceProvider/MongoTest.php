@@ -15,7 +15,7 @@ class MongoTest extends PHPUnit_Framework_TestCase
     {
         global $container;
         $this->container = $container;
-        $this->container->addServiceProvider('Obullo\Container\ServiceProvider\Mongo');
+        $this->container->addServiceProvider('App\ServiceProvider\Mongo');
         $this->connection = $this->container->get('mongo')->shared(['connection' => 'default']);
         $this->mongoClass = (version_compare(phpversion('mongo'), '1.3.0', '<')) ? '\Mongo' : '\MongoClient';
     }

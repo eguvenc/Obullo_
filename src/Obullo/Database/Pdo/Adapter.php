@@ -6,7 +6,7 @@ use PDO;
 use Closure;
 use Exception;
 use RuntimeException;
-use Obullo\Controller;
+use Obullo\Mvc\Controller;
 use Obullo\Database\AdapterInterface;
 use Obullo\Database\SQLLoggerInterface;
 

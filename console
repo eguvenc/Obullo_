@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+// console
+
+require __DIR__.'/constants.php';
+require __DIR__.'/vendor/autoload.php';
+
+$container = new League\Container\Container;
+
+/**
+ * Add your service providers
+ */
+$container->addServiceProvider('App\ServiceProvider\Config');
+
+/**
+ * Create your console commands
+ */
+use App\Command\LogHttpCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+$application->add(new LogHttpCommand($container));
+$application->run();

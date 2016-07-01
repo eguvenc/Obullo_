@@ -31,21 +31,11 @@ $container->share('response', new Zend\Diactoros\Response);
 $container->share('router', new Obullo\Router\Router($container, ['resolveCurrentPath' => true]));
 
 /**
- * Step 3: Add config service & Create configuration variables
+ * Step 3: Add your service providers
  */
 $container->addServiceProvider('App\ServiceProvider\Config');
-
-/**
- * Step 4: Add your middlewares
- */
-// $app->add('Translation');
-// $app->add('ParsedBody');
-
-/**
- * Step 5: Add your service providers
- */
 $container->addServiceProvider('App\ServiceProvider\Cookie');
-$container->addServiceProvider('App\ServiceProvider\Layer');
+$container->addServiceProvider('App\ServiceProvider\Http');
 $container->addServiceProvider('App\ServiceProvider\View');
 $container->addServiceProvider('App\ServiceProvider\Logger');
 // $container->addServiceProvider('App\ServiceProvider\Amqp');
@@ -54,16 +44,24 @@ $container->addServiceProvider('App\ServiceProvider\Logger');
 // $container->addServiceProvider('App\ServiceProvider\Mongo');
 
 /**
- * Step 6: Define your server using Zend Diactoros & Instantiate the Obullo application
+ * Step 4: Add your middlewares
+ */
+$application = new Obullo\Mvc\App($container);
+
+// $applicaiton->add('ParsedBody');
+
+
+/**
+ * Step 5: Define your server using Zend Diactoros & Instantiate the Obullo application
  */
 $server = Zend\Diactoros\Server::createServerfromRequest(
-    new Obullo\App($container),
+    $application,
     $container->get('request'),
     $container->get('response')
 );
 
 /**
- * Step 7: Emit output
+ * Step 6: Emit output
  *
  * This method should be called last. This executes the Obullo application
  * and returns the HTTP response to the HTTP client.

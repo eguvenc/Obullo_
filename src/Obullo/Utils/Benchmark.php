@@ -36,7 +36,7 @@ class Benchmark
     public static function end($container, $extra = array())
     {
         $logger = $container->get('logger');
-        $config = $container->get('config')->get('config');
+        // $config = $container->get('config');
 
         $end = microtime(true) - self::$time;
         $usage = 'memory_get_usage() function not found on your php configuration.';
@@ -44,13 +44,13 @@ class Benchmark
         if (function_exists('memory_get_usage') && ($usage = memory_get_usage()) != '') {
             $usage = round($usage/1024/1024, 2). ' MB';
         }
-        if ($config['extra']['debugger']) {  // Exclude debugger cost from benchmark results.
-            $end = $end - 0.0003;
-        }
+        // if ($config['extra']['debugger']) {  // Exclude debugger cost from benchmark results.
+        //     $end = $end - 0.0003;
+        // }
         $extra['time']   = number_format($end, 4);
         $extra['memory'] = $usage;
         
-        $logger->debug('Final output sent to browser', $extra, -9999);
+        $logger->debug('Final output sent to browser', $extra);
     }
 
 }

@@ -35,17 +35,10 @@ class Logger extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $filename = 'http.log';
-        if (defined('STDIN')) {
-            $filename = 'cli.log';
-        }
-        if ($container->get('request')->isAjax()) {
-            $filename = 'ajax.log';
-        }
         $logger = $container->share('logger', 'Monolog\Logger')
             ->withArgument('system');
 
-        if (false == $container->get('config')->log) {
+        if (false == $container->get('config')->logger->enabled) {
             $logger->withMethodCall(
                 'pushHandler',
                 [new NullHandler]
@@ -54,7 +47,7 @@ class Logger extends AbstractServiceProvider
         }
         $logger->withMethodCall(
             'pushHandler',
-            [new StreamHandler(APP . 'Resources/data/logs/'. $filename, Log::DEBUG, true, 0666)]
+            [new StreamHandler(APP . 'Resources/data/log/http.log', Log::DEBUG, true, 0666)]
         );
     }
 }

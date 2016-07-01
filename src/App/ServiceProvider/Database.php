@@ -42,30 +42,21 @@ class Database extends AbstractServiceProvider
                         \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
                         \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
                     ]
-                ],
-                'failed' => [
-                    'dsn'      => 'pdo_mysql:host=localhost;port=;dbname=failed',
-                    'username' => 'root',
-                    'password' => '123456',
-                    'options'  => [
-                        \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
-                        \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
-                    ]
-                ],
+                ]
             ],
             'sql' => [
                 'log' => true
             ]
         );
         
-        $container->share('database', 'Obullo\Container\ServiceProvider\Connector\Database')
+        $container->share('database', 'Obullo\Container\Connector\Database')
             ->withArgument($container)
             ->withArgument($params);
 
         // DoctrineDBAL Replacement
         // 
 
-        // $container->share('database', 'Obullo\Container\ServiceProvider\Connector\DoctrineDBAL')
+        // $container->share('database', 'Obullo\Container\Connector\DoctrineDBAL')
         //     ->withArgument($container)
         //     ->withArgument($params);
 

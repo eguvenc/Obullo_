@@ -2,11 +2,11 @@
 
 namespace App\View\Controller;
 
-use Obullo\Controller;
+use Obullo\Mvc\Controller;
 
 class HeaderController extends Controller
 {
-	public function index()
+	public function indexAction()
 	{
 		echo 'Header';
 	}

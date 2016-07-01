@@ -3,8 +3,9 @@
 namespace Obullo\View;
 
 use Closure;
-use Obullo\Controller;
+use Obullo\Mvc\Controller;
 use Psr\Log\LoggerInterface as Logger;
+use Obullo\View\Model\ViewModelInterface as ViewModel;
 use Interop\Container\ContainerInterface as Container;
 
 /**
@@ -111,14 +112,32 @@ class View implements ViewInterface
     /**
      * Include nested view files from current module /view folder
      * 
-     * @param string $filename filename
-     * @param mixed  $data     array data
+     * @param mixed $filename filename
+     * @param mixed $data     array data
      * 
      * @return string                      
      */
     public function render($filename, $data = array())
     {
-        return $this->renderNestedView($filename, $data, true);
+        if ($filename instanceof ViewModel) {
+            
+            $data     = $filename->getVariables();
+            $template = $filename->getTemplate();
+
+            if ($template instanceof TemplateInterface) {
+                $template->setContainer($this->container);
+                $template->setVariables();
+
+                $filename = $template->getName();
+                $data     = array_merge($template->getVariables(), $data);
+
+                // print_r($data);
+
+            } else {
+                $filename = (string)$template;
+            }
+        }
+        return $this->renderView($filename, $data, true);
     }
 
     /**
@@ -131,7 +150,7 @@ class View implements ViewInterface
      */
     public function get($filename, $data = array())
     {
-        return $this->renderNestedView($filename, $data, false);
+        return $this->renderView($filename, $data, false);
     }
 
     /**
@@ -166,22 +185,6 @@ class View implements ViewInterface
     }
 
     /**
-     * Set model
-     * 
-     * @param string $name model name
-     * 
-     * @return object of view
-     */
-    public function model($name)
-    {
-        $modelClass = '\App\View\Model\\' . ucfirst($name) . 'Model';
-        $viewModel  = new $modelClass($this->container);
-        $viewModel->setTemplate();
-
-        return $this;
-    }
-
-    /**
      * Render nested view files
      * 
      * @param string  $filename filename
@@ -190,7 +193,7 @@ class View implements ViewInterface
      * 
      * @return object Stream or Response                     
      */
-    protected function renderNestedView($filename, $data = array(), $include = true)
+    protected function renderView($filename, $data = array(), $include = true)
     {
         /**
          * IMPORTANT:
@@ -199,11 +202,11 @@ class View implements ViewInterface
          * which contains view class, it will not work if router not available in the controller.
          * So first we need check Controller is available if not we use container->router.
          */
-        if (! class_exists('Obullo\Controller', false) || Controller::$instance == null) {
-            $router = $this->container->get('router');
-        } else {
-            $router = &Controller::$instance->router;  // Use nested controller router ( @see the Layer package. )
-        }
+        // if (! class_exists('Obullo\Mvc\Controller', false) || Controller::$instance == null) {
+        //     $router = $this->container->get('router');
+        // } else {
+        //     $router = &Controller::$instance->router;  // Use nested controller router ( @see the Layer package. )
+        // }
         
         // $path   = $router->getAncestor('/') . $router->getFolder();
         // $folder = (empty($path)) ? APP .'View' : CONTROLLER . $path .'/View';

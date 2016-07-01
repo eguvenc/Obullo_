@@ -3,7 +3,7 @@
 namespace Obullo\Database\Doctrine\DBAL;
 
 use PDO;
-use Obullo\Controller;
+use Obullo\Mvc\Controller;
 use Obullo\Database\AdapterInterface;
 use Obullo\Database\CommonAdapterTrait;
 

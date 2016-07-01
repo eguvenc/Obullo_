@@ -8,6 +8,6 @@
 | CONTROLLER      	- The full server path to the "controllers" folder
 | ASSET           	- The full server path to the "public/assets" folder
 */
-define('APP',  ROOT . 'src/App/');
-define('CONTROLLER', APP . 'Controller/');
-define('ASSET',  ROOT . 'public/assets/');
+define('APP',  __DIR__ . '/src/App/');
+define('CONTROLLER', APP .'Controller/');
+define('ASSET',  __DIR__ . '/public/assets/');

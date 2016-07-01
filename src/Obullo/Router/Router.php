@@ -50,7 +50,8 @@ class Router implements RouterInterface
      */
     public function __construct(Container $container, array $options)
     {
-        $this->path      = $container->get('request')->getUri()->getPath();
+        $uri             = $container->get('request')->getUri();
+        $this->path      = $uri->getPath();
         $this->request   = $container->get('request');
         $this->response  = $container->get('response');
         $this->container = $container;

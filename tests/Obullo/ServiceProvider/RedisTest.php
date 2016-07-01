@@ -14,7 +14,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     {
         global $container;
         $this->container = $container;
-        $this->container->addServiceProvider('Obullo\Container\ServiceProvider\Redis');
+        $this->container->addServiceProvider('App\ServiceProvider\Redis');
         $this->connection = $this->container->get('redis')->shared(['connection' => 'default']);
 
     }
