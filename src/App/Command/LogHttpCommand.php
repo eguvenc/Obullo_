@@ -33,14 +33,14 @@ class LogHttpCommand extends Command
         $file   = APP . 'Resources/data/log/http.log';
         $action = $input->getArgument('action');
         /**
-         * Clear log
+         * Clear log file
          */
         if ($action == 'clear' && is_file($file)) {
             unlink($file);
             return;
         }
         /**
-         * Display log
+         * Display log file
          */
         $size = 0;
         while (true) {
@@ -60,14 +60,14 @@ class LogHttpCommand extends Command
             fseek($fh, $size);
             while ($line = fgets($fh)) {
                 /**
-                 * Mark sql queries (green)
+                 * Colourize sql queries (green)
                  */
                 if (stripos($line, 'SQL-') !== false) {
                     $line = "<fg=green;options=bold>".preg_replace('/[\s]+/', ' ', $line)."</>";
                     $line = preg_replace('/[\r\n]/', "\n", $line)."\n";
                 }
                 /**
-                 * Mark errors (red)
+                 * Colourize errors (red)
                  */
                 if (stripos($line, '.debug') == false && stripos($line, '.info') == false) {
                     $line = "<fg=red;options=bold>".$line."</>";

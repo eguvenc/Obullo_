@@ -135,7 +135,6 @@ class ControllerResolver
     protected function checkAncestor($segments)
     {
         if (! empty($segments[1])
-            // && strtolower($segments[1]) != 'views'  // http://example/debugger/view/index bug fix
             && is_dir(APP . $this->folder .'/'. $segments[0] .'/'. $segments[1].'/')  // Detect ancestor folder and change folder !!
         ) {
             $this->router->setAncestor($segments[0]);

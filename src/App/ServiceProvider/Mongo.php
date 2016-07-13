@@ -2,6 +2,7 @@
 
 namespace App\ServiceProvider;
 
+use Obullo\Config\ConfigFile;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 class Mongo extends AbstractServiceProvider
@@ -31,6 +32,9 @@ class Mongo extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
+        $file  = new ConfigFile('mongo');
+        $mongo = $file->getObject();
+
         $container->share('mongo', 'Obullo\Container\Connector\Mongo')
             ->withArgument($container)
             ->withArgument(
@@ -38,11 +42,11 @@ class Mongo extends AbstractServiceProvider
                     'connections' =>
                     [
                         'default' => [
-                            'server' => 'mongodb://root:123456@localhost:27017',
+                            'server' => $mongo->connections->default->server,
                             'options'  => ['connect' => true]
                         ],
                         'second' => [
-                            'server' => 'mongodb://test:123456@localhost:27017',
+                            'server' => $mongo->connections->second->server,
                             'options'  => ['connect' => true]
                         ]
                     ]

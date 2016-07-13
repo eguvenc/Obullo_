@@ -4,7 +4,7 @@ namespace App\ServiceProvider;
 
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
-class Http extends AbstractServiceProvider
+class Mvc extends AbstractServiceProvider
 {
     /**
      * The provides array is a way to let the container
@@ -16,7 +16,7 @@ class Http extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'http'
+        'mvc'
     ];
 
     /**
@@ -31,7 +31,7 @@ class Http extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->share('http', 'Obullo\Mvc\Layer\HmvcRequest')
+        $container->share('mvc', 'Obullo\Mvc\Layer\HmvcRequest')
             ->withArgument($container)
             ->withArgument($container->get('logger'))
             ->withArgument(

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Middleware;
 
 use Zend\Diactoros\PhpInputStream;
 use Psr\Http\Message\ResponseInterface as Response;

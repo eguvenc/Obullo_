@@ -2,10 +2,10 @@
 
 namespace App\ServiceProvider;
 
-use Obullo\Config\ConfigFile;
+use Symfony\Component\Cache\Adapter\RedisAdapter;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
-class Config extends AbstractServiceProvider
+class Cache extends AbstractServiceProvider
 {
     /**
      * The provides array is a way to let the container
@@ -17,7 +17,7 @@ class Config extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'config'
+        'cache'
     ];
 
     /**
@@ -32,8 +32,8 @@ class Config extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $app = new ConfigFile('app');
+        $redis = $container->get('redis')->shared();
 
-        $container->share('config', $app->getObject());
+        $container->share('cache', new RedisAdapter($redis));
     }
 }

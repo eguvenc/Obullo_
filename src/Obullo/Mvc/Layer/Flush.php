@@ -2,8 +2,8 @@
 
 namespace Obullo\Mvc\Layer;
 
-use Psr\Log\LoggerInterface as Logger;
 use Obullo\Cache\CacheInterface as Cache;
+use Interop\Container\ContainerInterface as Container;
 
 /**
  * Flush cached layer
@@ -21,42 +21,33 @@ class Flush
     protected $cache;
 
     /**
-     * Logger
-     * 
-     * @var object
-     */
-    protected $logger;
-
-    /**
      * Constructor
      *
-     * @param object $logger \Obullo\Log\LoggerInterface
-     * @param object $cache  \Obullo\Cache\CacheInterface
+     * @param object $container container
      */
-    public function __construct(Logger $logger, Cache $cache)
+    public function __construct(Container $container)
     {
-        $this->cache = $cache;
-        $logger->debug('Layer Flush Class Initialized');
+        $this->cache = $container->get('cache');
     }
 
     /**
-     * Removes layer from cache using layer "uri" and "parameters".
+     * Removes layer from cache using layer "path" and "parameters".
      * 
      * @param string $path uri string
      * @param array  $data array
      * 
      * @return boolean
      */
-    public function data($path = '', $data = array())
+    public function path($path = '', $data = array())
     {
-        $hashString = trim($uri, '/');
+        $hashString = trim($path, '/');
         if (sizeof($data) > 0 ) {      // We can't use count() in sub layers sizeof gives better results.
             $hashString .= str_replace('"', '', json_encode($data)); // Remove quotes to fix equality problem
         }
         $KEY = $this->generateId($hashString);
 
         if ($this->cache->hasItem($KEY)) {
-            return $this->cache->removeItem($KEY);
+            return $this->cache->deleteItem($KEY);
         }
         return false;
     }

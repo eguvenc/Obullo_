@@ -89,7 +89,7 @@ class DoctrineDBAL extends AbstractServiceProvider
         $config = isset($params['config']) ? $params['config'] : new Configuration;
         $eventManager = isset($params['eventManager']) ? $params['eventManager'] : null;
 
-        if ($this->params['sql']['log']) {
+        if ($this->params['log']['sqlQuery']) {
             $config->setSQLLogger(new SQLLogger($this->container->get('logger')));
         }
         $params['wrapperClass'] = '\Obullo\Database\Doctrine\DBAL\Adapter';

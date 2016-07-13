@@ -104,92 +104,71 @@ class HmvcRequest implements HmvcRequestInterface
     protected function newRequest($folder, $method, $path = '/', $data = array(), $expiration = null)
     {
         if ($path instanceof ViewComponent) {
-            
             $component = $path;
             $path      = $component->getPath();
             $folder    = 'View/Controller';
-
-            if ($component->isRemoval()) { // Remove cached mvc layer
-
-                $flush = new Flush(
-                    $this->container->get('logger'),
-                    $this->container->get('cache')
-                );
-                $flush->data($path, $component->getVariables());
-            }
         }
-        if (is_numeric($data)) { // Set expiration as second param if data not provided
-            
-            $expiration = $data;
-            $data       = array();
-        }
+        $path = trim($path, '/');
+
         $layer = new Layer(
             $this->container,
             $this->params,
             $folder
         );
         $layer->clear();
-
         $layer->newRequest(
             $this->createRequest($path),
             $method,
             $data
         );
         $id = $layer->getId();
+
         /**
-         * Dispatch route errors
+         * Read Cache
          */
-        if ($layer->getError() != '') {
-            $error = $layer->getError();
-            $layer->restore();
-            return Error::getError($error);
-        }
-        /**
-         * Cache support
-         */
-        if ($this->params['cache'] && $response = $this->container->get('cache')->getItem($id)) {   
-            $layer->restore();
-            return base64_decode($response);
+        if ($this->params['cache']) {
+
+            $cacheItem = $this->container->get('cache')->getItem($id);
+
+            if ($cacheItem->isHit()) {
+                $layer->restore();
+                $this->logger->debug('Mvc Layer (Cached): '.strtolower($path), ['id' => $id]);
+                return base64_decode($cacheItem->get());
+            }
         }
 
         $response = $layer->execute($path); // Execute the process
 
         /**
-         * Cache support
+         * Save Cache
          */
         if (is_numeric($expiration)) {
-            $this->container->get('cache')->setItem($id, base64_encode($response), (int)$expiration);
+
+            $cache = $this->container->get('cache');
+            $cacheItem = $cache->getItem($id);
+            $cacheItem->set(base64_encode($response));
+            $cacheItem->expiresAfter((int)$expiration);
+
+            $cache->save($cacheItem);
         }
         $layer->restore();  // Restore controller objects
 
         if (is_array($response) && isset($response['error'])) {
             return Error::getError($response);  // Error template support
         }
-        $this->log($path, $id, $response);
 
+        $this->logger->debug('Mvc Layer: '.strtolower($path), ['id' => $id]);
         return (string)$response;
     }
-
-    /**
-     * Log response data
-     * 
-     * @param string $path      uri string
-     * @param string $id       layer id
-     * @param string $response data
-     * 
-     * @return void
-     */
-    protected function log($path, $id, $response)
-    {
-        $uriString = md5($this->container->get('request')->getMaster()->getUri()->getPath());
-
-        $this->logger->debug(
-            'Layer: '.strtolower($path), 
-            array(
-                'id' => $id, 
-                'output' => '<div class="obullo-layer" data-unique="u'.uniqid().'" data-id="'.$id.'" data-uristring="'.$uriString.'">' .$response. '</div>',
-            )
-        );
-    }
     
+    /**
+     * Returns to flush object
+     * 
+     * @return object
+     */
+    public function getFlush()
+    {
+        return new Flush($this->container);
+    }
+
 }

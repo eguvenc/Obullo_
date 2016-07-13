@@ -27,19 +27,20 @@ class ConfigFile extends Ini
 	 */
 	public function __construct($filename)
 	{
-		$this->filename = $filename;
+		$this->filename = $filename . '.ini';
+
+		$env = getenv("APPLICATION_ENV");
+		$this->env = ($env) ? $env . "." : "dev.";
 	}
 
 	/**
-	 * Set env
-	 *
-	 * @return void
+	 * Returns to array
+	 * 
+	 * @return array
 	 */
-	public function setEnv()
+	public function getArray()
 	{
-		$env = getenv("APPLICATION_ENV");
-
-		$this->env = ($env) ? $env . "." : "dev.";
+		return $this->fromFile(APP . 'Config/'. $this->env . $this->filename);
 	}
 
 	/**
@@ -49,7 +50,7 @@ class ConfigFile extends Ini
 	 */
 	public function getObject()
 	{
-		return new ZendConfig($this->fromFile(APP . 'Config/'. $this->env . $this->filename), true);
+		return new ZendConfig($this->getArray(), true);
 	}
 
 }

@@ -206,13 +206,8 @@ class Memcached extends AbstractServiceProvider
      */
     public function shared($params = array())
     {
-        if (empty($params['connection'])) {
-            throw new RuntimeException(
-                sprintf(
-                    "Memcached provider requires connection parameter. <pre>%s</pre>",
-                    "\$container->get('memcached')->shared(['connection' => 'default']);"
-                )
-            );
+        if (! isset($params['connection'])) {
+            $params['connection'] = array_keys($this->params['connections'])[0];  //  Set default connection
         }
         if (! isset($this->params['connections'][$params['connection']])) {
             throw new UnexpectedValueException(

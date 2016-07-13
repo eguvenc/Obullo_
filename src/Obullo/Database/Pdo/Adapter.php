@@ -639,6 +639,16 @@ class Adapter
     }
 
     /**
+     * Create query builder object
+     * 
+     * @return void
+     */
+    public function createQueryBuilder()
+    {
+        throw new RuntimeException("This operation requires database service configuration with Doctrine/DBAL.");
+    }
+
+    /**
      * Close the database connetion.
      */
     public function __destruct()

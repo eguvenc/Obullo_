@@ -247,14 +247,16 @@ $db = $container->get('database')->factory(
 Db servisi <kbd>database</kbd> servis sağlayıcısı içerisinden <kbd>default</kbd> bağlantısıyla yaratılan veritabanına ait metotlara kısayoldan ulaşmanızı sağlar. Servisin çalışabilmesi için <kbd>app/providers.php</kbd> dosyasında tanımlı olması gerekir.
 
 ```php
-$container->addServiceProvider('Obullo\Container\ServiceProvider\Db');
+$container->addServiceProvider('Obullo\Container\ServiceProvider\Database');
 ```
 
 Servisi çağırmak,
 
 
 ```php
-$container->get('db')->query(" .. ");
+$this->db = $container->get('database')->shared();
+
+$this->db->query(" .. ");
 ```
 
 kontrolör içerisinden,

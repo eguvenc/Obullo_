@@ -35,7 +35,7 @@ $container->share('router', new Obullo\Router\Router($container, ['resolveCurren
  */
 $container->addServiceProvider('App\ServiceProvider\Config');
 $container->addServiceProvider('App\ServiceProvider\Cookie');
-$container->addServiceProvider('App\ServiceProvider\Http');
+$container->addServiceProvider('App\ServiceProvider\Mvc');
 $container->addServiceProvider('App\ServiceProvider\View');
 $container->addServiceProvider('App\ServiceProvider\Logger');
 // $container->addServiceProvider('App\ServiceProvider\Amqp');

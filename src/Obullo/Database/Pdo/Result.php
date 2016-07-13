@@ -35,7 +35,7 @@ class Result
      *
      * @return integer
      */
-    public function count()
+    public function getCount()
     {
         return $this->stmt->rowCount();
     }
@@ -47,7 +47,7 @@ class Result
      * 
      * @return array | object otherwise false
      */
-    public function row($default = false)
+    public function getRow($default = false)
     {
         $result = $this->stmt->fetch(PDO::FETCH_OBJ);
 
@@ -61,10 +61,10 @@ class Result
      * 
      * @return array | object otherwise false
      */
-    public function rowArray($default = false)
+    public function getRowArray($default = false)
     {
         $result = $this->stmt->fetch(PDO::FETCH_ASSOC);
-
+        
         return ($result) ? $result : $default;
     }
 
@@ -75,7 +75,7 @@ class Result
      * 
      * @return array | object otherwise false
      */
-    public function result($default = false)
+    public function getResult($default = false)
     {
         $result = $this->stmt->fetchAll(PDO::FETCH_OBJ);
 
@@ -89,11 +89,10 @@ class Result
      * 
      * @return array | object otherwise false
      */
-    public function resultArray($default = false)
+    public function getArrayResult($default = false)
     {
         $result = $this->stmt->fetchAll(PDO::FETCH_ASSOC);
         
         return ($result) ? $result : $default;
     }
-
 }

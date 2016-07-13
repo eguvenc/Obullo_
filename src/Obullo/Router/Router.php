@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use SplQueue;
 use Obullo\Router\Group;
 use InvalidArgumentException;
-use Http\Middleware\NotAllowed;
+use App\Middleware\NotAllowed;
 use Obullo\Utils\Route as RouteHelper;
 use Obullo\Router\Filter\FilterTrait;
 use Interop\Container\ContainerInterface as Container;
@@ -225,7 +225,7 @@ class Router implements RouterInterface
             return;
         }
         foreach ((array)$middlewares as $value) {
-            $middleware = '\Http\Middleware\\'.$value['name'];
+            $middleware = '\App\Middleware\\'.$value['name'];
             if (! class_exists($middleware, false)) {
                 $this->queue->enqueue(['callable' => new $middleware, 'params' => $value['params']]);
             }

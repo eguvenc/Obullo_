@@ -2,6 +2,7 @@
 
 namespace App\ServiceProvider;
 
+use Obullo\Config\ConfigFile;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 class Redis extends AbstractServiceProvider
@@ -31,6 +32,9 @@ class Redis extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
+        $file  = new ConfigFile('redis');
+        $redis = $file->getObject();
+
         $container->share('redis', 'Obullo\Container\Connector\Redis')
             ->withArgument($container)
             ->withArgument(
@@ -38,8 +42,8 @@ class Redis extends AbstractServiceProvider
                     'connections' => 
                     [
                         'default' => [
-                            'host' => '127.0.0.1',
-                            'port' => 6379,
+                            'host' => $redis->connections->default->host,
+                            'port' => $redis->connections->default->port,
                             'options' => [
                                 'persistent' => false,
                                 'auth' => '',
@@ -51,8 +55,8 @@ class Redis extends AbstractServiceProvider
                             ]
                         ],
                         'second' => [
-                            'host' => '127.0.0.1',
-                            'port' => 6379,
+                            'host' => $redis->connections->second->host,
+                            'port' => $redis->connections->second->port,
                             'options' => [
                                 'persistent' => false,
                                 'auth' => '',

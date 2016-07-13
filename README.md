@@ -5,7 +5,7 @@ Small, fast & expandable.
 
 * Small because of it has 8 core components.
 * Easy to run your application from app_dev.php in 7 steps.
-* Modern because the core supports Http Middlewares, Psr7 HTTP Standarts, Container, Dependency Injection, Service Providers & composer.
+* Modern because the core supports Http Middlewares, Ps6 and Psr7 Standarts, Container, Dependency Injection, Service Providers & composer.
 * The router contains just 400 lines of code.
 * The core natively supports HMVC design pattern.
 * Ready for php7.
@@ -22,7 +22,7 @@ Small, fast & expandable.
 
 There is no release yet, we are still working on it.
 
-### Configuration of Vhost File
+### Configuration of Vhost File for "dev" environment
 
 Put the latest version to your web root (<kbd>/var/www/project/</kbd>). Create your apache vhost file and set your project root as <kbd>public</kbd>.
 

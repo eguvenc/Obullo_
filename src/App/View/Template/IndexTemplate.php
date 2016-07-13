@@ -73,12 +73,9 @@ class IndexTemplate implements TemplateInterface
     protected function getHeaderComponent()
     {
         $header = new ViewComponent('header');
+        $result = $this->getContainer()->get('mvc')->get($header);
 
-        // $header->setVariables($data);
-        // $header->setCache($time);
-        // $header->removeCache(true);
-
-        return $this->getContainer()->get('http')->get($header);
+        return $result;
     }
 
     /**
@@ -89,8 +86,9 @@ class IndexTemplate implements TemplateInterface
     protected function getFooterComponent()
     {
         $footer = new ViewComponent('footer');
-
-        return $this->getContainer()->get('http')->get($footer);
+        $result = $this->getContainer()->get('mvc')->get($footer);
+        
+        return $result;
     }
 
 }

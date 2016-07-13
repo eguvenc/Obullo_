@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use Obullo\Mvc\Controller;
-// use Obullo\View\Model\ViewModel;
-// use App\View\Template\IndexTemplate;
+use Obullo\View\Model\ViewModel;
+use App\View\Template\IndexTemplate;
 
 class WelcomeController extends Controller
 {
@@ -15,13 +15,29 @@ class WelcomeController extends Controller
      */
     public function indexAction()
     {
-        // var_dump($this->config->database->connections->default->dsn);
+        // $this->db = $this->database->shared()->createQueryBuilder();
 
-        // $model = new ViewModel(['foo' => 'bar']);
-        // $model->setTemplate(new IndexTemplate('welcome.phtml'));
+        // $row = $this->db
+        //     ->select('username', 'email')
+        //     ->from('users')
+        //     // ->setFirstResult(10)
+        //     ->setMaxResults(20)
+        //     ->execute()
+        //     ->getResult();
+
+        // var_dump($row);
+
+        // $row = $this->db->query("SELECT * FROM users")->row();
+        // var_dump($row);
+
+
+        // $this->mvc->getFlush()->path("header", ['userId' => 5]);
+
+        $model = new ViewModel(['foo' => 'bar']);
+        $model->setTemplate(new IndexTemplate('welcome.phtml'));
         
-        // $this->view->render($model);
+        $this->view->render($model);
 
-        $this->view->render('welcome.phtml');
+        // $this->view->render('welcome.phtml');
     }
 }

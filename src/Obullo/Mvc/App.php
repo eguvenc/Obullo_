@@ -6,12 +6,11 @@ use SplQueue;
 use Throwable;
 use Exception;
 
-use App\Http\Middleware\FinalHandler;
-use App\Http\Middleware\ErrorMiddlewareInterface;
+use App\Middleware\FinalHandler;
+use App\Middleware\ErrorMiddlewareInterface;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Interop\Container\ContainerInterface as Container;
-
 
 /**
  * Application
@@ -109,13 +108,13 @@ class App
 
         } catch (Throwable $throwable) {
             
-            $error = new \App\Http\Middleware\Error;
+            $error = new \App\Middleware\Error;
 
             return $error($throwable, $request, $response, $done);
 
         } catch (Exception $exception) {
 
-            $error = new \App\Http\Middleware\Error;
+            $error = new \App\Middleware\Error;
 
             return $error($exception, $request, $response, $done);
         }
@@ -132,7 +131,7 @@ class App
         $name   = $params[0];
         unset($params[0]);
 
-        $middleware = '\App\Http\Middleware\\'.$name;
+        $middleware = '\App\Middleware\\'.$name;
         if (! class_exists($middleware, false)) {
             $this->queue->enqueue(['callable' => new $middleware, 'params' => $params]);
         }

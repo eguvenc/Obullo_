@@ -83,7 +83,7 @@ class Database extends AbstractServiceProvider
         $params['dsn'] = str_replace('pdo_', '', $params['dsn']);
         $Class = '\\Obullo\Database\Pdo\Drivers\\'.ucfirst(strstr($params['dsn'], ':', true));
 
-        if ($this->params['sql']['log']) {
+        if ($this->params['log']['sqlQuery']) {
             $params['logger'] = new SQLLogger($this->container->get('logger'));
         }
         return new $Class($params);

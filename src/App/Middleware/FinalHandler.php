@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Middleware;
 
 use Zend\Diactoros\Stream;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -137,7 +137,7 @@ class FinalHandler implements ContainerAwareInterface
     protected function renderHtmlErrorMessage($error)
     {
         $html  = null;
-        $title = 'Http Error';
+        $title = 'Application Error';
 
         if (is_string($error)) {
 

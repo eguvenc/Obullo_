@@ -27,7 +27,7 @@ use Interop\Container\ContainerInterface as Container;
  */
 class Layer
 {
-    const CACHE_KEY = 'Layer:';
+    const CACHE_KEY = 'Mvc_Layer_';
 
     protected $router;
     protected $folder;
@@ -37,7 +37,7 @@ class Layer
     protected $done = false;
     protected $params = array();
     protected $container = null;
-    protected $hashString = null;
+    protected $hashString = '';
     protected static $path = array();
 
     /**
@@ -82,7 +82,11 @@ class Layer
         $this->container->share('request', $request);
         $this->container->get('router')->clear();   // Reset router objects we will reuse it for layer
 
+        $this->hashString = '';           // Reset hash string
         $this->setMethod($method, $data); // Must be at the end otherwise POST GET data does not work
+
+        $this->setHash($request->getUri()->getPath());
+        $this->setHash($data);
     }
 
     /**
@@ -95,7 +99,6 @@ class Layer
      */
     public function setMethod($method = 'GET', $data = array())
     {
-        $this->setHash($data);
         $request = $this->container->get('request')->withMethod(strtoupper($method));
 
         if (empty($data)) {
@@ -114,18 +117,14 @@ class Layer
     /**
      * Execute layer
      *
-     * @param string $uriString uri
+     * @param string $path uri
      * 
      * @return string
      */
-    public function execute($uriString)
+    public function execute($path)
     {
-        $uriString = '/'.trim($uriString, '/');  // Normalize uri
-        $this->hashString = '';      // Reset hash string otherwise it causes unique id errors.
-        $this->setHash($this->folder.$uriString);
-
         $uri = $this->container->get('request')->getUri();
-        $uri = $uri->withPath($uriString); //  Create unique uri
+        $uri = $uri->withPath($path); //  Create unique uri
         
         $resolver = new ControllerResolver(
             $this->container,
@@ -158,7 +157,7 @@ class Layer
             [
                 'code' => '404',
                 'error' => 'request not found',
-                'uri' => $path.'/'.$method
+                'uri' => $path .'/'. $method .'Action'
             ]
         );
         return $this->getError();
@@ -189,6 +188,7 @@ class Layer
         Controller::$instance = $this->controller;
         Controller::$instance->router  = $this->router;
         Controller::$instance->request = $this->request;
+
         $this->done = true;
     }
 
@@ -218,6 +218,7 @@ class Layer
     public function getId()
     {
         $hashString = trim($this->hashString);
+
         return self::CACHE_KEY. sprintf("%u", crc32((string)$hashString));
     }
 

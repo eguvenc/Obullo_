@@ -25,7 +25,6 @@ Doctrine katmanı standart PDO programlama arayüzü üzerinden benzer arabiriml
     <ul>
         <li><a href="#getting-existing-connection">Varolan Bağlantıyı Almak</a></li>
         <li><a href="#creating-new-connection">Yeni Bir Bağlantı Oluşturmak</a></li>
-        <li><a href="#service">Servis</a></li>
     </ul>
 </li>
 
@@ -210,26 +209,6 @@ pdo_mysql:unix_socket=/PATH/TO/SOCK_FILE;dbname=YOUR_DB_NAME;charset=utf8;
 pdo_mysql:unix_socket=/var/run/mysqld/mysqld.sock;dbname=test
 ```
 
-<a name='service-provider'></a>
-
-### Servis Sağlayıcısı
-
-Veritabanı sınıfını kullanabilmek için servis sağlayıcısının <kbd>app/providers.php</kbd> dosyasından aşağıdaki gibi konfigüre edilmiş olması gerekir.
-
-```php
-$container->addServiceProvider('ServiceProvider\Connector\Database');
-```
-
-Servis sağlayıcısı içerisideki ilgili satırı aşağıdaki gibi düzenleyin.
-
-```php 
-$container->share('database', 'Obullo\Container\ServiceProvider\Connector\DoctrineDBAL')
-     ->withArgument($container)
-     ->withArgument($config->getParams());
-```
-
-Servis sağlayıcısı var olan bir veritabanı bağlantısını kullanmak yada yeni bir veritabanı bağlantısı açmak görevini üstlenir.
-
 <a name='getting-existing-connection'></a>
 
 ##### Varolan Bağlantıyı Almak
@@ -261,27 +240,27 @@ $db = $container->get('database')->factory(
 );
 ```
 
+<a name='service-provider'></a>
 
-<a name='service'></a>
+#### Servis Sağlayıcısı
 
-#### Servis
-
-Db servisi <kbd>database</kbd> servis sağlayıcısı içerisinden <kbd>default</kbd> bağlantısıyla yaratılan veritabanına ait metotlara kısayoldan ulaşmanızı sağlar. Servisin çalışabilmesi için <kbd>app/providers.php</kbd> dosyasında tanımlı olması gerekir.
+Database servis sağlayıcısı <kbd>default</kbd> bağlantısıyla yaratılan veritabanına ait metotlara kısayoldan ulaşmanızı sağlar. Servis sağlayıcının çalışabilmesi için aşağıdaki gibi tanımlı olması gerekir.
 
 ```php
-$container->addServiceProvider('Obullo\Container\ServiceProvider\Db');
+$container->addServiceProvider('App\ServiceProvider\Database');
 ```
 
-Servisi çağırmak,
-
-
-```php
-$container->get('db')->query(" .. ");
+```php 
+$container->share('database', 'Obullo\Container\Connector\DoctrineDBAL')
+     ->withArgument($container)
+     ->withArgument($params);
 ```
 
-kontrolör içerisinden,
+Veritabanı metotlarını çağırmak,
+
 
 ```php
+$this->db = $this->database->shared();
 $this->db->query(" .. ");
 ```
 

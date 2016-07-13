@@ -71,7 +71,7 @@ Sonra katmanı <kbd>app/middlewares.php</kbd> dosyası içerisinde tanımlayın.
 ```php
 $middleware->register(
     [
-        'Hello' => 'Http\Middlewares\Hello',
+        'Hello' => 'App\Middlewares\Hello',
     ]
 );
 ```
