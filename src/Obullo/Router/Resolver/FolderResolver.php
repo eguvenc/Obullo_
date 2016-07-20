@@ -49,7 +49,7 @@ class FolderResolver
         $folder = $this->router->getFolder();
         $hasSegmentOne = empty($segments[1]) ? false : true;
 
-        $file = CONTROLLER .$folder.'/'.RouteHelper::ucwords($folder).'.php';
+        $file = APP_PATH .'/Controller/'.$folder.'/'.RouteHelper::ucwords($folder).'.php';
 
         if (is_file($file)) {
 

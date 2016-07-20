@@ -211,7 +211,7 @@ class View implements ViewInterface
         // $path   = $router->getAncestor('/') . $router->getFolder();
         // $folder = (empty($path)) ? APP .'View' : CONTROLLER . $path .'/View';
 
-        $folder = APP . 'View';
+        $folder = APP_PATH . 'View';
 
         /**
          * End layer package support

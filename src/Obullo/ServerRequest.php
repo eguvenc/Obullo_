@@ -8,7 +8,7 @@ use Zend\Diactoros\ServerRequest as ZendServerRequest;
 
 /**
  * Http Request
- * 
+ *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
@@ -18,9 +18,9 @@ class ServerRequest extends ZendServerRequest
 
     /**
      * After HMVC operation request object will changed.
-     * 
+     *
      * This method returns to first original object of request.
-     * 
+     *
      * @return object
      */
     public function getMaster()
@@ -34,88 +34,19 @@ class ServerRequest extends ZendServerRequest
     }
 
     /**
-     * GET wrapper
-     * 
-     * @param string $key key
-     * 
-     * @return mixed
+     * Returns to http input
+     *
+     * @return object
      */
-    public function get($key)
+    public function getInput()
     {
-        $get = $this->getQueryParams();
-
-        return isset($get[$key]) ? $get[$key] : false;
+        $input = new HttpInput($this);
+        return $input;
     }
 
-    /**
-     * POST wrapper
-     * 
-     * @param string $key key
-     * 
-     * @return mixed
-     */
-    public function post($key)
-    {
-        $post = $this->getParsedBody();
-
-        return isset($post[$key]) ? $post[$key] : false;
-    }
-
-    /**
-     * REQUEST wrapper
-     * 
-     * @param string|null $key key
-     * 
-     * @return mixed
-     */
-    public function all($key = null)
-    {
-        $get  = (array)$this->getQueryParams();
-        $post = (array)$this->getParsedBody();
-
-        $request = array_merge($post, $get);
-
-        if (is_null($key)) {
-            return $request;
-        }
-        return isset($request[$key]) ? $request[$key] : false;
-    }
-
-    /**
-     * Check ip is valid
-     * 
-     * @param string $ip address
-     * 
-     * @return boolean
-     */
-    public function isValidIp($ip)
-    {
-        if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Get ip address
-     * 
-     * @return string
-     */
-    public function getIpAddress()
-    {
-        static $ipAddress = '';
-        $ipAddress = $this->getAttribute('TRUSTED_IP');
-
-        if (empty($ipAddress)) {
-            $server = $this->getServerParams();
-            $ipAddress = isset($server['REMOTE_ADDR']) ? $server['REMOTE_ADDR'] : '0.0.0.0';
-        }
-        return $ipAddress;
-    }
-    
     /**
      * Detect the request is xmlHttp ( Ajax )
-     * 
+     *
      * @return boolean
      */
     public function isAjax()
@@ -125,7 +56,7 @@ class ServerRequest extends ZendServerRequest
 
     /**
      * Detect the connection is secure ( Https )
-     * 
+     *
      * @return boolean
      */
     public function isSecure()
@@ -144,7 +75,7 @@ class ServerRequest extends ZendServerRequest
 
     /**
      * If http request type equal to POST returns to true otherwise false.
-     * 
+     *
      * @return boolean
      */
     public function isPost()
@@ -154,7 +85,7 @@ class ServerRequest extends ZendServerRequest
 
     /**
      * If http request type equal to GET returns true otherwise false.
-     * 
+     *
      * @return boolean
      */
     public function isGet()
@@ -164,7 +95,7 @@ class ServerRequest extends ZendServerRequest
 
     /**
      * If http request type equal to PUT returns to true otherwise false.
-     * 
+     *
      * @return boolean
      */
     public function isPut()
@@ -174,7 +105,7 @@ class ServerRequest extends ZendServerRequest
 
     /**
      * If http request type equal to PATCH returns to true otherwise false.
-     * 
+     *
      * @return boolean
      */
     public function isPatch()
@@ -184,7 +115,7 @@ class ServerRequest extends ZendServerRequest
 
     /**
      * Check method is head
-     * 
+     *
      * @return boolean
      */
     public function isHead()
@@ -194,7 +125,7 @@ class ServerRequest extends ZendServerRequest
 
     /**
      * Check method is options
-     * 
+     *
      * @return boolean
      */
     public function isOptions()
@@ -204,7 +135,7 @@ class ServerRequest extends ZendServerRequest
 
     /**
      * If http request type equal to DELETE returns to true otherwise false.
-     * 
+     *
      * @return boolean
      */
     public function isDelete()
@@ -216,12 +147,11 @@ class ServerRequest extends ZendServerRequest
      * Does this request use a given method?
      *
      * @param string $method HTTP method
-     * 
+     *
      * @return bool
      */
     public function isMethod($method)
     {
         return $this->getMethod() === $method;
     }
-
 }

@@ -8,14 +8,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 use SplQueue;
 use Obullo\Router\Group;
 use InvalidArgumentException;
-use App\Middleware\NotAllowed;
-use Obullo\Utils\Route as RouteHelper;
 use Obullo\Router\Filter\FilterTrait;
+use Obullo\Utils\Route as RouteHelper;
 use Interop\Container\ContainerInterface as Container;
 
 /**
  * Router
- * 
+ *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
@@ -38,11 +37,11 @@ class Router implements RouterInterface
     protected $count = 0;
     protected $routes = array();
     protected $dispatched = false;
-    protected $resolveCurrentPath = false;
+    protected $autoResolver = false;
 
     /**
      * Constructor
-     * 
+     *
      * @param Container $container container
      * @param array     $options   options
      *
@@ -56,16 +55,16 @@ class Router implements RouterInterface
         $this->response  = $container->get('response');
         $this->container = $container;
 
-        $this->resolveCurrentPath = $options['resolveCurrentPath'];
+        $this->autoResolver = $options['autoResolver'];
     }
 
     /**
      * Rewrite all http requests
-     * 
+     *
      * @param string $method  method
      * @param string $pattern regex pattern
      * @param string $rewrite replacement path
-     * 
+     *
      * @return void
      */
     public function rewrite($method, $pattern, $rewrite)
@@ -79,11 +78,11 @@ class Router implements RouterInterface
 
     /**
      * Create a route
-     * 
+     *
      * @param string $method  method
      * @param string $pattern regex pattern
      * @param mixed  $handler mixed
-     * 
+     *
      * @return void
      */
     public function map($method, $pattern, $handler = null)
@@ -100,14 +99,14 @@ class Router implements RouterInterface
 
     /**
      * Create group
-     * 
+     *
      * @param string   $pattern  pattern
      * @param callable $callable callable
-     * 
+     *
      * @return object
      */
     public function group($pattern, $callable)
-    {   
+    {
         if (! is_callable($callable)) {
             throw new InvalidArgumentException("Group method second parameter must be callable.");
         }
@@ -118,22 +117,21 @@ class Router implements RouterInterface
 
     /**
      * Route process
-     * 
+     *
      * @return void
      */
     protected function dispatch()
     {
         foreach ($this->routes as $r) {
-
             if (! in_array($this->request->getMethod(), (array)$r['method'])) {
-                $this->queue->enqueue(['callable' => new NotAllowed, 'params' => (array)$r['method']]);
+                $notAllowed = '\\'. APP_NAME .'\Middleware\NotAllowed';
+                $this->queue->enqueue(['callable' => new $notAllowed, 'params' => (array)$r['method']]);
                 continue;
             }
             $handler = $r['handler'];
             $pattern = $r['pattern'];
             
             if (trim($pattern, "/") == trim($this->path, "/") || preg_match('#^'.$pattern.'$#', $this->path, $params)) {
-
                 $this->queue($r['middlewares']);
 
                 if (is_string($handler)) {
@@ -159,14 +157,14 @@ class Router implements RouterInterface
      */
     protected function setDefaultHandler()
     {
-        if ($this->handler == null && $this->resolveCurrentPath) {
+        if ($this->handler == null && $this->autoResolver) {
             $this->handler = $this->path;
         }
     }
 
     /**
      * Group process
-     * 
+     *
      * @return void
      */
     public function popGroup()
@@ -188,7 +186,7 @@ class Router implements RouterInterface
 
     /**
      * Get executed handler result
-     * 
+     *
      * @return object|string
      */
     public function getHandler()
@@ -202,7 +200,7 @@ class Router implements RouterInterface
 
     /**
      * Set queue for middlewares
-     * 
+     *
      * @param SplQueue $queue queue
      *
      * @return void
@@ -214,9 +212,9 @@ class Router implements RouterInterface
 
     /**
      * Queue middlewares
-     * 
+     *
      * @param array $middlewares middlewares
-     * 
+     *
      * @return void
      */
     protected function queue($middlewares)
@@ -225,7 +223,7 @@ class Router implements RouterInterface
             return;
         }
         foreach ((array)$middlewares as $value) {
-            $middleware = '\App\Middleware\\'.$value['name'];
+            $middleware = '\\'. APP_NAME .'\Middleware\\'.$value['name'];
             if (! class_exists($middleware, false)) {
                 $this->queue->enqueue(['callable' => new $middleware, 'params' => $value['params']]);
             }
@@ -234,7 +232,7 @@ class Router implements RouterInterface
 
     /**
      * Add middleware
-     * 
+     *
      * @param string $name middleware name
      * @param array  $args arguments
      *
@@ -247,7 +245,7 @@ class Router implements RouterInterface
 
     /**
      * Set the class name
-     * 
+     *
      * @param string $class classname segment 1
      *
      * @return object Router
@@ -260,7 +258,7 @@ class Router implements RouterInterface
 
     /**
      * Set current method
-     * 
+     *
      * @param string $method name
      *
      * @return object Router
@@ -275,7 +273,7 @@ class Router implements RouterInterface
      * Set the folder name : It must be lowercase otherwise folder does not work
      *
      * @param string $folder folder
-     * 
+     *
      * @return object Router
      */
     public function setFolder($folder)
@@ -286,7 +284,7 @@ class Router implements RouterInterface
 
     /**
      * Sets top folder http://example.com/api/user/delete/4
-     * 
+     *
      * @param string $folder sets top folder
      *
      * @return void
@@ -300,7 +298,7 @@ class Router implements RouterInterface
      * Get primary folder
      *
      * @param string $separator get folder seperator
-     * 
+     *
      * @return void
      */
     public function getAncestor($separator = '')
@@ -312,7 +310,7 @@ class Router implements RouterInterface
      * Get folder
      *
      * @param string $separator get folder seperator
-     * 
+     *
      * @return string
      */
     public function getFolder($separator = '')
@@ -332,7 +330,7 @@ class Router implements RouterInterface
 
     /**
      * Returns to current method
-     * 
+     *
      * @return string
      */
     public function getMethod()
@@ -342,7 +340,7 @@ class Router implements RouterInterface
 
     /**
      * Returns php namespace of the current route
-     * 
+     *
      * @return string
      */
     public function getNamespace()
@@ -358,14 +356,14 @@ class Router implements RouterInterface
     }
 
     /**
-     * Get master request router
-     * 
+     * Get route object of master request
+     *
      * @return object
      */
     public function getMaster()
     {
         if ($this->container->has('router.master')) {
-            return $this->container->get('router.master');   
+            return $this->container->get('router.master');
         }
         return $this->container->get('router');
     }
@@ -381,5 +379,4 @@ class Router implements RouterInterface
         $this->folder = '';
         $this->ancestor = '';
     }
-
 }

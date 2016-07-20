@@ -2,6 +2,8 @@
 <?php
 // console
 
+define('ROOT', __DIR__.'/');
+
 require __DIR__.'/constants.php';
 require __DIR__.'/vendor/autoload.php';
 
@@ -10,14 +12,16 @@ $container = new League\Container\Container;
 /**
  * Add your service providers
  */
-$container->addServiceProvider('App\ServiceProvider\Config');
+$container->addServiceProvider('AppBundle\ServiceProvider\Config');
 
 /**
  * Create your console commands
  */
-use App\Command\LogHttpCommand;
 use Symfony\Component\Console\Application;
+use AppBundle\Command\LogHttpCommand;
+use AppBundle\Command\GenerateBundleCommand;
 
 $application = new Application();
 $application->add(new LogHttpCommand($container));
+$application->add(new GenerateBundleCommand($container));
 $application->run();

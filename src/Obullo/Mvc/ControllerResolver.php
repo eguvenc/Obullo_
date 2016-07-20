@@ -11,7 +11,7 @@ use Obullo\Router\Resolver\AncestorResolver;
 
 /**
  * Resolve controller
- * 
+ *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
@@ -23,7 +23,7 @@ class ControllerResolver
 
     /**
      * Constructor
-     * 
+     *
      * @param Container $container container
      * @param Request   $request   request
      * @param Response  $response  response
@@ -44,7 +44,7 @@ class ControllerResolver
      * input, and sets the current class/method
      *
      * @param string $handler path
-     * 
+     *
      * @return boolean|null
      */
     public function dispatch($handler)
@@ -65,7 +65,7 @@ class ControllerResolver
         if (! empty($segments[$method])) {
             $this->router->setMethod($segments[$method]); // A standard method request
         } else {
-            $segments[$method] = 'index';  // This lets the "routed" segment array identify 
+            $segments[$method] = 'index';  // This lets the "routed" segment array identify
                                            // that the default index method is being used.
             $this->router->setMethod('index');
         }
@@ -76,7 +76,7 @@ class ControllerResolver
 
     /**
      * Set dispatch folder
-     * 
+     *
      * @param string $folder folder
      *
      * @return void
@@ -88,7 +88,7 @@ class ControllerResolver
 
     /**
      * Returns to subfolder level
-     * 
+     *
      * @return integer
      */
     public function getSubfolderLevel()
@@ -98,9 +98,9 @@ class ControllerResolver
 
     /**
      * Resolve segments
-     * 
+     *
      * @param array $segments uri parts
-     * 
+     *
      * @return array|null
      */
     protected function resolve($segments)
@@ -108,6 +108,7 @@ class ControllerResolver
         if (empty($segments[0])) {
             return null;
         }
+
         $this->router->setFolder($segments[0]);      // Set first segment as default folder
         $segments = $this->checkAncestor($segments);
         $ancestor = $this->router->getAncestor('/');
@@ -116,7 +117,7 @@ class ControllerResolver
             $resolver = new AncestorResolver($this->router, $this->getSubfolderLevel());
             return $resolver->resolve($segments);
         }
-        if (is_dir(APP . $this->folder .'/'. $this->router->getFolder())) {
+        if (is_dir(APP_PATH . $this->folder .'/'. $this->router->getFolder())) {
             $resolver = new FolderResolver($this->router);
             return $resolver->resolve($segments);
         }
@@ -127,15 +128,15 @@ class ControllerResolver
 
     /**
      * Check first segment if have a ancestor folder & set it.
-     * 
+     *
      * @param array $segments uri segments
-     * 
+     *
      * @return array
      */
     protected function checkAncestor($segments)
     {
         if (! empty($segments[1])
-            && is_dir(APP . $this->folder .'/'. $segments[0] .'/'. $segments[1].'/')  // Detect ancestor folder and change folder !!
+            && is_dir(APP_PATH . $this->folder .'/'. $segments[0] .'/'. $segments[1].'/')  // Detect ancestor folder and change folder !!
         ) {
             $this->router->setAncestor($segments[0]);
             array_shift($segments);
@@ -145,7 +146,7 @@ class ControllerResolver
 
     /**
      * Returns to arity
-     * 
+     *
      * @return integer
      */
     public function getArity()
@@ -155,29 +156,29 @@ class ControllerResolver
 
     /**
      * Returns to called filename
-     * 
+     *
      * @return string
      */
     public function getFilename()
     {
-        return APP . $this->folder .'/'. $this->router->getAncestor('/') . $this->router->getFolder('/') . $this->router->getClass() . 'Controller.php';
+        return APP_PATH . $this->folder .'/'. $this->router->getAncestor('/') . $this->router->getFolder('/') . $this->router->getClass() . 'Controller.php';
     }
 
     /**
      * Returns to called filename of namespace
-     * 
+     *
      * @return string
      */
     public function getNamespace()
     {
-        return '\\App\\' . str_replace('/', '\\', $this->folder) . '\\'. $this->router->getNamespace() . $this->router->getClass() . 'Controller';
+        return '\\'. APP_NAME .'\\' . str_replace('/', '\\', $this->folder) .'\\'. $this->router->getNamespace() . $this->router->getClass() . 'Controller';
     }
 
     /**
      * Call the controller
      *
      * @param array $segments path segments
-     * 
+     *
      * @return mixed
      */
     public function call($segments)
@@ -186,12 +187,9 @@ class ControllerResolver
         $className = $this->getNamespace();
 
         if (! is_file($file)) {
-
             $this->router->clear();  // Fix layer errors.
             return false;
-
         } else {
-
             $method     = $this->router->getMethod() . 'Action'; // We put "Action" to allow to use reserved php names
             $controller = new $className($this->container);
 
@@ -214,5 +212,4 @@ class ControllerResolver
         }
         return true;
     }
-
 }

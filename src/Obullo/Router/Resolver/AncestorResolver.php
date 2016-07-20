@@ -49,7 +49,7 @@ class AncestorResolver
      */
     public function __construct(Router $router, $subfolderLevel)
     {
-        $this->router = $router;
+        $this->router  = $router;
         $this->subfolderLevel = (int)$subfolderLevel;
     }
 
@@ -62,8 +62,8 @@ class AncestorResolver
      */
     public function resolve(array $segments)
     {
-        $ancestor    = $this->router->getAncestor('/');
-        $CONTROLLER  = $this->getSubfolder($ancestor, $segments);
+        $ancestor   = $this->router->getAncestor('/');
+        $CONTROLLER = $this->getSubfolder($ancestor, $segments);
 
         $this->router->setFolder(implode("/", $CONTROLLER));
 
@@ -75,7 +75,7 @@ class AncestorResolver
         if (empty($segments[1])) {
             $segments[1] = $folder;
         }
-        $file = CONTROLLER . $ancestor . $folder .'/'. RouteHelper::ucwords($segments[1]) .'.php';
+        $file = APP_PATH .'Controller/'.$ancestor.$folder.'/'.RouteHelper::ucwords($segments[1]) .'.php';
 
         // Support for e.g "/examples/forms/Ajax"
     
@@ -88,7 +88,7 @@ class AncestorResolver
 
         // Support for unlimited subCONTROLLERS
 
-        if (isset($segments[2]) && is_dir(CONTROLLER . $ancestor . $folder)) {
+        if (isset($segments[2]) && is_dir(APP_PATH .'Controller/'.$ancestor.$folder)) {
             $this->arity = $arity;
             $this->segments = $segments;
             return $this;
@@ -117,7 +117,7 @@ class AncestorResolver
             if (isset($temp[$key - 1])) {
                 $append = $temp[$key - 1];
             }
-            if (is_dir(CONTROLLER . $ancestor . $append ."/". $folder)) {
+            if (is_dir(APP_PATH .'/Controller/'.$ancestor.$append."/".$folder)) {
                 $temp[$key]    = $append ."/". $folder;
                 $CONTROLLERS[$key] = $folder;
             }
