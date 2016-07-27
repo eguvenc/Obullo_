@@ -31,7 +31,7 @@ class DatabaseConnector implements ConnectorInterface
      * @param array $container container
      * @param array $params    connection parameters
      *
-     * @uses register()
+     * @return void
      */
     public function __construct(array $connectionParams)
     {

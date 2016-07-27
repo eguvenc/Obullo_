@@ -34,10 +34,6 @@ class Mvc extends AbstractServiceProvider
         $container->share('mvc', 'Obullo\Mvc\Layer\HmvcRequest')
             ->withArgument($container)
             ->withArgument($container->get('logger'))
-            ->withArgument(
-                [
-                    'cache' => false,
-                ]
-            );
+            ->withArgument(['cache' => false]);
     }
 }

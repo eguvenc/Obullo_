@@ -2,6 +2,7 @@
 
 namespace AppBundle\ServiceProvider;
 
+use Obullo\Connectors\MemcachedConnector;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 class Memcached extends AbstractServiceProvider
@@ -16,7 +17,7 @@ class Memcached extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'memcached'
+        'memcached:default'
     ];
 
     /**
@@ -31,27 +32,20 @@ class Memcached extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->share('memcached', 'Obullo\Container\Connector\Memcached')
-            ->withArgument($container)
-            ->withArgument(
-                array(
-                    'connections' => 
-                    [
-                        'default' => [
-                            'host' => '127.0.0.1',
-                            'port' => 11211,
-                            'weight' => 1,
-                            'options' => [
-                                'persistent' => false,
-                                'pool' => 'connection_pool',
-                                'timeout' => 30,
-                                'attempt' => 100,  // connection attemps
-                                'serializer' => 'php',
-                                'prefix' => null
-                            ]
-                        ]
-                    ]
-                )
-            );
+        $connectionParams = [
+            'host' => '127.0.0.1',
+            'port' => 11211,
+            'weight' => 1,
+            'options' => [
+                'persistent' => false,
+                'pool' => 'connection_pool',
+                'timeout' => 30,
+                'attempt' => 100,  // connection attemps
+                'serializer' => 'php',
+                'prefix' => null
+            ]
+        ];
+        $connector = new MemcachedConnector($connectionParams);
+        $container->share('memcached:default', $connector->getConnection());
     }
 }

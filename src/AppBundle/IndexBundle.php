@@ -33,10 +33,10 @@ class IndexBundle implements BundleInterface
         $container->addServiceProvider('AppBundle\ServiceProvider\Logger');
         $container->addServiceProvider('AppBundle\ServiceProvider\Database');
         $container->addServiceProvider('AppBundle\ServiceProvider\Cache');
-        // $container->addServiceProvider('AppBundle\ServiceProvider\Amqp');
+        $container->addServiceProvider('AppBundle\ServiceProvider\Amqp');
         $container->addServiceProvider('AppBundle\ServiceProvider\Redis');
-        // $container->addServiceProvider('AppBundle\ServiceProvider\Memcached');
-        // $container->addServiceProvider('AppBundle\ServiceProvider\Mongo');
+        $container->addServiceProvider('AppBundle\ServiceProvider\Memcached');
+        $container->addServiceProvider('AppBundle\ServiceProvider\Mongo');
     }
 
     public function addMiddlewares()

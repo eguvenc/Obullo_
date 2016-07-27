@@ -1,14 +1,16 @@
 
-### Obullo Php Framework
+### Obullo
 
-Small, fast & expandable.
+Small, fast & expandable php framework.
 
-* Small because of it has 8 core components.
+* Small because of it has 10 core components.
 * Easy to run your application from dev.app.php in 5 steps.
-* Supports Http Middlewares, Ps6 and Psr7 Standarts, Dependency Injection, Service Providers.
-* Bundle creation. ( A Bundle is a directory containing a set of files ( Controllers, Routes, Middlewares, Console Commands, Services Providers, Templates, Data, …) that implement a single feature (a blog, a forum, etc).
-* The core natively supports HMVC design pattern.
+* Supports Psr2, Ps6, Psr7 Standarts.
+* Http Middlewares, Dependency Injection and Service Providers.
+* Bundle creation. ( A Bundle is a directory containing a set of files ( Controllers, Route, Middlewares, Console Commands, Services Providers, View files and Resources, …) that implement a single feature (a blog, a forum, etc).
+* The kernel natively supports HMVC design pattern.
 * The router contains just 400 lines of code.
+* It use Zend, Symfony and The Php League libraries via composer.
 * Ready for php7.
 
 ### Philosophy
@@ -17,11 +19,15 @@ Small, fast & expandable.
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/obullo/framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Follow us on twitter !](https://img.shields.io/badge/twitter-follow me-green.svg?style=flat-square)](http://twitter.com/obullo)
 
+### Server Requirements
+
+* php >=5.5.9
+
 ### Status
 
 ----
 
-There is no release yet, we are still working on it.
+[x] There is no release yet, we are still working on it.
 
 ### Configuration of Vhost File for "dev" environment
 

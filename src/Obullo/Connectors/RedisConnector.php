@@ -14,7 +14,7 @@ use RuntimeException;
 class RedisConnector implements ConnectorInterface
 {
     /**
-     * Redis extension
+     * Redis connection
      *
      * @var object
      */

@@ -32,7 +32,7 @@ class Cache extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $redis = $container->get('redis')->shared();
+        $redis = $container->get('redis:default');
 
         $container->share('cache', new RedisAdapter($redis));
     }

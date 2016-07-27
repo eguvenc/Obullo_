@@ -2,6 +2,7 @@
 
 namespace AppBundle\ServiceProvider;
 
+use Obullo\Connectors\AmqpConnector;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 class Amqp extends AbstractServiceProvider
@@ -16,7 +17,7 @@ class Amqp extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'amqp'
+        'amqp:default'
     ];
 
     /**
@@ -31,33 +32,19 @@ class Amqp extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $params =  array(
+        $connectionParams =  array(
             'exchange' => [
                 'type' => 'direct',  // fanout / header / topic
                 'flag' => 'durable', // passive
             ],
-            'connections' => 
-            [
-                'default' => [
-                    'host'  => '127.0.0.1',
-                    'port'  => 5672,
-                    'username'  => 'root',
-                    'password'  => '123456',
-                    'vhost' => '/',
-                ],
-            ]
+            'host'  => '127.0.0.1',
+            'port'  => 5672,
+            'username'  => 'root',
+            'password'  => '123456',
+            'vhost' => '/',
         );
 
-        $container->share('amqp', 'Obullo\Container\Connector\Amqp')
-            ->withArgument($container)
-            ->withArgument($params);
-
-        // AmqpLib Replacement
-        // 
-        
-        // $container->share('amqp', 'Obullo\Container\Connector\AmqpLib')
-        //     ->withArgument($container)
-        //     ->withArgument($params);
-
+        $connector = new AmqpConnector($connectionParams);
+        $container->share('amqp:default', $connector->getConnection());
     }
 }

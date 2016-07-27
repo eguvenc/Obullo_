@@ -17,19 +17,14 @@ class WelcomeController extends Controller
     {
         // var_dump($this->container->get('redis:default'));
         // var_dump($this->container->get('database:default'));
-
-        // $this->session->set("test", "sdasd");
-
-        // echo $this->session->getId()."<br>";
-        // $this->session->regenerateId();
-        // echo $this->session->getId()."<br>";
-
-        // echo $this->session->get("test");
+        // var_dump($this->container->get('amqp:default'));
+        // var_dump($this->container->get('mongo:default'));
+        // var_dump($this->container->get('memcached:default'));
 
         // $this->flash->success("succesfull !!");
         // echo $this->flash->getOutputString();
 
-        // $this->db = $this->database->shared()->createQueryBuilder();
+        // $this->db = $this->container->get('database:default')->createQueryBuilder();
         // $this->db = $this->database->shared();
 
         // $stmt = $this->db->query("SELECT * FROM users");
