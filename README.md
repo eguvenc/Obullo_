@@ -10,6 +10,7 @@ Small, fast & expandable php framework.
 * Bundle creation. ( A Bundle is a directory containing a set of files ( Controllers, Route, Middlewares, Console Commands, Services Providers, View files and Resources, …) that implement a single feature (a blog, a forum, etc).
 * The kernel natively supports HMVC design pattern.
 * The router contains just 400 lines of code.
+* Supports Doctrine/DBAL and Doctrine ORM.
 * It use Zend, Symfony and The Php League libraries via composer.
 * Ready for php7.
 
