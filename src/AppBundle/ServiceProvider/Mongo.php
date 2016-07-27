@@ -32,8 +32,7 @@ class Mongo extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $file  = new ConfigFile('mongo');
-        $mongo = $file->getObject();
+        $mongo = $container->get('config')->load('mongo')->getObject();
 
         $container->share('mongo', 'Obullo\Container\Connector\Mongo')
             ->withArgument($container)

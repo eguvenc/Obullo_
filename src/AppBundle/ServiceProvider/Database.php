@@ -2,7 +2,7 @@
 
 namespace AppBundle\ServiceProvider;
 
-use Obullo\Config\ConfigFile;
+use Obullo\Connectors\DatabaseConnector;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 class Database extends AbstractServiceProvider
@@ -17,7 +17,7 @@ class Database extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'database'
+        'database:default'
     ];
 
     /**
@@ -32,38 +32,19 @@ class Database extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $file     = new ConfigFile('database');
-        $database = $file->getObject();
+        $database = $container->get('config')->load('database')->getObject();
         
-        $params = array(
-            'connections' => 
-            [
-                'default' => [
-                    'dsn'      => $database->connections->default->dsn,
-                    'username' => $database->connections->default->username,
-                    'password' => $database->connections->default->password,
-                    'options'  => [
-                        \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
-                        \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
-                    ]
-                ],
-
-            ],
-            'log' => [
-                'sqlQuery' => true
+        $connectionParams = array(
+            'dsn'      => $database->connections->default->dsn,
+            'username' => $database->connections->default->username,
+            'password' => $database->connections->default->password,
+            'options'  => [
+                \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+                \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
             ]
         );
-        
-        // $container->share('database', 'Obullo\Container\Connector\Database')
-        //     ->withArgument($container)
-        //     ->withArgument($params);
-
-        // DoctrineDBAL Replacement
-        // 
-
-        $container->share('database', 'Obullo\Container\Connector\DoctrineDBAL')
-            ->withArgument($container)
-            ->withArgument($params);
-
+        $connector = new DatabaseConnector($connectionParams);
+        $connector->setLogger($container->get('logger'));
+        $container->share('database:default', $connector->getConnection());
     }
 }

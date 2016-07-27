@@ -10,7 +10,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Control cookie set, get, delete and queue operations
- * 
+ *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
@@ -18,49 +18,49 @@ class Cookie implements CookieInterface
 {
     /**
      * Cookie unique id
-     * 
+     *
      * @var string
      */
     protected $id;
 
     /**
      * Config
-     * 
+     *
      * @var object
      */
     protected $config;
 
     /**
      * Logger
-     * 
+     *
      * @var object
      */
     protected $logger;
 
     /**
      * Cookie response headers
-     * 
+     *
      * @var array
      */
     protected $headers = array();
 
     /**
      * Request cookies
-     * 
+     *
      * @var array
      */
     protected $requestCookies = array();
 
     /**
      * Response cookies
-     * 
+     *
      * @var array
      */
     protected $responseCookies = array();
 
     /**
      * Constructor
-     * 
+     *
      * @param Request $request request
      * @param Config  $config  config
      * @param Logger  $logger  logger
@@ -68,15 +68,16 @@ class Cookie implements CookieInterface
     public function __construct(Request $request, Config $config, Logger $logger)
     {
         $this->requestCookies = $request->getCookieParams();
-        $this->config = $config;
-        
+
         $this->logger = $logger;
         $this->logger->debug('Cookie Class Initialized');
+        
+        $this->config = $config->load('app')->getArray();
     }
 
     /**
      * Create unique cookie id
-     * 
+     *
      * @return void
      */
     protected function createId()
@@ -88,9 +89,9 @@ class Cookie implements CookieInterface
 
     /**
      * Set cookie name
-     * 
+     *
      * @param string $name cookie name
-     * 
+     *
      * @return object
      */
     public function name($name)
@@ -102,9 +103,9 @@ class Cookie implements CookieInterface
     
     /**
      * Set cookie value
-     * 
+     *
      * @param string $value value
-     * 
+     *
      * @return object
      */
     public function value($value = '')
@@ -116,9 +117,9 @@ class Cookie implements CookieInterface
 
     /**
      * Set cookie expire in seconds
-     * 
+     *
      * @param integer $expire seconds
-     * 
+     *
      * @return object
      */
     public function expire($expire = 0)
@@ -130,9 +131,9 @@ class Cookie implements CookieInterface
 
     /**
      * Set cookie domain name
-     * 
+     *
      * @param string $domain name
-     * 
+     *
      * @return void
      */
     public function domain($domain = '')
@@ -144,9 +145,9 @@ class Cookie implements CookieInterface
 
     /**
      * Set cookie path
-     * 
+     *
      * @param string $path name
-     * 
+     *
      * @return object
      */
     public function path($path = '/')
@@ -158,9 +159,9 @@ class Cookie implements CookieInterface
 
     /**
      * Set secure cookie
-     * 
+     *
      * @param boolean $bool true or false
-     * 
+     *
      * @return object
      */
     public function secure($bool = false)
@@ -172,9 +173,9 @@ class Cookie implements CookieInterface
 
     /**
      * Make cookie available just for http. ( No javascript )
-     * 
+     *
      * @param boolean $bool true or false
-     * 
+     *
      * @return object
      */
     public function httpOnly($bool = false)
@@ -186,9 +187,9 @@ class Cookie implements CookieInterface
 
     /**
      * Set a cookie prefix
-     * 
+     *
      * @param string $prefix prefix
-     * 
+     *
      * @return object
      */
     public function prefix($prefix = '')
@@ -200,14 +201,14 @@ class Cookie implements CookieInterface
 
     /**
      * Set cookie
-     * 
+     *
      * @param array|null|string $name  mixed name or parameters
      * @param mixed             $value value
      *
      * @return boolean
      */
     public function set($name = null, $value = null)
-    {        
+    {
         if (is_array($name)) {
             $params = $name;
         } elseif (empty($name)) {
@@ -229,9 +230,9 @@ class Cookie implements CookieInterface
 
     /**
      * Build cookie parameters
-     * 
+     *
      * @param array $params cookie params
-     * 
+     *
      * @return array
      */
     public function buildParams(array $params)
@@ -289,9 +290,9 @@ class Cookie implements CookieInterface
 
     /**
      * Returns to true if cookie id exists in headers
-     * 
+     *
      * @param string $id cookie id
-     * 
+     *
      * @return bool
      */
     public function exists($id = null)
@@ -302,7 +303,7 @@ class Cookie implements CookieInterface
 
     /**
      * Returns to cookie response header array
-     * 
+     *
      * @return array
      */
     public function getHeaders()
@@ -312,9 +313,9 @@ class Cookie implements CookieInterface
 
     /**
      * Create timestamp
-     * 
+     *
      * @param array $properties cookie properties
-     * 
+     *
      * @return mixed
      */
     protected function getTimestamp(array $properties)
@@ -332,10 +333,10 @@ class Cookie implements CookieInterface
 
     /**
      * Get cookie
-     * 
+     *
      * @param string $key    cookie key
      * @param string $prefix cookie prefix
-     * 
+     *
      * @return string sanizited cookie
      */
     public function get($key, $prefix = null)
@@ -352,7 +353,7 @@ class Cookie implements CookieInterface
 
     /**
      * Returns to id of cookie
-     * 
+     *
      * @return string
      */
     public function getId()
@@ -362,9 +363,9 @@ class Cookie implements CookieInterface
 
     /**
      * Get expiration of cookie
-     * 
+     *
      * @param int $expire in second
-     * 
+     *
      * @return int
      */
     protected function getExpiration($expire)
@@ -384,7 +385,7 @@ class Cookie implements CookieInterface
     *
     * @param string|array $name   cookie
     * @param string       $prefix custom prefix
-    * 
+    *
     * @return boolean
     */
     public function delete($name = null, $prefix = null)
@@ -414,12 +415,11 @@ class Cookie implements CookieInterface
     *
     * @param string|array $name   cookie
     * @param string       $prefix custom prefix
-    * 
+    *
     * @return bool
     */
     public function remove($name = null, $prefix = null)
     {
         return $this->delete($name, $prefix);
     }
-
 }

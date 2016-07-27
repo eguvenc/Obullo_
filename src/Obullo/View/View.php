@@ -115,7 +115,7 @@ class View implements ViewInterface
      * @param mixed $filename filename
      * @param mixed $data     array data
      * 
-     * @return string                      
+     * @return string
      */
     public function render($filename, $data = array())
     {
@@ -125,13 +125,12 @@ class View implements ViewInterface
             $template = $filename->getTemplate();
 
             if ($template instanceof TemplateInterface) {
+                
                 $template->setContainer($this->container);
                 $template->setVariables();
 
                 $filename = $template->getName();
                 $data     = array_merge($template->getVariables(), $data);
-
-                // print_r($data);
 
             } else {
                 $filename = (string)$template;
@@ -191,7 +190,7 @@ class View implements ViewInterface
      * @param mixed   $data     array data
      * @param boolean $include  fetch as string or return
      * 
-     * @return object Stream or Response                     
+     * @return object Stream or Response
      */
     protected function renderView($filename, $data = array(), $include = true)
     {

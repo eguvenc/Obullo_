@@ -10,18 +10,20 @@ use Psr\Http\Message\ServerRequestInterface;
 use Interop\Container\ContainerInterface as Container;
 
 /**
- * Layers is a programming technique that delivers you to "Multitier Architecture" 
+ * Layers is a programming technique that delivers you to "Multitier Architecture"
  * to scale your applications.
- * 
+ *
  * Derived from Java HMVC pattern, 2009 - 2016.
- * 
+ *
  * http://www.javaworld.com/article/2076128/design-patterns/-
  * hmvc--the-layered-pattern-for-developing-strong-client-tiers.html
+ *
+ * @author Ersin Guvenc <eguvenc@gmail.com>
  */
 
 /**
  * Layer
- * 
+ *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
@@ -42,7 +44,7 @@ class Layer
 
     /**
      * Constructor
-     * 
+     *
      * @param object $container \Obullo\Container\ContainerInterface
      * @param array  $params    config parameters
      * @param string $folder    folder ( Controller or View/Controller )
@@ -58,11 +60,11 @@ class Layer
 
     /**
      * Create new http request
-     * 
+     *
      * @param ServerRequestInterface $request psr7 request
      * @param string                 $method  request method
      * @param array                  $data    any possible data
-     * 
+     *
      * @return void
      */
     public function newRequest(ServerRequestInterface $request, $method = 'GET', $data = array())
@@ -94,7 +96,7 @@ class Layer
      *
      * @param string $method layer method
      * @param array  $data   params
-     * 
+     *
      * @return void
      */
     public function setMethod($method = 'GET', $data = array())
@@ -107,7 +109,7 @@ class Layer
         if ($method == 'POST') {
             $request = $request->withParsedBody($data);
             $this->container->share('request', $request);
-        } 
+        }
         if ($method == 'GET') {
             $request = $request->withQueryParams($data);
             $this->container->share('request', $request);
@@ -118,7 +120,7 @@ class Layer
      * Execute layer
      *
      * @param string $path uri
-     * 
+     *
      * @return string
      */
     public function execute($path)
@@ -133,25 +135,24 @@ class Layer
         );
         $resolver->setFolder($this->folder);
 
-        ob_start();
         $result = $resolver->dispatch($uri->getPath());
+        
         if ($result == false) {
-            ob_end_clean();
             return $this->show404($uri->getPath(), $this->container->get('router')->getMethod());
         }
-        return ob_get_clean();
+        return $result;
     }
 
     /**
      * Show404 output and reset layer variables
-     * 
+     *
      * @param string $path   current uri
      * @param string $method current method
-     * 
+     *
      * @return string 404 message
      */
     protected function show404($path, $method)
-    {   
+    {
         $this->clear();
         $this->setError(
             [
@@ -176,7 +177,7 @@ class Layer
 
     /**
      * Restore original controller objects
-     * 
+     *
      * @return void
      */
     public function restore()
@@ -206,13 +207,13 @@ class Layer
                 $this->hashString .= str_replace('"', '', json_encode($resource));
             }
             return;
-        } 
+        }
         $this->hashString .= $resource;
     }
 
     /**
      * Returns to Cache key ( layer id ).
-     * 
+     *
      * @return string
      */
     public function getId()
@@ -226,7 +227,7 @@ class Layer
      * Set last response error
      *
      * @param array $error data
-     * 
+     *
      * @return object
      */
     public function setError(array $error)
@@ -237,7 +238,7 @@ class Layer
 
     /**
      * Get last response error
-     * 
+     *
      * @return string
      */
     public function getError()
@@ -247,11 +248,11 @@ class Layer
 
     /**
      * Close Layer Connections
-     * 
+     *
      * If we have any possible Layer exceptions
      * reset the router variables and restore all objects
      * to complete Layer process. Otherwise we see uncompleted request errors.
-     * 
+     *
      * @return void
      */
     public function close()
@@ -262,5 +263,4 @@ class Layer
         }
         $this->done = false;
     }
-    
 }

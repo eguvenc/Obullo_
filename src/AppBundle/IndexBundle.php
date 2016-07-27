@@ -1,18 +1,18 @@
 <?php
 
-namespace BackendBundle;
+namespace AppBundle;
 
-use Obullo\Mvc\Bundle\RegexMatch;
+use Obullo\Mvc\Bundle\LiteralMatch;
 use Obullo\Mvc\Bundle\BundleInterface;
 
-class IndexService implements BundleInterface
+class IndexBundle implements BundleInterface
 {
     protected $app;
     protected $match;
 
     public function __construct($pattern)
     {
-        $this->match = new RegexMatch($pattern);
+        $this->match = new LiteralMatch($pattern);
     }
 
     public function setApplication($app)
@@ -26,6 +26,8 @@ class IndexService implements BundleInterface
 
         $container->addServiceProvider('AppBundle\ServiceProvider\Config');
         $container->addServiceProvider('AppBundle\ServiceProvider\Cookie');
+        $container->addServiceProvider('AppBundle\ServiceProvider\Session');
+        $container->addServiceProvider('AppBundle\ServiceProvider\Flash');
         $container->addServiceProvider('AppBundle\ServiceProvider\Mvc');
         $container->addServiceProvider('AppBundle\ServiceProvider\View');
         $container->addServiceProvider('AppBundle\ServiceProvider\Logger');
@@ -52,4 +54,5 @@ class IndexService implements BundleInterface
     {
         return $this->match;
     }
+
 }

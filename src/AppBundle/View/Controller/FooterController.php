@@ -6,8 +6,8 @@ use Obullo\Mvc\Controller;
 
 class FooterController extends Controller
 {
-	public function indexAction()
-	{
-		echo 'Footer';
-	}
+    public function indexAction()
+    {
+        return 'Footer';
+    }
 }

@@ -6,8 +6,8 @@ use Obullo\Mvc\Controller;
 
 class HeaderController extends Controller
 {
-	public function indexAction()
-	{
-		echo 'Header';
-	}
+    public function indexAction()
+    {
+        return 'Header';
+    }
 }

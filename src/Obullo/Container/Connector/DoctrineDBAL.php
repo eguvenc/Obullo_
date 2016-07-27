@@ -12,7 +12,7 @@ use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 /**
  * Doctrine DBAL Connection Provider
- * 
+ *
  * @copyright 2009-2015 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
@@ -20,21 +20,21 @@ class DoctrineDBAL extends AbstractServiceProvider
 {
     /**
      * Database config array
-     * 
+     *
      * @var array
      */
     protected $params;
 
     /**
      * Container
-     * 
+     *
      * @var object
      */
     protected $container;
 
     /**
      * Doctrin adapter class
-     * 
+     *
      * @var string
      */
     protected $adapterClass;
@@ -44,7 +44,7 @@ class DoctrineDBAL extends AbstractServiceProvider
      *
      * @param array $container container
      * @param array $params    connection parameters
-     * 
+     *
      * @uses register()
      */
     public function __construct(Container $container, array $params)
@@ -57,13 +57,12 @@ class DoctrineDBAL extends AbstractServiceProvider
 
     /**
      * Register all connections as shared services ( It should be run one time )
-     * 
+     *
      * @return void
      */
     public function register()
     {
         foreach (array_keys($this->params['connections']) as $key) {
-
             $this->container->share(
                 $this->getConnectionKey($key),
                 function () use ($key) {
@@ -75,9 +74,9 @@ class DoctrineDBAL extends AbstractServiceProvider
 
     /**
      * Creates databse connections
-     * 
+     *
      * @param array $params database connection params
-     * 
+     *
      * @return object
      */
     protected function createConnection(array $params)
@@ -101,7 +100,7 @@ class DoctrineDBAL extends AbstractServiceProvider
      * Retrieve shared database connection instance from connection pool
      *
      * @param array $params provider parameters
-     * 
+     *
      * @return object PDO
      */
     public function shared($params = array())
@@ -112,7 +111,7 @@ class DoctrineDBAL extends AbstractServiceProvider
         if (! isset($this->params['connections'][$params['connection']])) {
             throw new UnexpectedValueException(
                 sprintf(
-                    'Connection key %s does not exist in your database.php config file.',
+                    'Connection key %s does not exist in your database config file.',
                     $params['connection']
                 )
             );
@@ -124,13 +123,13 @@ class DoctrineDBAL extends AbstractServiceProvider
 
     /**
      * Create a new database connection if you don't want to add config file and you want to create new one.
-     * 
+     *
      * @param array $params connection parameters
-     * 
+     *
      * @return object database
      */
     public function factory($params = array())
-    {   
+    {
         $key = $this->getConnectionId($params);
 
         if (! $this->container->has($key)) { // create shared connection if not exists
@@ -159,5 +158,4 @@ class DoctrineDBAL extends AbstractServiceProvider
             }
         }
     }
-
 }

@@ -8,8 +8,8 @@ trait ConfigAwareTrait
 {
     /**
      * Config
-     * 
-     * @var array
+     *
+     * @var object
      */
     protected $config;
 
@@ -17,7 +17,7 @@ trait ConfigAwareTrait
      * Set config
      *
      * @param object $config config
-     * 
+     *
      * @return $this
      */
     public function setConfig(Config $config)
@@ -30,7 +30,7 @@ trait ConfigAwareTrait
     /**
      * Get config
      *
-     * @return array
+     * @return object
      */
     public function getConfig()
     {

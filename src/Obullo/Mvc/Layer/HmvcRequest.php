@@ -9,7 +9,7 @@ use Obullo\View\Gui\ViewComponentInterface as ViewComponent;
 
 /**
  * Layer Request
- * 
+ *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
@@ -27,7 +27,7 @@ class HmvcRequest implements HmvcRequestInterface
      * @param array  $params    array parameters
      */
     public function __construct(Container $container, Logger $logger, array $params)
-    {   
+    {
         $this->container = $container;
         $this->params = $params;
         $this->logger = $logger;
@@ -35,9 +35,9 @@ class HmvcRequest implements HmvcRequestInterface
 
     /**
      * Create new request
-     * 
+     *
      * @param string $path request uri
-     * 
+     *
      * @return object
      */
     protected function createRequest($path)
@@ -60,12 +60,12 @@ class HmvcRequest implements HmvcRequestInterface
 
     /**
      * GET Request
-     * 
+     *
      * @param string  $path       uri string
      * @param array   $data       get data
      * @param integer $expiration cache ttl
      * @param string  $folder     folder
-     * 
+     *
      * @return string
      */
     public function get($path = '/', $data = array(), $expiration = null)
@@ -80,7 +80,7 @@ class HmvcRequest implements HmvcRequestInterface
      * @param array   $data       post data
      * @param integer $expiration cache ttl
      * @param string  $folder     folder
-     * 
+     *
      * @return string
      */
     public function post($path = '/', $data = array(), $expiration = null)
@@ -90,7 +90,7 @@ class HmvcRequest implements HmvcRequestInterface
 
     /**
      * Create new request
-     * 
+     *
      * Layer always must create new instance other ways we can't use nested layers.
      *
      * @param string  $folder     folder
@@ -98,7 +98,7 @@ class HmvcRequest implements HmvcRequestInterface
      * @param string  $path       uri string
      * @param array   $data       request data
      * @param integer $expiration ttl
-     * 
+     *
      * @return string
      */
     protected function newRequest($folder, $method, $path = '/', $data = array(), $expiration = null)
@@ -127,7 +127,6 @@ class HmvcRequest implements HmvcRequestInterface
          * Read Cache
          */
         if ($this->params['cache']) {
-
             $cacheItem = $this->container->get('cache')->getItem($id);
 
             if ($cacheItem->isHit()) {
@@ -143,12 +142,10 @@ class HmvcRequest implements HmvcRequestInterface
          * Save Cache
          */
         if (is_numeric($expiration)) {
-
             $cache = $this->container->get('cache');
             $cacheItem = $cache->getItem($id);
             $cacheItem->set(base64_encode($response));
             $cacheItem->expiresAfter((int)$expiration);
-
             $cache->save($cacheItem);
         }
         $layer->restore();  // Restore controller objects
@@ -163,12 +160,11 @@ class HmvcRequest implements HmvcRequestInterface
     
     /**
      * Returns to flush object
-     * 
+     *
      * @return object
      */
     public function getFlush()
     {
         return new Flush($this->container);
     }
-
 }

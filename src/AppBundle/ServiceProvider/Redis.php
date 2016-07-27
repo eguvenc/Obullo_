@@ -2,7 +2,7 @@
 
 namespace AppBundle\ServiceProvider;
 
-use Obullo\Config\ConfigFile;
+use Obullo\Connectors\RedisConnector;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 class Redis extends AbstractServiceProvider
@@ -17,7 +17,7 @@ class Redis extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'redis'
+        'redis:default'
     ];
 
     /**
@@ -32,43 +32,22 @@ class Redis extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $file  = new ConfigFile('redis');
-        $redis = $file->getObject();
+        $redis = $container->get('config')->load('redis')->getObject();
 
-        $container->share('redis', 'Obullo\Container\Connector\Redis')
-            ->withArgument($container)
-            ->withArgument(
-                array(
-                    'connections' => 
-                    [
-                        'default' => [
-                            'host' => $redis->connections->default->host,
-                            'port' => $redis->connections->default->port,
-                            'options' => [
-                                'persistent' => false,
-                                'auth' => '',
-                                'timeout' => 30,
-                                'attempt' => 100,
-                                'serializer' => 'none',
-                                'database' => null,
-                                'prefix' => null,
-                            ]
-                        ],
-                        'second' => [
-                            'host' => $redis->connections->second->host,
-                            'port' => $redis->connections->second->port,
-                            'options' => [
-                                'persistent' => false,
-                                'auth' => '',
-                                'timeout' => 30,
-                                'attempt' => 100,
-                                'serializer' => 'php',
-                                'database' => null,
-                                'prefix' => null,
-                            ]
-                        ],
-                    ]
-                )
-            );
+        $connectionParams = [
+            'host' => $redis->connections->default->host,
+            'port' => $redis->connections->default->port,
+            'options' => [
+                'persistent' => false,
+                'auth' => '',
+                'timeout' => 30,
+                'attempt' => 100,
+                'serializer' => 'none',
+                'database' => null,
+                'prefix' => null,
+            ]
+        ];
+        $connector = new RedisConnector($connectionParams);
+        $container->share('redis:default', $connector->getConnection());
     }
 }

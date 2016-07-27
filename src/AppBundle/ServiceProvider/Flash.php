@@ -2,9 +2,11 @@
 
 namespace AppBundle\ServiceProvider;
 
+use Obullo\Session\FlashBag\FlashBag;
+use Obullo\Session\FlashBag\Template\BootstrapTemplate;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
-class Password extends AbstractServiceProvider
+class Flash extends AbstractServiceProvider
 {
     /**
      * The provides array is a way to let the container
@@ -16,7 +18,7 @@ class Password extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'password'
+        'flash'
     ];
 
     /**
@@ -29,6 +31,11 @@ class Password extends AbstractServiceProvider
      */
     public function register()
     {
-        $this->getContainer()->share('password', 'Obullo\Utils\Password');
+        $container = $this->getContainer();
+
+        $container->share('flash', 'Obullo\Session\FlashBag\FlashBag')
+            ->withArgument($container->get('session'))
+            ->withArgument($container->get('logger'))
+            ->withMethodCall('setTemplate', [new BootstrapTemplate]);
     }
 }

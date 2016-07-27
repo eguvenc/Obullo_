@@ -8,8 +8,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use SplQueue;
 use Obullo\Router\Group;
 use InvalidArgumentException;
+use Obullo\Router\Utils\Text;
 use Obullo\Router\Filter\FilterTrait;
-use Obullo\Utils\Route as RouteHelper;
 use Interop\Container\ContainerInterface as Container;
 
 /**
@@ -325,7 +325,7 @@ class Router implements RouterInterface
      */
     public function getClass()
     {
-        return htmlspecialchars(RouteHelper::ucwords($this->class));
+        return htmlspecialchars(Text::ucwords($this->class));
     }
 
     /**
@@ -350,7 +350,7 @@ class Router implements RouterInterface
             $exp = explode("/", $folder);
             $folder = trim(implode("\\", $exp), "\\");
         }
-        $namespace = RouteHelper::ucwords($this->getAncestor()).'\\'.RouteHelper::ucwords($folder);
+        $namespace = Text::ucwords($this->getAncestor()).'\\'.Text::ucwords($folder);
         $namespace = trim($namespace, '\\');
         return (empty($namespace)) ? '' : $namespace.'\\';
     }

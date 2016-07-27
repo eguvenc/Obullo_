@@ -2,7 +2,6 @@
 
 namespace AppBundle\ServiceProvider;
 
-use Obullo\Config\ConfigFile;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 class Config extends AbstractServiceProvider
@@ -32,8 +31,6 @@ class Config extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $app = new ConfigFile('app');
-
-        $container->share('config', $app->getObject());
+        $container->share('config', 'Obullo\Config\Config');
     }
 }

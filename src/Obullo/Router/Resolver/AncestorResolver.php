@@ -2,12 +2,12 @@
 
 namespace Obullo\Router\Resolver;
 
-use Obullo\Utils\Route as RouteHelper;
+use Obullo\Router\Utils\Text;
 use Obullo\Router\RouterInterface as Router;
 
 /**
  * Resolve primary folder
- * 
+ *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
@@ -22,28 +22,28 @@ class AncestorResolver
 
     /**
      * Argument slice
-     * 
+     *
      * @var integer
      */
     protected $arity = 0;
 
     /**
      * Segments
-     * 
+     *
      * @var array
      */
     protected $segments;
 
     /**
      * Subfolder level
-     * 
+     *
      * @var int
      */
     protected $subfolderLevel;
 
     /**
      * Constructor
-     * 
+     *
      * @param Router  $router         router
      * @param Integer $subfolderLevel integer
      */
@@ -55,9 +55,9 @@ class AncestorResolver
 
     /**
      * Resolve
-     * 
+     *
      * @param array $segments uri segments
-     * 
+     *
      * @return array resolved segments
      */
     public function resolve(array $segments)
@@ -75,7 +75,7 @@ class AncestorResolver
         if (empty($segments[1])) {
             $segments[1] = $folder;
         }
-        $file = APP_PATH .'Controller/'.$ancestor.$folder.'/'.RouteHelper::ucwords($segments[1]) .'.php';
+        $file = APP_PATH .'Controller/'.$ancestor.$folder.'/'.Text::ucwords($segments[1]) .'.php';
 
         // Support for e.g "/examples/forms/Ajax"
     
@@ -99,10 +99,10 @@ class AncestorResolver
 
     /**
      * Returns to sub CONTROLLERS if they exist
-     * 
+     *
      * @param string $ancestor ancestor folder
      * @param array  $segments uri segments
-     * 
+     *
      * @return array
      */
     protected function getSubfolder($ancestor, $segments)
@@ -110,7 +110,6 @@ class AncestorResolver
         $append  = "";
         $temp = [];
         foreach ($segments as $key => $folder) {
-
             if ($key > $this->subfolderLevel) {  // Subfolder level limit
                 continue;
             }
@@ -127,7 +126,7 @@ class AncestorResolver
 
     /**
      * Get arity
-     * 
+     *
      * @return int
      */
     public function getArity()
@@ -137,12 +136,11 @@ class AncestorResolver
 
     /**
      * Get uri segments
-     * 
+     *
      * @return array
      */
     public function getSegments()
     {
         return $this->segments;
     }
-
 }

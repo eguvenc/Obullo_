@@ -108,7 +108,6 @@ class ControllerResolver
         if (empty($segments[0])) {
             return null;
         }
-
         $this->router->setFolder($segments[0]);      // Set first segment as default folder
         $segments = $this->checkAncestor($segments);
         $ancestor = $this->router->getAncestor('/');
@@ -136,7 +135,7 @@ class ControllerResolver
     protected function checkAncestor($segments)
     {
         if (! empty($segments[1])
-            && is_dir(APP_PATH . $this->folder .'/'. $segments[0] .'/'. $segments[1].'/')  // Detect ancestor folder and change folder !!
+            && is_dir(APP_PATH . $this->folder .'/'. $segments[0] .'/'. $segments[1].'/')  // Detect ancestor
         ) {
             $this->router->setAncestor($segments[0]);
             array_shift($segments);
@@ -179,7 +178,7 @@ class ControllerResolver
      *
      * @param array $segments path segments
      *
-     * @return mixed
+     * @return string|Response
      */
     public function call($segments)
     {
@@ -207,9 +206,6 @@ class ControllerResolver
             ),
             array_slice($segments, $this->getArity())
         );
-        if ($result instanceof Response) {
-            return $result;
-        }
-        return true;
+        return $result;
     }
 }

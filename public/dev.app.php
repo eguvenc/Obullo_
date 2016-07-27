@@ -39,12 +39,12 @@ $container->share('response', new Zend\Diactoros\Response);
 $container->share('router', new Obullo\Router\Router($container, ['autoResolver' => true]));
 
 /**
- * Step 3: Create your mvc services
+ * Step 3: Create your mvc appliations
  */
 $application = new Obullo\Mvc\App($container);
 
-$application->addBundle(new AppBundle\IndexService('/'));
-// $application->addBundle(new BackendBundle\IndexService('/.{2}/backend.*'));
+$application->addBundle(new AppBundle\IndexBundle('/'));
+$application->addBundle(new BackendBundle\IndexBundle('/backend'));
 $application->create();
 
 /**
