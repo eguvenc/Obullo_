@@ -39,7 +39,7 @@ $container->share('response', new Zend\Diactoros\Response);
 $container->share('router', new Obullo\Router\Router($container, ['autoResolver' => true]));
 
 /**
- * Step 3: Create your mvc appliations
+ * Step 3: Create your mvc applications
  */
 $application = new Obullo\Mvc\App($container);
 
