@@ -50,7 +50,7 @@ class Controller
         if (in_array($key, ['request', 'router', 'view'])) {
             self::$instance = &$this;
         }
-        return $this->container->get($key);
+        return $this->container->get($key); // ucfirst($key)
     }
 
     /**

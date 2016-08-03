@@ -52,11 +52,15 @@ class Config extends Ini
     /**
      * Load config file
      *
-     * @param oject
+     * @param string $env environment
+     *
+     * @param object
      */
-    public function load($filename)
+    public function load($filename, $env = null)
     {
-        $this->file = ROOT .'config/'.$this->env.'/'.$filename.'.ini';
+        $env = ($env) ? $env : $this->env;
+
+        $this->file = ROOT .'config/'.$env.'/'.$filename.'.ini';
         return $this;
     }
 

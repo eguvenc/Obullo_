@@ -13,19 +13,21 @@ class WelcomeController extends Controller
      *
      * @return void
      */
-    public function indexAction()
+    public function indexAction($request)
     {
-        // var_dump($this->container->get('redis:default'));
-        // var_dump($this->container->get('database:default'));
-        // var_dump($this->container->get('amqp:default'));
-        // var_dump($this->container->get('mongo:default'));
-        // var_dump($this->container->get('memcached:default'));
+        $args = $this->request->getArgs();
+        print_r($args);
+
+        // var_dump($this->container->get('Redis:Default'));
+        // var_dump($this->container->get('Database:Default'));
+        // var_dump($this->container->get('Amqp:Default'));
+        // var_dump($this->container->get('Mongo:Default'));
+        // var_dump($this->container->get('Memcached:Default'));
 
         // $this->flash->success("succesfull !!");
-        // echo $this->flash->getOutputString();
+        // echo $this->flash->getMessageString();
 
-        // $this->db = $this->container->get('database:default')->createQueryBuilder();
-        // $this->db = $this->database->shared();
+        // $this->db = $this->container->get('Database:Default')->createQueryBuilder();
 
         // $stmt = $this->db->query("SELECT * FROM users");
         // $row  = $stmt->fetch(\PDO::FETCH_OBJ);

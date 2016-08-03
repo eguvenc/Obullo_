@@ -182,6 +182,7 @@ class ControllerResolver
      */
     public function call($segments)
     {
+        $request   = $this->container->get('request');
         $file      = $this->getFilename();
         $className = $this->getNamespace();
 
@@ -189,7 +190,7 @@ class ControllerResolver
             $this->router->clear();  // Fix layer errors.
             return false;
         } else {
-            $method     = $this->router->getMethod() . 'Action'; // We put "Action" to allow to use reserved php names
+            $method     = $this->router->getMethod() . 'Action'; // Allow to use reserved php names
             $controller = new $className($this->container);
 
             if (! method_exists($controller, $method)
@@ -199,13 +200,9 @@ class ControllerResolver
                 return false;
             }
         }
-        $result = call_user_func_array(
-            array(
-                $controller,
-                $method
-            ),
-            array_slice($segments, $this->getArity())
-        );
-        return $result;
+        $args   = array_slice($segments, $this->getArity());
+        $request->setArgs($args);
+        
+        return $controller->$method($request);
     }
 }

@@ -58,8 +58,8 @@ class FlashBag
     /**
      * Constructor
      *
-     * @param object $session   \Obullo\Session\SessionInterface
-     * @param object $logger    \Obullo\Log\LoggerInterface
+     * @param object $session \Obullo\Session\SessionInterface
+     * @param object $logger  \Obullo\Log\LoggerInterface
      */
     public function __construct(Session $session, Logger $logger)
     {
@@ -98,7 +98,7 @@ class FlashBag
      *
      * @return array
      */
-    public function getOutputArray()
+    public function getMessageArray()
     {
         $messages = array();
         foreach (array('success', 'error', 'info', 'warning') as $key) {
@@ -118,9 +118,9 @@ class FlashBag
      *
      * @return string
      */
-    public function getOutputString($newline = '<br />')
+    public function getMessageString($newline = '<br />')
     {
-        $array = $this->getOutputArray();
+        $array = $this->getMessageArray();
         return implode($newline, $array);
     }
 

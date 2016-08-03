@@ -43,7 +43,7 @@ Put the latest version to your web root (<kbd>/var/www/project/</kbd>). Create y
 	ServerName project
 
 	SetEnv APP_ENV dev
-	DirectoryIndex dev.app.php
+	DirectoryIndex dev_app.php
 
 </VirtualHost>
 ```

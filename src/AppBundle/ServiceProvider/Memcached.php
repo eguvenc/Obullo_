@@ -17,7 +17,7 @@ class Memcached extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'memcached:default'
+        'Memcached:Default'
     ];
 
     /**
@@ -46,6 +46,6 @@ class Memcached extends AbstractServiceProvider
             ]
         ];
         $connector = new MemcachedConnector($connectionParams);
-        $container->share('memcached:default', $connector->getConnection());
+        $container->share('Memcached:Default', $connector->getConnection());
     }
 }

@@ -34,14 +34,40 @@ class ServerRequest extends ZendServerRequest
     }
 
     /**
-     * Returns to http input
+     * Set uri arguments
      *
-     * @return object
+     * @param array $args arguments
      */
-    public function getInput()
+    public function setArgs(array $args)
     {
-        $input = new HttpInput($this);
-        return $input;
+        $this->args = $args;
+    }
+
+    /**
+     * Returns to uri arguments
+     *
+     * @return array
+     */
+    public function getArgs()
+    {
+        return $this->args;
+    }
+
+    /**
+     * Get ip address
+     *
+     * @return string
+     */
+    public function getIpAddress()
+    {
+        static $ipAddress = '';
+        $ipAddress = $this->getAttribute('TRUSTED_IP');
+
+        if (empty($ipAddress)) {
+            $server = $this->getServerParams();
+            $ipAddress = isset($server['REMOTE_ADDR']) ? $server['REMOTE_ADDR'] : '0.0.0.0';
+        }
+        return $ipAddress;
     }
 
     /**

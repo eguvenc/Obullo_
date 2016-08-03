@@ -17,7 +17,7 @@ class Redis extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'redis:default'
+        'Redis:Default'
     ];
 
     /**
@@ -48,6 +48,6 @@ class Redis extends AbstractServiceProvider
             ]
         ];
         $connector = new RedisConnector($connectionParams);
-        $container->share('redis:default', $connector->getConnection());
+        $container->share('Redis:Default', $connector->getConnection());
     }
 }
