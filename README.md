@@ -12,7 +12,6 @@ Small, fast & expandable php framework.
 * The router contains just 400 lines of code.
 * Supports Doctrine/DBAL and Doctrine ORM.
 * It use Zend, Symfony and The Php League libraries via composer.
-* Ready for php7.
 
 ### Philosophy
 
