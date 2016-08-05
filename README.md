@@ -4,7 +4,7 @@
 Small, fast & expandable php framework.
 
 * Small because of it has 10 core components.
-* Easy to run your application from dev.app.php in 5 steps.
+* Easy to run your application from <kbd>dev_app.php</kbd> in 5 steps.
 * Supports Psr2, Ps6, Psr7 Standarts.
 * Http Middlewares, Dependency Injection and Service Providers.
 * Bundle creation. ( A Bundle is a directory containing a set of files ( Controllers, Route, Middlewares, Console Commands, Services Providers, View files and Resources, …) that implement a single feature (a blog, a forum, etc).
