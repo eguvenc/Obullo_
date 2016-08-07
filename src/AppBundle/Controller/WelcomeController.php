@@ -18,16 +18,16 @@ class WelcomeController extends Controller
         $args = $this->request->getArgs();
         print_r($args);
 
-        // var_dump($this->container->get('Redis:Default'));
-        // var_dump($this->container->get('Database:Default'));
-        // var_dump($this->container->get('Amqp:Default'));
-        // var_dump($this->container->get('Mongo:Default'));
-        // var_dump($this->container->get('Memcached:Default'));
+        // var_dump($this->container->get('database:default'));
+        // var_dump($this->container->get('redis:default'));
+        // var_dump($this->container->get('amqp:default'));
+        // var_dump($this->container->get('mongo:default'));
+        // var_dump($this->container->get('memcached:default'));
 
         // $this->flash->success("succesfull !!");
         // echo $this->flash->getMessageString();
 
-        // $this->db = $this->container->get('Database:Default')->createQueryBuilder();
+        // $this->db = $this->container->get('database:default')->createQueryBuilder();
 
         // $stmt = $this->db->query("SELECT * FROM users");
         // $row  = $stmt->fetch(\PDO::FETCH_OBJ);

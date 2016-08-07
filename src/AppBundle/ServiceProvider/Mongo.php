@@ -17,7 +17,7 @@ class Mongo extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'Mongo:Default'
+        'mongo:default'
     ];
 
     /**
@@ -39,6 +39,6 @@ class Mongo extends AbstractServiceProvider
             'options'=> ['connect' => true]
         ];
         $connector = new MongoConnector($connectionParams);
-        $container->share('Mongo:Default', $connector->getConnection());
+        $container->share('mongo:default', $connector->getConnection());
     }
 }

@@ -16,7 +16,8 @@ class AmqpTest extends PHPUnit_Framework_TestCase
         global $container;
         $this->container = $container;
         $this->container->addServiceProvider('App\ServiceProvider\Amqp');
-        $this->AMQPConnection = $this->container->get('Amqp:Default');
+        $this->AMQPConnection = $this->container->get('amqp:default');
+        
         $this->AMQPClass = (get_class($this->AMQPConnection) == 'AMQPConnection') ? 'AMQPConnection' : 'PhpAmqpLib\Connection\AMQPConnection';
     }
 
@@ -27,7 +28,7 @@ class AmqpTest extends PHPUnit_Framework_TestCase
      */
     public function testShared()
     {
-        $AMQPConnectionShared = $this->container->get('Amqp:Default');
+        $AMQPConnectionShared = $this->container->get('amqp:default');
 
         $this->assertInstanceOf($this->AMQPClass, $this->AMQPConnection, "I expect that the value is instance of $this->AMQPClass.");
         $this->assertSame($this->AMQPConnection, $AMQPConnectionShared, "I expect that the two variables reference the same object.");

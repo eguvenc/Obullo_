@@ -17,7 +17,7 @@ class Amqp extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'Amqp:Default'
+        'amqp:default'
     ];
 
     /**
@@ -45,6 +45,6 @@ class Amqp extends AbstractServiceProvider
         );
 
         $connector = new AmqpConnector($connectionParams);
-        $container->share('Amqp:Default', $connector->getConnection());
+        $container->share('amqp:default', $connector->getConnection());
     }
 }

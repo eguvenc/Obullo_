@@ -46,3 +46,17 @@ Put the latest version to your web root (<kbd>/var/www/project/</kbd>). Create y
 
 </VirtualHost>
 ```
+
+### Cli Testing
+
+Single File
+
+```php
+vendor/bin/phpunit tests/Obullo/ServiceProvider/RedisTest.php
+```
+
+Folder
+
+```
+vendor/bin/phpunit tests/Obullo
+```

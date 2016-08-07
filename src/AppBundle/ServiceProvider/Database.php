@@ -17,7 +17,7 @@ class Database extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'Database:Default'
+        'database:default'
     ];
 
     /**
@@ -45,6 +45,6 @@ class Database extends AbstractServiceProvider
         );
         $connector = new DatabaseConnector($connectionParams);
         $connector->setLogger($container->get('logger'));
-        $container->share('Database:Default', $connector->getConnection());
+        $container->share('database:default', $connector->getConnection());
     }
 }
