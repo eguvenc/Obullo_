@@ -31,9 +31,16 @@ class Cookie extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
+        $params = [
+            'domain' => '',
+            'path'   => '/',
+            'secure' => false,
+            'httpOnly' => true,
+            'expire' => 604800,
+            'prefix' => ''
+        ];
         $container->share('cookie', 'Obullo\Cookie\Cookie')
-            ->withArgument($container->get('request'))
-            ->withArgument($container->get('config'))
-            ->withArgument($container->get('logger'));
+            ->withArgument($container->get('request')->getCookieParams())
+            ->withMethodCall('setDefaults', [$params]);
     }
 }
