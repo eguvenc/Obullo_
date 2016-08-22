@@ -47,7 +47,7 @@ Put the latest version to your web root (<kbd>/var/www/project/</kbd>). Create y
 </VirtualHost>
 ```
 
-### Cli Testing
+### Php Unit Testing
 
 Single File
 
