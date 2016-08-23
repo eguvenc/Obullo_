@@ -140,19 +140,6 @@ class View implements ViewInterface
     }
 
     /**
-     * Get nested view files as string from current module /view folder
-     * 
-     * @param string $filename filename
-     * @param mixed  $data     array data
-     * 
-     * @return string
-     */
-    public function get($filename, $data = array())
-    {
-        return $this->renderView($filename, $data, false);
-    }
-
-    /**
      * Set view variables
      * 
      * @param string $key key
@@ -190,9 +177,9 @@ class View implements ViewInterface
      * @param mixed   $data     array data
      * @param boolean $include  fetch as string or return
      * 
-     * @return object Stream or Response
+     * @return string
      */
-    protected function renderView($filename, $data = array(), $include = true)
+    protected function renderView($filename, $data = array())
     {
         /**
          * IMPORTANT:
@@ -217,13 +204,7 @@ class View implements ViewInterface
          */
         $body = $this->renderFile($filename, $folder, $data);
 
-        if ($include === false) {
-            return $body;
-        }
-        $response = $this->container->get('response');
-        $response->getBody()->write($body);
-
-        return $response;
+        return $body;
     }
 
     /**

@@ -45,15 +45,5 @@ interface ViewInterface
      * @return string                      
      */
     public function render($filename, $data = array());
-
-    /**
-     * Get nested view files as string from current module /view folder
-     * 
-     * @param string $filename filename
-     * @param mixed  $data     array data
-     * 
-     * @return string
-     */
-    public function get($filename, $data = array());
    
 }

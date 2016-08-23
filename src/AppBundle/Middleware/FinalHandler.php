@@ -20,23 +20,23 @@ class FinalHandler implements ContainerAwareInterface
 
     /**
      * Request
-     * 
+     *
      * @var object
      */
     protected $request;
 
     /**
      * Invoke middleware
-     * 
+     *
      * @param ServerRequestInterface $request  request
      * @param ResponseInterface      $response response
      * @param Exception              $err      error
      * @param Callable               $handler  handler
-     * 
+     *
      * @return object ResponseInterface
      */
     public function __invoke(Request $request, Response $response, $err = null, $handler = null)
-    {   
+    {
         if ($err) {
             return $this->handleError($err);
         }
@@ -59,7 +59,7 @@ class FinalHandler implements ContainerAwareInterface
 
     /**
      * Set cookie headers
-     * 
+     *
      * @param Response $response http ressponse
      *
      * @return object response
@@ -67,21 +67,17 @@ class FinalHandler implements ContainerAwareInterface
     protected function sendCookieHeaders(Response $response)
     {
         if ($this->container->hasShared('cookie')) {
-            $headers = $this->container->get('cookie')->getHeaders();
-            if (! empty($headers)) {
-                foreach ($headers as $value) {
-                    $response = $response->withAddedHeader('Set-Cookie', $value);
-                }
-            }
+            $cookie   = $this->container->get('cookie');
+            $response = $response->withHeader('Set-Cookie', $cookie->toHeaders());
         }
         return $response;
     }
-
+    
     /**
      * Handle application errors
-     * 
+     *
      * @param mixed $err mostly exception object
-     * 
+     *
      * @return object response
      */
     protected function handleError($err)
@@ -90,12 +86,11 @@ class FinalHandler implements ContainerAwareInterface
         // $json = $this->renderJsonErrorMessage($error);
         
         if (is_object($err)) {
-
             switch ($err) {
-            case ($err instanceof Exception):
-            case ($err instanceof RuntimeException):
-                // error log
-                break;
+                case ($err instanceof Exception):
+                case ($err instanceof RuntimeException):
+                    // error log
+                    break;
             }
         }
         // return new JsonResponse($json, 500, [], JSON_PRETTY_PRINT);
@@ -107,7 +102,7 @@ class FinalHandler implements ContainerAwareInterface
      * Render HTML error page
      *
      * @param error $error error | exception
-     * 
+     *
      * @return string
      */
     protected function renderHtmlErrorMessage($error)
@@ -116,9 +111,7 @@ class FinalHandler implements ContainerAwareInterface
         $title = 'Application Error';
 
         if (is_string($error)) {
-
             $html = $error;
-
         } elseif (is_object($error)) {
             $html = $this->renderHtmlException($error);
             while ($exception = $error->getPrevious()) {
@@ -188,7 +181,7 @@ class FinalHandler implements ContainerAwareInterface
      * Render JSON error
      *
      * @param Exception $exception exception
-     * 
+     *
      * @return string
      */
     protected function renderJsonErrorMessage(Exception $exception)
@@ -215,9 +208,9 @@ class FinalHandler implements ContainerAwareInterface
 
     /**
      * Create 404 page
-     * 
+     *
      * @param Response $response response
-     * 
+     *
      * @return response
      */
     protected function create404(Response $response)
@@ -230,5 +223,4 @@ class FinalHandler implements ContainerAwareInterface
             ->withHeader('Content-Type', 'text/html')
             ->withBody($stream);
     }
-
 }

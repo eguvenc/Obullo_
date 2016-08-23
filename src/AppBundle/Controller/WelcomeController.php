@@ -2,9 +2,11 @@
 
 namespace AppBundle\Controller;
 
+// use Obullo\View\Model\ViewModel;
+// use AppBundle\View\Template\IndexTemplate;
+
 use Obullo\Mvc\Controller;
-use Obullo\View\Model\ViewModel;
-use AppBundle\View\Template\IndexTemplate;
+use Zend\Diactoros\Response\HtmlResponse;
 
 class WelcomeController extends Controller
 {
@@ -51,6 +53,6 @@ class WelcomeController extends Controller
         
         // return $this->view->render($model);
 
-        return $this->view->render('welcome.phtml');
+        return new HtmlResponse($this->view->render('welcome.phtml'));
     }
 }

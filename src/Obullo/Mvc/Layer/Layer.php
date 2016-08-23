@@ -130,8 +130,7 @@ class Layer
         
         $resolver = new ControllerResolver(
             $this->container,
-            $this->container->get('request'),
-            $this->container->get('response')
+            $this->container->get('request')
         );
         $resolver->setFolder($this->folder);
 

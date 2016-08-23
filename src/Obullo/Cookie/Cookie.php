@@ -2,7 +2,6 @@
 
 namespace Obullo\Cookie;
 
-use RuntimeException;
 use InvalidArgumentException;
 
 /**
@@ -14,18 +13,11 @@ use InvalidArgumentException;
 class Cookie implements CookieInterface
 {
     /**
-     * Cookie unique id
+     * Cookie unique name
      *
      * @var string
      */
-    protected $id;
-
-    /**
-     * Cookie response headers
-     *
-     * @var array
-     */
-    protected $headers = array();
+    protected $name;
 
     /**
      * Request cookies
@@ -47,7 +39,6 @@ class Cookie implements CookieInterface
      * @var array
      */
     protected $defaults = [
-        'name' => 'undefined',
         'value' => '',
         'domain' => null,
         'path' => null,
@@ -77,18 +68,6 @@ class Cookie implements CookieInterface
     }
 
     /**
-     * Create unique cookie id
-     *
-     * @return void
-     */
-    protected function createId()
-    {
-        if ($this->id == null) {
-            $this->id = uniqid();  // Create random id for new cookie
-        }
-    }
-
-    /**
      * Set cookie name
      *
      * @param string $name cookie name
@@ -97,8 +76,7 @@ class Cookie implements CookieInterface
      */
     public function name($name)
     {
-        $this->createId();
-        $this->responseCookies[$this->id]['name'] = trim($name);
+        $this->name = trim($name);
         return $this;
     }
     
@@ -111,8 +89,7 @@ class Cookie implements CookieInterface
      */
     public function value($value = '')
     {
-        $this->createId();
-        $this->responseCookies[$this->id]['value'] = $value;
+        $this->responseCookies[$this->name]['value'] = $value;
         return $this;
     }
 
@@ -125,8 +102,7 @@ class Cookie implements CookieInterface
      */
     public function expire($expire = 0)
     {
-        $this->createId();
-        $this->responseCookies[$this->id]['expire'] = (int)$expire;
+        $this->responseCookies[$this->name]['expire'] = (int)$expire;
         return $this;
     }
 
@@ -139,8 +115,7 @@ class Cookie implements CookieInterface
      */
     public function domain($domain = '')
     {
-        $this->createId();
-        $this->responseCookies[$this->id]['domain'] = $domain;
+        $this->responseCookies[$this->name]['domain'] = $domain;
         return $this;
     }
 
@@ -153,8 +128,7 @@ class Cookie implements CookieInterface
      */
     public function path($path = '/')
     {
-        $this->createId();
-        $this->responseCookies[$this->id]['path'] = $path;
+        $this->responseCookies[$this->name]['path'] = $path;
         return $this;
     }
 
@@ -167,8 +141,7 @@ class Cookie implements CookieInterface
      */
     public function secure($bool = false)
     {
-        $this->createId();
-        $this->responseCookies[$this->id]['secure'] = $bool;
+        $this->responseCookies[$this->name]['secure'] = $bool;
         return $this;
     }
 
@@ -181,8 +154,7 @@ class Cookie implements CookieInterface
      */
     public function httpOnly($bool = false)
     {
-        $this->createId();
-        $this->responseCookies[$this->id]['httpOnly'] = $bool;
+        $this->responseCookies[$this->name]['httpOnly'] = $bool;
         return $this;
     }
 
@@ -192,14 +164,14 @@ class Cookie implements CookieInterface
      * @param array|null|string $name  mixed name or parameters
      * @param mixed             $value value
      *
-     * @return boolean
+     * @return void
      */
     public function set($name = null, $value = null)
     {
         if (is_array($name)) {
             $params = $name;
         } elseif (empty($name)) {
-            $params = $this->responseCookies[$this->id];
+            $params = $this->responseCookies[$this->name];
         } elseif (is_string($name)) {
             if ($name != null) {
                 $this->name($name);
@@ -207,12 +179,11 @@ class Cookie implements CookieInterface
             if ($value != null) {
                 $this->value($value);
             }
-            $params = $this->responseCookies[$this->id];
+            $params = $this->responseCookies[$this->name];
         }
         $properties = $this->buildParams($params);
-        $this->toHeader($this->id, $properties);
-        
-        return $this->exists($this->id);
+        $this->responseCookies[$this->name] = $properties;
+        $this->name = null; // Reset name variable & prevent collisions.
     }
 
     /**
@@ -224,33 +195,46 @@ class Cookie implements CookieInterface
      */
     public function buildParams(array $params)
     {
-        if (! isset($params['name'])) {
-            throw new RuntimeException("Cookie name can't be empty.");
+        if (empty($this->name)) {
+            throw new InvalidArgumentException("Cookie name can't be empty.");
         }
         $cookie = array();
-        foreach (array('name','value','expire','domain','path','secure','httpOnly') as $k) {
+        foreach (array('value','expire','domain','path','secure','httpOnly') as $k) {
             if (array_key_exists($k, $params)) {
                 $cookie[$k] = $params[$k];
             } elseif (array_key_exists($k, $this->defaults)) {
                 $cookie[$k] = $this->defaults[$k];
             }
         }
-        $cookie['name']   = trim($cookie['name']);
         $cookie['expire'] = $this->getExpiration($cookie['expire']);
         return $cookie;
     }
 
     /**
+     * Convert to `Set-Cookie` headers & reset object variables
+     *
+     * @return string[]
+     */
+    public function toHeaders()
+    {
+        $headers = [];
+        foreach ($this->responseCookies as $name => $properties) {
+            $headers[] = $this->toHeader($name, $properties);
+        }
+        return $headers;
+    }
+
+    /**
      * Convert to `Set-Cookie` header
      *
-     * @param string $id         Cookie-id
+     * @param string $name       Cookie name
      * @param array  $properties Cookie properties
      *
      * @return string
      */
-    protected function toHeader($id, array $properties)
+    protected function toHeader($name, array $properties)
     {
-        $result = urlencode($properties['name']) . '=' . urlencode($properties['value']);
+        $result = urlencode($name) . '=' . urlencode($properties['value']);
 
         if (isset($properties['domain'])) {
             $result .= '; domain=' . $properties['domain'];
@@ -272,30 +256,8 @@ class Cookie implements CookieInterface
         if (isset($properties['httpOnly']) && $properties['httpOnly']) {
             $result .= '; HttpOnly';
         }
-        $this->headers[$id] = $result;
-    }
 
-    /**
-     * Returns to true if cookie id exists in headers
-     *
-     * @param string $id cookie id
-     *
-     * @return bool
-     */
-    public function exists($id = null)
-    {
-        $id = empty($id) ? $this->id : $id;
-        return isset($this->responseCookies[$id]);
-    }
-
-    /**
-     * Returns to cookie response header array
-     *
-     * @return array
-     */
-    public function getHeaders()
-    {
-        return $this->headers;
+        return $result;
     }
 
     /**
@@ -332,13 +294,13 @@ class Cookie implements CookieInterface
     }
 
     /**
-     * Returns to id of cookie
+     * Returns to name of cookie
      *
      * @return string
      */
-    public function getId()
+    public function getName()
     {
-        return $this->id;
+        return $this->name;
     }
 
     /**
@@ -365,7 +327,7 @@ class Cookie implements CookieInterface
     *
     * @param string|array $name cookie
     *
-    * @return boolean
+    * @return void
     */
     public function delete($name = null)
     {
@@ -379,7 +341,5 @@ class Cookie implements CookieInterface
             $this->name($name);
         }
         $this->value(null)->expire(-1)->set();
-
-        return $this->exists($this->id);
     }
 }
