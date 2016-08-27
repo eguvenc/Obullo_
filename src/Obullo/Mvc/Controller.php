@@ -70,4 +70,17 @@ class Controller
                                   // variables come in here.
         }
     }
+
+    /**
+     * Include nested view files from current module /view folder
+     *
+     * @param mixed $filename filename
+     * @param mixed $data     array data
+     *
+     * @return string
+     */
+    public function render($filename, $data = array())
+    {
+        return $this->view->render($filename, $data);
+    }
 }

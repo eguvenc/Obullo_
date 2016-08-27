@@ -17,7 +17,7 @@ class WelcomeController extends Controller
      */
     public function indexAction($request)
     {
-        $args = $this->request->getArgs();
+        $args = $request->getArgs();
         print_r($args);
 
         // var_dump($this->container->get('database:default'));
@@ -51,8 +51,8 @@ class WelcomeController extends Controller
         // $model = new ViewModel(['foo' => 'bar']);
         // $model->setTemplate(new IndexTemplate('welcome.phtml'));
         
-        // return $this->view->render($model);
+        // $html = $this->render($model);
 
-        return new HtmlResponse($this->view->render('welcome.phtml'));
+        return new HtmlResponse($this->render('welcome.phtml'));
     }
 }

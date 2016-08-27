@@ -1,10 +1,10 @@
 <?php
 
-namespace Obullo\View\Model;
+namespace Obullo\Mvc;
 
 /**
  * View model
- * 
+ *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
@@ -12,31 +12,31 @@ class ViewModel implements ViewModelInterface
 {
     /**
      * Template
-     * 
+     *
      * @var mixed
      */
     protected $template = null;
 
     /**
      * Variables
-     * 
+     *
      * @var array
      */
     protected $variables = array();
 
     /**
      * Constructor
-     * 
+     *
      * @param array variables
      */
     public function __construct($variables = array())
     {
-    	$this->variables = $variables;
+        $this->variables = $variables;
     }
 
     /**
      * Set view variables
-     * 
+     *
      * @param mixed $key key
      * @param mixed $val val
      */
@@ -51,7 +51,7 @@ class ViewModel implements ViewModelInterface
 
     /**
      * Get view variables
-     * 
+     *
      * @return array
      */
     public function getVariables()
@@ -61,7 +61,7 @@ class ViewModel implements ViewModelInterface
 
     /**
      * Set template
-     * 
+     *
      * @param string|object $template name or object
      */
     public function setTemplate($template)
@@ -71,12 +71,11 @@ class ViewModel implements ViewModelInterface
 
     /**
      * Returns to template
-     * 
+     *
      * @return string|object
      */
     public function getTemplate()
     {
         return $this->template;
     }
-
 }
