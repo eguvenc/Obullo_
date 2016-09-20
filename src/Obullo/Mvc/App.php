@@ -97,7 +97,7 @@ class App
     public function create()
     {
         if (empty($this->bundles[0])) {
-            die("Bundle could not be initialized. Check your '".getenv("APP_ENV").".app.php' file.");
+            die("Bundle could not be initialized. Check your '".getenv("APP_ENV")."_app.php' file.");
         }
         foreach ($this->bundles as $bundle) {
             if ($bundle->getMatch()->hasMatch($this->path)) {
