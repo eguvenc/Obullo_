@@ -3,6 +3,7 @@
 namespace BackendBundle\Controller;
 
 use Obullo\Mvc\Controller;
+use Zend\Diactoros\Response\HtmlResponse;
 
 class HomeController extends Controller
 {
@@ -13,6 +14,6 @@ class HomeController extends Controller
      */
     public function indexAction()
     {
-        return $this->view->render('home.phtml');
+		return new HtmlResponse($this->render('home.phtml'));
     }
 }

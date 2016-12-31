@@ -17,7 +17,7 @@ interface CookieInterface
      *
      * @return object
      */
-    public function name($name);
+    public function withName($name);
     
     /**
      * Set cookie value
@@ -26,7 +26,7 @@ interface CookieInterface
      *
      * @return object
      */
-    public function value($value = '');
+    public function withValue($value = '');
 
     /**
      * Set cookie expire in seconds
@@ -35,7 +35,7 @@ interface CookieInterface
      *
      * @return object
      */
-    public function expire($expire = 0);
+    public function withExpire($expire = 0);
 
     /**
      * Set cookie domain name
@@ -44,7 +44,7 @@ interface CookieInterface
      *
      * @return void
      */
-    public function domain($domain = '');
+    public function withDomain($domain = '');
 
     /**
      * Set cookie path
@@ -53,7 +53,7 @@ interface CookieInterface
      *
      * @return object
      */
-    public function path($path = '/');
+    public function withPath($path = '/');
 
     /**
      * Set secure cookie
@@ -62,7 +62,7 @@ interface CookieInterface
      *
      * @return object
      */
-    public function secure($bool = false);
+    public function withSecure($bool = false);
 
     /**
      * Make cookie available just for http. ( No javascript )
@@ -71,7 +71,7 @@ interface CookieInterface
      *
      * @return object
      */
-    public function httpOnly($bool = false);
+    public function withHttpOnly($bool = false);
 
     /**
      * Set cookie

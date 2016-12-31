@@ -42,11 +42,13 @@ class Config extends Ini
     protected $fileObject = array();
 
     /**
-     * Constructor
+     * Set environment variable
+     *
+     * @param string $env env
      */
-    public function __construct()
+    public function setEnv($env)
     {
-        $this->env = getenv("APP_ENV");
+        $this->env = $env;
     }
 
     /**

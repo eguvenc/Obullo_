@@ -14,7 +14,6 @@
     </li>
     <li><a href="#readcookie">Bir Çerez Verisini Okumak</a></li>
     <li><a href="#removecookie">Bir Çerezi Silmek</a></li>
-    <li><a href="#prefix">Çerez Ön Ekleri</a></li>
     <li><a href="#parameters">Parametreler</a></li>
     <li><a href="#method-reference">Cookie Sınıfı Referansı</a></li>
 </ul>
@@ -25,10 +24,10 @@ Bir çereze kayıt edilebilecek maksimum veri 4KB tır.
 
 ### Servis Sağlayıcısı
 
-<kbd>app/providers.php</kbd> dosyasında servis sağlayıcısının tanımlı olduğundan emin olun.
+<kbd>Bundle</kbd> dosyanızda cookie servis sağlayıcısının tanımlı olduğundan emin olun.
 
 ```php
-$container->addServiceProvider('Obullo\Container\ServiceProvider\Cookie');
+$container->addServiceProvider('AppBundle\ServiceProvider\Cookie');
 ```
 
 <a name="setcookie"></a>
@@ -43,29 +42,27 @@ $container->addServiceProvider('Obullo\Container\ServiceProvider\Cookie');
 
 ```php
 $this->cookie
-    ->expire(0)
+    ->withExpire(0)
     ->set('name', 'value'); 
 ```
 
-Bu yöntemi kullanarak konfigürasyon dosyasından gelen varsayılan değerleri devre dışı bırakarak girilen değerleri çereze kaydedebilirsiniz. Çereze ait domain, path ve diğer girilmeyen bilgiler <kbd>config.php</kbd> konfigürasyon dosyasından okunur.
+Bu yöntemi kullanarak servis konfigürasyon dosyasından gelen varsayılan değerleri devre dışı bırakarak girilen değerleri çereze kaydedebilirsiniz.
 
 ```php
-$set = $this->cookie
-    ->name('hello')
-    ->value('world')
-    ->expire(86400)
-    ->domain('')
-    ->path('/')
+$this->cookie
+    ->withName('hello')
+    ->withValue('world')
+    ->withExpire(86400)
+    ->withDomain('')
+    ->withPath('/')
     ->set();
-
-var_dump($set); // true 
 ```
 
 <a name="arrays"></a>
 
 #### Array Yöntemi
 
-Eğer konfigürasyon dosyasını ezerek bir çerez kaydetmek istiyorak aşağıdaki gibi tüm parametreleri göndermeliyiz.
+Eğer servis konfigürasyonunu ezerek bir çerez kaydetmek istiyorak aşağıdaki gibi tüm parametreleri göndermeliyiz.
 
 ```php
 $cookie = array(
@@ -76,7 +73,6 @@ $cookie = array(
                    'path'   => '/',
                    'secure' => false,
                    'httpOnly' => false,
-                   'prefix' => 'myprefix_',
                );
 
 $this->cookie->set($cookie); 
@@ -94,19 +90,16 @@ if ($value = $this->cookie->get('name')) {
 }
 ```
 
-Eğer çereze kayıtlı bir değer yoksa fonksiyon <kbd>false</kbd> değerine döner. 
+Eğer çereze kayıtlı bir değer yoksa fonksiyon varsayılan <kbd>null</kbd> değerine döner.
 
-<a name="prefix"></a>
-
-### Çerez Ön Ekleri
-
-Eğer çerezler için önceden konfigürasyondan bir ön ek belirlenmişse tüm çerez işlemleri bu ön ek gözönüne alınarak yapılır. Eğer konfigürasyonda olmayan özel ön ekler kullanılıyorsa bu durumda ikinci parametereden ön ek girilmelidir.
 
 ```php
-if ($value = $this->cookie->get('name', 'prefix')) {
-	echo $value;
+if (false == $this->cookie->get('name', false)) {
+    echo "Cookie does not exist";
 }
 ```
+
+İkinci parametre çerez bulunamadığında fonksiyonun hangi türe döneceğini belirler.
 
 <a name="removecookie"></a>
 
@@ -115,27 +108,19 @@ if ($value = $this->cookie->get('name', 'prefix')) {
 Bir çerezi silmek için çerez ismi girmeniz yeterlidir.
 
 ```php
-$isRemoved = $this->cookie->remove("name");
-
-var_dump($isRemoved);  // true
-```
-
-İkinci parametre, varsayılan konfigürasyondan farklı bir ön ek kullanıbilmeniz için ayrılmıştır.
-
-```php
-$this->cookie->remove($name = "name", $prefix = null)
+$this->cookie->delete("name");
 ```
 
 Domain ve path metotları ile bir örnek.
 
 ```php
-$this->cookie->domain('my.subdomain.com')->path('/')->delete("name");
+$this->cookie->withDomain('my.subdomain.com')->withPath('/')->delete("name");
 ```
 
 Veya
 
 ```php
-$this->cookie->name('name')->prefix('prf_')->domain('my.subdomain.com')->path('/')->delete();
+$this->cookie->name('name')->domain('my.subdomain.com')->path('/')->delete();
 ```
 
 <a name="parameters"></a>
@@ -178,38 +163,34 @@ $this->cookie->name('name')->prefix('prf_')->domain('my.subdomain.com')->path('/
             <td>httpOnly</td>
             <td>Eğer http only parameteresi true gönderilirse çerez sadece http protokolü üzerinden okunabilir hale gelir javascript gibi diller ile çerezin okunması engellenmiş olur. Çerez güvenliği ile ilgili daha fazla bilgi için <a href="http://resources.infosecinstitute.com/securing-cookies-httponly-secure-flags/" target="_blank">bu makaleden</a> faydalanabilirsiniz.</td>
         </tr>
-        <tr>
-            <td>prefix</td>
-            <td>Sadece çerezlerinizin diğer çerezler ile karışmasını engellemek için kullanılır. Bir değer girilmezse varsayılan değer konfigürasyon dosyasından okunur.</td>
-        </tr>
         </tbody>
 </table>
 
 <a name="method-reference"></a>
 
-### Cookie Sınıfı Referansı  
+### Cookie Sınıfı Referansı
 
-##### $this->cookie->name(string $name);
+##### $this->cookie->withName(string $name);
 
 Kaydedilmek üzere olan bir çereze isim atar.
 
-##### $this->cookie->value(mixed $value = '');
+##### $this->cookie->withValue(mixed $value);
 
 Kaydedilmek üzere olan bir çerez ismine değer atar.
 
-##### $this->cookie->expire(int $expire = 0);
+##### $this->cookie->withExpire(int $expire = 0);
 
 Kaydedilmek üzere olan bir çerezin sona erme süresini belirler.
 
-##### $this->cookie->domain(string $domain = '');
+##### $this->cookie->withDomain(string $domain = '');
 
-Kaydedilmek üzere olan bir çereze ait alanadı parametresini belirler.
+Kaydedilmek üzere olan bir çereze ait alanadını belirler.
 
-##### $this->cookie->path(string $path = '/');
+##### $this->cookie->withPath(string $path = '/');
 
 Kaydedilmek üzere olan bir çereze ait path parametresini tanımlar.
 
-##### $this->cookie->secure(boolean $bool = false);
+##### $this->cookie->withSecure(boolean $bool = false);
 
 Kaydedilmek üzere olan bir çereze ait secure parametresini tanımlar.
 
@@ -217,30 +198,14 @@ Kaydedilmek üzere olan bir çereze ait secure parametresini tanımlar.
 
 Kaydedilmek üzere olan bir çereze ait httpOnly parametresini tanımlar.
 
-##### $this->cookie->prefix(string $prefix = '');
-
-Kaydedilmek üzere olan bir çereze ait bir ön ek tanımlar.
-
 ##### $this->cookie->set(mixed $name, string $value);
 
 Gönderilen parametrelere göre bir çereze veri kaydeder. En son çalıştırılmalıdır. Kayıt işleminden sonra daha önce kullanılan çereze ait veriler başa döndürülür.
 
-##### $this->cookie->get(string $name, string $prefix = '');
+##### $this->cookie->get(string $name, mixed $return = null);
 
-Kayıtlı bir çerezi okur eğer çerez mevcut değilese <kbd>false</kbd> değerine döner. Konfigürasyonda yada parametrede bir ön ek belirtilmişse çerez bu ön ek kullanılarak okunur. Parametreden bir ön ek gönderilirse konfigürasyon dosyasındaki varsayılan değer pas geçilir.
+Kayıtlı bir çerezi okur eğer çerez mevcut değilse <kbd>null</kbd> değerine döner.
 
-##### $this->cookie->delete(string $name, string $prefix = '');
+##### $this->cookie->delete(string $name);
 
 Gönderilen parametrelere göre bir çerezi tarayıcıdan siler.
-
-##### $this->cookie->remove(string $name, string $prefix = '');
-
-Delete fonksiyonu ile aynı işlevi görür.
-
-##### $this->cookie->getHeaders();
-
-Kuyruğa gönderilmiş çerezlerin raw değerilerine bir dizi içerisinde geri döner.
-
-##### $this->cookie->getId();
-
-Çerez sınıfı tarafından rastgele üretilen geçerli çerezin kimlik değerine geri döner.

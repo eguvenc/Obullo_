@@ -5,7 +5,10 @@ namespace Obullo\Mvc;
 use SplQueue;
 use Throwable;
 use Exception;
-use RuntimeException;
+
+use Obullo\Mvc\ControllerResolver;
+use Obullo\Container\ContainerAwareTrait;
+use Obullo\Container\ContainerAwareInterface;
 
 use Obullo\Container\ConfigurationInterface;
 use Obullo\Mvc\Bundle\BundleInterface as Bundle;
@@ -97,7 +100,7 @@ class App
     public function create()
     {
         if (empty($this->bundles[0])) {
-            die("Bundle could not be initialized. Check your '".getenv("APP_ENV").".app.php' file.");
+            die("Bundle could not be initialized. Check your '".getenv("APP_ENV")."_app.php' file.");
         }
         foreach ($this->bundles as $bundle) {
             if ($bundle->getMatch()->hasMatch($this->path)) {
@@ -121,10 +124,6 @@ class App
         $router = $this->router;
         $name   = $bundle->getName();
 
-        $finalHandler = "\\$name\Middleware\FinalHandler";
-        $this->done   = new $finalHandler;
-        $this->done->setContainer($this->container);
-
         define('APP_PATH', ROOT .'src/'.$name.'/');
         define('APP_NAME', $name);
 
@@ -146,13 +145,29 @@ class App
     public function __invoke(Request $request, Response $response)
     {
         $middleware = null;
-        $done       = $this->done;
+        $errorMiddleware    = "\\". APP_NAME .'\Middleware\Error';
+        $notFoundMiddleware = "\\". APP_NAME .'\Middleware\NotFound';
 
         try {
             $handler = $this->router->getHandler();
 
-            if ($this->queue->isEmpty()) {
-                return $done($request, $response, null, $handler);
+            if ($this->queue->isEmpty()) {  // Execute final handler
+
+                if ($handler instanceof Response) {
+                    return $handler;
+                }
+                $resolver = new ControllerResolver($this->container, $request, $response);
+                $result   = $resolver->dispatch($handler);
+
+                if (! $result) {
+                    $notFound = new $notFoundMiddleware;
+                    $notFound->setContainer($this->container);
+                    return $notFound($request, $response);
+                }
+                if ($result instanceof $response) {
+                    $response = $result;
+                }
+                return $response;
             }
             $middleware = $this->queue->dequeue();
 
@@ -164,15 +179,13 @@ class App
             }
             return $middleware['callable']($request, $response, $this);
         } catch (Throwable $throwable) {
-            $errorMiddleware = "\\". APP_NAME .'\Middleware\Error';
             $error = new $errorMiddleware;
-
-            return $error($throwable, $request, $response, $done);
+            $error->setContainer($this->container);
+            return $error($throwable, $request, $response);
         } catch (Exception $exception) {
-            $errorMiddleware = "\\". APP_NAME .'\Middleware\Error';
             $error = new $errorMiddleware;
-
-            return $error($exception, $request, $response, $done);
+            $error->setContainer($this->container);
+            return $error($exception, $request, $response);
         }
     }
 

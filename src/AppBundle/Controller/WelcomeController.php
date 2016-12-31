@@ -17,8 +17,13 @@ class WelcomeController extends Controller
      */
     public function indexAction($request)
     {
-        $args = $request->getArgs();
-        print_r($args);
+        // $this->cookie->withName('name')->withExpire(0)->withValue('1.23')->set(); 
+        // $this->cookie->delete('name'); 
+
+        // $args = $request->getArgs();
+        // print_r($args);
+
+        // throw new \Exception("asda");
 
         // var_dump($this->container->get('database:default'));
         // var_dump($this->container->get('redis:default'));

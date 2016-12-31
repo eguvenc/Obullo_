@@ -10,12 +10,12 @@ class NotAllowed
 {
     /**
      * Invoke middleware
-     * 
+     *
      * @param ServerRequestInterface $request  request
      * @param ResponseInterface      $response respone
      * @param callable               $next     callable
      * @param array                  $methods  allowed methods
-     * 
+     *
      * @return object ResponseInterface
      */
     public function __invoke(Request $request, Response $response, callable $next, $methods = array())
@@ -33,5 +33,4 @@ class NotAllowed
             ->withHeader('Content-Type', 'text/html')
             ->withBody($stream);
     }
-
 }

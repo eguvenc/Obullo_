@@ -74,7 +74,7 @@ class Cookie implements CookieInterface
      *
      * @return object
      */
-    public function name($name)
+    public function withName($name)
     {
         $this->name = trim($name);
         return $this;
@@ -87,8 +87,9 @@ class Cookie implements CookieInterface
      *
      * @return object
      */
-    public function value($value = '')
+    public function withValue($value = '')
     {
+        $this->validateName();
         $this->responseCookies[$this->name]['value'] = $value;
         return $this;
     }
@@ -100,8 +101,9 @@ class Cookie implements CookieInterface
      *
      * @return object
      */
-    public function expire($expire = 0)
+    public function withExpire($expire = 0)
     {
+        $this->validateName();
         $this->responseCookies[$this->name]['expire'] = (int)$expire;
         return $this;
     }
@@ -113,8 +115,9 @@ class Cookie implements CookieInterface
      *
      * @return void
      */
-    public function domain($domain = '')
+    public function withDomain($domain = '')
     {
+        $this->validateName();
         $this->responseCookies[$this->name]['domain'] = $domain;
         return $this;
     }
@@ -126,8 +129,9 @@ class Cookie implements CookieInterface
      *
      * @return object
      */
-    public function path($path = '/')
+    public function withPath($path = '/')
     {
+        $this->validateName();
         $this->responseCookies[$this->name]['path'] = $path;
         return $this;
     }
@@ -139,8 +143,9 @@ class Cookie implements CookieInterface
      *
      * @return object
      */
-    public function secure($bool = false)
+    public function withSecure($bool = false)
     {
+        $this->validateName();
         $this->responseCookies[$this->name]['secure'] = $bool;
         return $this;
     }
@@ -152,8 +157,9 @@ class Cookie implements CookieInterface
      *
      * @return object
      */
-    public function httpOnly($bool = false)
+    public function withHttpOnly($bool = false)
     {
+        $this->validateName();
         $this->responseCookies[$this->name]['httpOnly'] = $bool;
         return $this;
     }
@@ -173,16 +179,23 @@ class Cookie implements CookieInterface
         } elseif (empty($name)) {
             $params = $this->responseCookies[$this->name];
         } elseif (is_string($name)) {
-            if ($name != null) {
-                $this->name($name);
-            }
+            $this->withName($name);
             if ($value != null) {
-                $this->value($value);
+                $this->withValue($value);
             }
             $params = $this->responseCookies[$this->name];
         }
-        $properties = $this->buildParams($params);
-        $this->responseCookies[$this->name] = $properties;
+        $cookie = $this->buildParams($params);
+
+        setcookie(
+            $this->getName(),
+            $cookie['value'],
+            $cookie['expire'],
+            $cookie['path'],
+            $cookie['domain'],
+            $cookie['secure'],
+            $cookie['httpOnly']
+        );
         $this->name = null; // Reset name variable & prevent collisions.
     }
 
@@ -195,9 +208,6 @@ class Cookie implements CookieInterface
      */
     public function buildParams(array $params)
     {
-        if (empty($this->name)) {
-            throw new InvalidArgumentException("Cookie name can't be empty.");
-        }
         $cookie = array();
         foreach (array('value','expire','domain','path','secure','httpOnly') as $k) {
             if (array_key_exists($k, $params)) {
@@ -208,6 +218,26 @@ class Cookie implements CookieInterface
         }
         $cookie['expire'] = $this->getExpiration($cookie['expire']);
         return $cookie;
+    }
+
+    /**
+     * Get expiration of cookie
+     *
+     * @param int $expire in second
+     *
+     * @return int
+     */
+    protected function getExpiration($expire)
+    {
+        if ($expire == "0" || $expire == 0) {
+            return 0;
+        }
+        if (! is_numeric($expire)) {
+            $expire = time() - 86500;
+        } else {
+            $expire = time() + $expire;
+        }
+        return $expire;
     }
 
     /**
@@ -304,25 +334,6 @@ class Cookie implements CookieInterface
     }
 
     /**
-     * Get expiration of cookie
-     *
-     * @param int $expire in second
-     *
-     * @return int
-     */
-    protected function getExpiration($expire)
-    {
-        if (! is_numeric($expire)) {
-            $expire = time() - 86500;
-        } else {
-            if ($expire > 0) {
-                $expire = time() + $expire;
-            }
-        }
-        return $expire;
-    }
-
-    /**
     * Delete a cookie
     *
     * @param string|array $name cookie
@@ -338,8 +349,20 @@ class Cookie implements CookieInterface
             return;
         }
         if ($name != null) {
-            $this->name($name);
+            $this->withName($name);
         }
-        $this->value(null)->expire(-1)->set();
+        $this->withValue(null)->withExpire(-1)->set();
+    }
+
+    /**
+     * Validate cookie name
+     *
+     * @return void
+     */
+    protected function validateName()
+    {
+        if (empty($this->name)) {
+            throw new InvalidArgumentException("You must set a cookie name at first.");
+        }
     }
 }

@@ -31,6 +31,7 @@ class Config extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->share('config', 'Obullo\Config\Config');
+        $container->share('config', 'Obullo\Config\Config')
+            ->withMethodCall('setEnv', [getenv("APP_ENV")]);
     }
 }

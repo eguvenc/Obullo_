@@ -13,13 +13,12 @@ interface ErrorMiddlewareInterface
      * Accepts an error, a server-side request, and a response instance, and
      * does something with them; if further processing can be done, it can
      * delegate to `$out`.
-     * 
-     * @param mixed         $err      error
-     * @param Request       $request  request
-     * @param Response      $response response
-     * @param null|callable $out      final handler
-     * 
+     *
+     * @param mixed    $err      error
+     * @param Request  $request  request
+     * @param Response $response response
+     *
      * @return null|Response
      */
-    public function __invoke($err, Request $request, Response $response, callable $out = null);
+    public function __invoke($err, Request $request, Response $response);
 }

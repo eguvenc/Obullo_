@@ -3,7 +3,6 @@
 namespace Obullo\Session\SaveHandler;
 
 use Psr\Cache\CacheItemPoolInterface as Cache;
-use Obullo\Container\ServiceProvider\ServiceProviderInterface as ServiceProvider;
 
 /**
  * Cache Save Handler
@@ -53,7 +52,7 @@ class CacheSaveHandler implements SaveHandlerInterface
      *
      * @var string
      */
-    protected $sessionSavePath;
+    protected $savePath;
 
     /**
      * Constructor
@@ -66,8 +65,8 @@ class CacheSaveHandler implements SaveHandlerInterface
         $this->setStorage($cache);
 
         $this->params   = $params;
-        $this->key      = $this->params['session']['key'];
-        $this->lifetime = $this->params['session']['gc_maxlifetime'];
+        $this->key      = $params['session']['key'];
+        $this->lifetime = $params['session']['gc_maxlifetime'];
     }
 
     /**
@@ -81,8 +80,8 @@ class CacheSaveHandler implements SaveHandlerInterface
     public function open($savePath, $name)
     {
         // @todo figure out if we want to use these
-        $this->sessionSavePath = $savePath;
-        $this->sessionName     = $name;
+        $this->savePath    = $savePath;
+        $this->sessionName = $name;
 
         return true;
     }

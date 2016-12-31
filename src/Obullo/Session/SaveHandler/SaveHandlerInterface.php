@@ -2,9 +2,6 @@
 
 namespace Obullo\Session\SaveHandler;
 
-use Obullo\Cache\CacheManager;
-use Obullo\Container\ServiceProvider\ServiceProviderInterface as ServiceProvider;
-
 /**
  * Save Handler Interface
  *
