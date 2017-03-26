@@ -44,7 +44,7 @@ $container->share('router', new Obullo\Router\Router($container, ['autoResolver'
 $application = new Obullo\Mvc\App($container);
 
 $application->addBundle(new AppBundle\IndexBundle('/'));
-$application->addBundle(new BackendBundle\IndexBundle('/backend'));
+// $application->addBundle(new BackendBundle\IndexBundle('/backend'));
 $application->create();
 
 /**

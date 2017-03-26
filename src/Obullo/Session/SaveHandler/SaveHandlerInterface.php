@@ -64,19 +64,4 @@ interface SaveHandlerInterface
      */
     public function gc($maxLifetime);
 
-    /**
-     * Set expiration of valid session
-     *
-     * @param int $ttl lifetime
-     *
-     * @return void
-     */
-    public function setLifetime($ttl);
-
-    /**
-     * Get expiration of valid session
-     *
-     * @return int
-     */
-    public function getLifetime();
 }

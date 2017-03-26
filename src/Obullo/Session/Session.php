@@ -62,7 +62,8 @@ class Session implements SessionInterface
         $this->server = $request->getServerParams();
         $this->cookie = $request->getCookieParams();
 
-        ini_set('session.cookie_domain', $this->params['cookie']['domain']);
+        ini_set('session.cookie_domain', $params['cookie']['domain']);
+        ini_set('session.gc_maxlifetime', $params['session']['gc_maxlifetime']);
 
         $this->logger = $logger;
         $this->logger->debug('Session Class Initialized');

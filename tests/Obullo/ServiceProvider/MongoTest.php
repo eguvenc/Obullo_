@@ -1,5 +1,7 @@
 <?php
 
+use League\Container\Container;
+
 class MongoTest extends PHPUnit_Framework_TestCase
 {
     protected $container;
@@ -13,10 +15,10 @@ class MongoTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        global $container;
-        $this->container = $container;
+        $this->container = new Container;
+        $this->container->addServiceProvider('AppBundle\ServiceProvider\Config');
         $this->container->addServiceProvider('AppBundle\ServiceProvider\Mongo');
-        $this->connection = $this->container->get('mongo')->shared(['connection' => 'default']);
+        $this->connection = $this->container->get('mongo:default');
         $this->mongoClass = (version_compare(phpversion('mongo'), '1.3.0', '<')) ? '\Mongo' : '\MongoClient';
     }
 

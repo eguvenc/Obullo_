@@ -8,7 +8,7 @@ namespace Obullo\Session\SaveHandler;
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
-class FileSessionHandler
+class FileSessionHandler implements SaveHandlerInterface
 {
     /**
      * Service parameters
@@ -23,13 +23,6 @@ class FileSessionHandler
      * @var string
      */
     protected $key = 'Session_';
-
-    /**
-     * Expiration time of current session
-     *
-     * @var integer
-     */
-    protected $lifetime = 7200; // two hours
 
     /**
      * Session Name
@@ -54,9 +47,6 @@ class FileSessionHandler
     {
         $this->params   = $params;
         $this->key      = $params['session']['key'];
-        $this->lifetime = $params['session']['gc_maxlifetime'];
-
-        ini_set('session.gc_maxlifetime', $this->lifetime);
     }
 
     /**

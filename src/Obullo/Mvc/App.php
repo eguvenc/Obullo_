@@ -19,7 +19,7 @@ use Interop\Container\ContainerInterface as Container;
 /**
  * Application
  *
- * @copyright 2009-2016 Obullo
+ * @copyright 2009-2017 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
 class App

@@ -1,9 +1,14 @@
 <?php
 
+use League\Container\Container;
+
+use Obullo\ServerRequestFactory;
+
 class DatabaseTest extends PHPUnit_Framework_TestCase
 {
     protected $container;
     protected $connection;
+    protected $adapterClass = '\Obullo\Database\Doctrine\DBAL\Adapter';
 
     /**
      * Setup variables
@@ -12,9 +17,16 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        global $container;
-        $this->container = $container;
-        $this->container->addServiceProvider('App\ServiceProvider\Database');
+        define('APP_PATH', ROOT .'src/AppBundle/');
+        define('APP_NAME', 'AppBundle');
+
+        $this->container = new Container;
+        $this->container->addServiceProvider('AppBundle\ServiceProvider\Logger');
+        $this->container->addServiceProvider('AppBundle\ServiceProvider\Config');
+        $this->container->addServiceProvider('AppBundle\ServiceProvider\Database');
+
+        ServerRequestFactory::setContainer($this->container);
+        $this->container->share('request', ServerRequestFactory::fromGlobals());
 
         $this->connection = $this->container->get('database:default');
     }

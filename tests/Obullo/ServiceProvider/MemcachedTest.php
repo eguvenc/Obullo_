@@ -1,5 +1,7 @@
 <?php
 
+use League\Container\Container;
+
 class MemcachedTest extends PHPUnit_Framework_TestCase
 {
     protected $container;
@@ -12,9 +14,8 @@ class MemcachedTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        global $container;
-        $this->container = $container;
-        $this->container->addServiceProvider('App\ServiceProvider\Memcached');
+        $this->container = new Container;
+        $this->container->addServiceProvider('AppBundle\ServiceProvider\Memcached');
         $this->connection = $this->container->get('memcached:default');
     }
 

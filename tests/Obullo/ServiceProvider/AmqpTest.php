@@ -1,5 +1,7 @@
 <?php
 
+use League\Container\Container;
+
 class AmqpTest extends PHPUnit_Framework_TestCase
 {
     protected $container;
@@ -13,9 +15,8 @@ class AmqpTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        global $container;
-        $this->container = $container;
-        $this->container->addServiceProvider('App\ServiceProvider\Amqp');
+        $this->container = new Container;
+        $this->container->addServiceProvider('AppBundle\ServiceProvider\Amqp');
         $this->AMQPConnection = $this->container->get('amqp:default');
         
         $this->AMQPClass = (get_class($this->AMQPConnection) == 'AMQPConnection') ? 'AMQPConnection' : 'PhpAmqpLib\Connection\AMQPConnection';

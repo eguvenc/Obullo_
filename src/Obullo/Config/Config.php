@@ -52,13 +52,23 @@ class Config extends Ini
     }
 
     /**
+     * Returns to env string
+     *
+     * @return string
+     */
+    public function getEnv()
+    {
+        return $this->env;
+    }
+
+    /**
      * Load config file
      *
      * @param string $env environment
      *
      * @param object
      */
-    public function load($filename, $env = null)
+    public function load($filename, $env = 'dev')
     {
         $env = ($env) ? $env : $this->env;
 
