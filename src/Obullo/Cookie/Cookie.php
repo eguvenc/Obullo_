@@ -68,6 +68,16 @@ class Cookie implements CookieInterface
     }
 
     /**
+     * Returns to default settings
+     *
+     * @return array
+     */
+    public function getDefaults()
+    {
+        return $this->defaults;
+    }
+
+    /**
      * Set cookie name
      *
      * @param string $name cookie name

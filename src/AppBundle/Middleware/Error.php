@@ -69,10 +69,8 @@ class Error implements ErrorMiddlewareInterface, ContainerAwareInterface
             $html = $error;
         } elseif (is_object($error)) {
             $html = $this->renderHtmlException($error);
-            while ($exception = $error->getPrevious()) {
-                $html .= '<h2>Previous exception</h2>';
-                $html .= $this->renderHtmlException($exception);
-            }
+
+            // Don't use $exception->getPrevious() if exception object large you can not display it !
         }
         $header = '<style>
         body{ color: #777575 !important; margin:0 !important; padding:20px !important; font-family:Arial,Verdana,sans-serif !important;font-weight:normal;  }
@@ -145,18 +143,16 @@ class Error implements ErrorMiddlewareInterface, ContainerAwareInterface
             "success" => 0,
             'message' => 'Rest Api Error',
         ];
-        $error['exception'] = [];
+        $error['exception'] = [
+            'type' => get_class($exception),
+            'code' => $exception->getCode(),
+            'message' => $exception->getMessage(),
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+            'trace' => explode("\n", $exception->getTraceAsString()),
+        ];
 
-        do {
-            $error['exception'][] = [
-                'type' => get_class($exception),
-                'code' => $exception->getCode(),
-                'message' => $exception->getMessage(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-                'trace' => explode("\n", $exception->getTraceAsString()),
-            ];
-        } while ($exception = $exception->getPrevious());
+        // Don't use $exception->getPrevious() if exception object large you can not display it !
     
         return $error;
     }

@@ -27,7 +27,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $config = $this->container->get('config');
 
         $config->setEnv("test");
-
+        
         $this->assertEquals("test", $config->getEnv("test"), "I expect that the value is equal to 'test'.");
     }
 }

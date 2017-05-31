@@ -123,15 +123,15 @@ class Router implements RouterInterface
     protected function dispatch()
     {
         foreach ($this->routes as $r) {
-            if (! in_array($this->request->getMethod(), (array)$r['method'])) {
-                $notAllowed = '\\'. APP_NAME .'\Middleware\NotAllowed';
-                $this->queue->enqueue(['callable' => new $notAllowed, 'params' => (array)$r['method']]);
-                continue;
-            }
             $handler = $r['handler'];
             $pattern = $r['pattern'];
             
             if (trim($pattern, "/") == trim($this->path, "/") || preg_match('#^'.$pattern.'$#', $this->path, $params)) {
+                if (! in_array($this->request->getMethod(), (array)$r['method'])) {
+                    $notAllowed = '\\'. APP_NAME .'\Middleware\NotAllowed';
+                    $this->queue->enqueue(['callable' => new $notAllowed, 'params' => (array)$r['method']]);
+                    continue;
+                }
                 $this->queue($r['middlewares']);
 
                 if (is_string($handler)) {
