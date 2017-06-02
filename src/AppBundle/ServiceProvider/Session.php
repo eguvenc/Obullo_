@@ -2,7 +2,9 @@
 
 namespace AppBundle\ServiceProvider;
 
-use Obullo\Session\SaveHandler\CacheSaveHandler;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
+
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 class Session extends AbstractServiceProvider
@@ -32,28 +34,10 @@ class Session extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $params = [
-            'session' => [
-                'key' => 'Session_',
-                'gc_maxlifetime' => 3600,
-            ],
-            'cookie' => [
-                'lifetime' => 3600,
-                'domain'   => '',
-                'path'     => '/',
-                'secure'   => false,
-                'httpOnly' => false,
-                'prefix'   => ''
-            ],
-        ];
-        $saveHandler = new CacheSaveHandler($container->get('cache'), $params);
+        $storage = new NativeSessionStorage(array(), new NativeFileSessionHandler());
 
-        $container->share('session', 'Obullo\Session\Session')
-            ->withArgument($container->get('request'))
-            ->withArgument($container->get('logger'))
-            ->withArgument($params)
-            ->withMethodCall('setName', ['session_'])
-            ->withMethodCall('setSaveHandler', [$saveHandler])
+        $container->share('session', 'Symfony\Component\HttpFoundation\Session\Session')
+            ->withArgument($storage)
             ->withMethodCall('start');
     }
 }
