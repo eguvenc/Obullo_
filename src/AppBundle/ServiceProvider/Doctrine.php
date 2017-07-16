@@ -2,10 +2,10 @@
 
 namespace AppBundle\ServiceProvider;
 
-use Obullo\Connectors\DatabaseConnector;
+use Obullo\Connectors\DoctrineConnector;
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
-class Database extends AbstractServiceProvider
+class Doctrine extends AbstractServiceProvider
 {
     /**
      * The provides array is a way to let the container
@@ -17,7 +17,7 @@ class Database extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'database:default'
+        'doctrine:default'
     ];
 
     /**
@@ -43,8 +43,8 @@ class Database extends AbstractServiceProvider
                 \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
             ]
         );
-        $connector = new DatabaseConnector($connectionParams);
+        $connector = new DoctrineConnector($connectionParams);
         $connector->setLogger($container->get('logger'));
-        $container->share('database:default', $connector->getConnection());
+        $container->share('doctrine:default', $connector->getConnection());
     }
 }

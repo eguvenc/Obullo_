@@ -1,10 +1,10 @@
 <?php
 
-namespace Obullo\Mvc\Layer;
+namespace Obullo\Mvc\Request;
 
 /**
  * Layer error handler
- * 
+ *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
@@ -33,7 +33,7 @@ class Error
      * Format layer errors
      *
      * @param string $response layer response
-     * 
+     *
      * @return mixed
      */
     public static function getError($response)
@@ -44,12 +44,11 @@ class Error
         $code  = isset($response['code']) ? $response['code'] : 0;
 
         if ($code > 0) {
-            $errorStr = $code. ': '.$errorStr; 
+            $errorStr = $code. ': '.$errorStr;
         }
         if ($uri) {
             $errorStr = $errorStr. ' url : '. $uri;
         }
         return static::HEADER .$errorStr. static::FOOTER;
     }
-    
 }

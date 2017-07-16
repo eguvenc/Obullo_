@@ -4,7 +4,7 @@ use League\Container\Container;
 
 use Obullo\ServerRequestFactory;
 
-class DatabaseTest extends PHPUnit_Framework_TestCase
+class DoctrineTest extends PHPUnit_Framework_TestCase
 {
     protected $container;
     protected $connection;
@@ -23,12 +23,12 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $this->container = new Container;
         $this->container->addServiceProvider('AppBundle\ServiceProvider\Logger');
         $this->container->addServiceProvider('AppBundle\ServiceProvider\Config');
-        $this->container->addServiceProvider('AppBundle\ServiceProvider\Database');
+        $this->container->addServiceProvider('AppBundle\ServiceProvider\Doctrine');
 
         ServerRequestFactory::setContainer($this->container);
         $this->container->share('request', ServerRequestFactory::fromGlobals());
 
-        $this->connection = $this->container->get('database:default');
+        $this->connection = $this->container->get('doctrine:default');
     }
 
     /**
@@ -38,7 +38,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
      */
     public function testShared()
     {
-        $connectionShared = $this->container->get('database:default');
+        $connectionShared = $this->container->get('doctrine:default');
 
         $this->assertInstanceOf('Obullo\Database\Doctrine\DBAL\Adapter', $this->connection, "I expect that the value is instance of $this->adapterClass.");
         $this->assertSame($this->connection, $connectionShared, "I expect that the two variables reference the same object.");

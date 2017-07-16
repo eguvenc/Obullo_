@@ -72,7 +72,17 @@ class Controller
     }
 
     /**
-     * Include nested view files from current module /view folder
+     * Returns to sub request object
+     *
+     * @return object
+     */
+    public function subRequest()
+    {
+        return $this->container->get('subRequest');
+    }
+
+    /**
+     * Returns view file output
      *
      * @param mixed $filename filename
      * @param mixed $data     array data
@@ -81,6 +91,6 @@ class Controller
      */
     public function render($filename, $data = array())
     {
-        return $this->view->render($filename, $data);
+        return $this->container->get('view')->render($filename, $data);
     }
 }

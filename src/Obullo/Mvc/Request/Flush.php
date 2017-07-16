@@ -1,6 +1,6 @@
 <?php
 
-namespace Obullo\Mvc\Layer;
+namespace Obullo\Mvc\Request;
 
 use Interop\Container\ContainerInterface as Container;
 
@@ -63,6 +63,6 @@ class Flush
     {
         $id = trim($hashString);
         
-        return Layer::CACHE_KEY. (int)sprintf("%u", crc32((string)$id));
+        return SubRequest::CACHE_KEY. (int)sprintf("%u", crc32((string)$id));
     }
 }

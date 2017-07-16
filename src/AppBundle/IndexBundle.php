@@ -28,10 +28,10 @@ class IndexBundle implements BundleInterface
         $container->addServiceProvider('AppBundle\ServiceProvider\Cookie');
         $container->addServiceProvider('AppBundle\ServiceProvider\Session');
         $container->addServiceProvider('AppBundle\ServiceProvider\Flash');
-        $container->addServiceProvider('AppBundle\ServiceProvider\Mvc');
+        $container->addServiceProvider('AppBundle\ServiceProvider\SubRequest');
         $container->addServiceProvider('AppBundle\ServiceProvider\View');
         $container->addServiceProvider('AppBundle\ServiceProvider\Logger');
-        $container->addServiceProvider('AppBundle\ServiceProvider\Database');
+        $container->addServiceProvider('AppBundle\ServiceProvider\Doctrine');
         $container->addServiceProvider('AppBundle\ServiceProvider\Cache');
         $container->addServiceProvider('AppBundle\ServiceProvider\Amqp');
         $container->addServiceProvider('AppBundle\ServiceProvider\Redis');

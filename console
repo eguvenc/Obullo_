@@ -4,15 +4,23 @@
 
 define('ROOT', __DIR__.'/');
 
-require __DIR__.'/constants.php';
-require __DIR__.'/vendor/autoload.php';
+require 'constants.php';
+require 'vendor/autoload.php';
 
 $container = new League\Container\Container;
 
 /**
- * Add your service providers
+ * Step 1: Add service providers
  */
 $container->addServiceProvider('AppBundle\ServiceProvider\Config');
+$container->addServiceProvider('AppBundle\ServiceProvider\Logger');
+$container->addServiceProvider('AppBundle\ServiceProvider\Doctrine');
+
+/**
+ * Step 2: Instantiate the container
+ */
+Obullo\ServerRequestFactory::setContainer($container);
+$container->share('request', Obullo\ServerRequestFactory::fromGlobals());
 
 /**
  * Create your console commands

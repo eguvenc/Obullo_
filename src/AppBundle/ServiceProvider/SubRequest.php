@@ -4,7 +4,7 @@ namespace AppBundle\ServiceProvider;
 
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
-class Mvc extends AbstractServiceProvider
+class SubRequest extends AbstractServiceProvider
 {
     /**
      * The provides array is a way to let the container
@@ -16,7 +16,7 @@ class Mvc extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'mvc'
+        'subRequest'
     ];
 
     /**
@@ -31,7 +31,7 @@ class Mvc extends AbstractServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->share('mvc', 'Obullo\Mvc\Layer\HmvcRequest')
+        $container->share('subRequest', 'Obullo\Mvc\Request\HmvcRequest')
             ->withArgument($container)
             ->withArgument($container->get('logger'))
             ->withArgument(['cache' => false]);

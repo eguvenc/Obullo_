@@ -1,6 +1,6 @@
 <?php
 
-namespace Obullo\Mvc\Layer;
+namespace Obullo\Mvc\Request;
 
 use Obullo\Mvc\Controller;
 use Obullo\Mvc\ControllerResolver;
@@ -10,7 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Interop\Container\ContainerInterface as Container;
 
 /**
- * Layers is a programming technique that delivers you to "Multitier Architecture"
+ * HMVC is a programming technique that delivers you to "Multitier Architecture"
  * to scale your applications.
  *
  * Derived from Java HMVC pattern, 2009 - 2016.
@@ -22,14 +22,14 @@ use Interop\Container\ContainerInterface as Container;
  */
 
 /**
- * Layer
+ * SubRequest
  *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
-class Layer
+class SubRequest
 {
-    const CACHE_KEY = 'Mvc_Layer_';
+    const CACHE_KEY = 'Sub_Layer_';
 
     protected $router;
     protected $folder;
@@ -92,7 +92,7 @@ class Layer
     }
 
     /**
-     * Set Layer Request Method
+     * Set Sub Request Method
      *
      * @param string $method layer method
      * @param array  $data   params
@@ -246,11 +246,11 @@ class Layer
     }
 
     /**
-     * Close Layer Connections
+     * Close Sub Request Connections
      *
-     * If we have any possible Layer exceptions
+     * If we have any possible request exceptions
      * reset the router variables and restore all objects
-     * to complete Layer process. Otherwise we see uncompleted request errors.
+     * to complete request process. Otherwise we see uncompleted request errors.
      *
      * @return void
      */

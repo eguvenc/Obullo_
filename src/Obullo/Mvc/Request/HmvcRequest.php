@@ -1,14 +1,16 @@
 <?php
 
-namespace Obullo\Mvc\Layer;
+namespace Obullo\Mvc\Request;
 
 use Obullo\ServerRequestFactory;
 use Psr\Log\LoggerInterface as Logger;
 use Interop\Container\ContainerInterface as Container;
-use Obullo\View\Gui\ViewComponentInterface as ViewComponent;
+
+use Obullo\View\Gui\ViewComponent;
+use Obullo\View\Gui\ViewComponentInterface;
 
 /**
- * Layer Request
+ * Hmvc Request
  *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
@@ -59,6 +61,21 @@ class HmvcRequest implements HmvcRequestInterface
     }
 
     /**
+     * View Request
+     *
+     * @param string  $path       uri string
+     * @param array   $data       get data
+     * @param integer $expiration cache ttl
+     * @param string  $folder     folder
+     *
+     * @return string
+     */
+    public function view($filename, $data, $expiration = null)
+    {
+        return $this->get(new ViewComponent($filename), $data, $expiration);
+    }
+
+    /**
      * GET Request
      *
      * @param string  $path       uri string
@@ -91,7 +108,7 @@ class HmvcRequest implements HmvcRequestInterface
     /**
      * Create new request
      *
-     * Layer always must create new instance other ways we can't use nested layers.
+     * Layer always must create new instance other ways we can't use nested sub requests.
      *
      * @param string  $folder     folder
      * @param string  $method     request method
@@ -103,25 +120,25 @@ class HmvcRequest implements HmvcRequestInterface
      */
     protected function newRequest($folder, $method, $path = '/', $data = array(), $expiration = null)
     {
-        if ($path instanceof ViewComponent) {
+        if ($path instanceof ViewComponentInterface) {
             $component = $path;
             $path      = $component->getPath();
             $folder    = 'View/Controller';
         }
         $path = trim($path, '/');
 
-        $layer = new Layer(
+        $subRequest = new SubRequest(
             $this->container,
             $this->params,
             $folder
         );
-        $layer->clear();
-        $layer->newRequest(
+        $subRequest->clear();
+        $subRequest->newRequest(
             $this->createRequest($path),
             $method,
             $data
         );
-        $id = $layer->getId();
+        $id = $subRequest->getId();
 
         /**
          * Read Cache
@@ -130,13 +147,12 @@ class HmvcRequest implements HmvcRequestInterface
             $cacheItem = $this->container->get('cache')->getItem($id);
 
             if ($cacheItem->isHit()) {
-                $layer->restore();
-                $this->logger->debug('Mvc Layer (Cached): '.strtolower($path), ['id' => $id]);
+                $subRequest->restore();
+                $this->logger->debug('SubRequest (Cached): '.strtolower($path), ['id' => $id]);
                 return base64_decode($cacheItem->get());
             }
         }
-
-        $response = $layer->execute($path); // Execute the process
+        $response = $subRequest->execute($path); // Execute the process
 
         /**
          * Save Cache
@@ -148,13 +164,13 @@ class HmvcRequest implements HmvcRequestInterface
             $cacheItem->expiresAfter((int)$expiration);
             $cache->save($cacheItem);
         }
-        $layer->restore();  // Restore controller objects
+        $subRequest->restore();  // Restore controller objects
 
         if (is_array($response) && isset($response['error'])) {
             return Error::getError($response);  // Error template support
         }
 
-        $this->logger->debug('Mvc Layer: '.strtolower($path), ['id' => $id]);
+        $this->logger->debug('SubRequest: '.strtolower($path), ['id' => $id]);
         return (string)$response;
     }
     

@@ -9,12 +9,12 @@ use Obullo\Logger\LoggerAwareTrait;
 use Obullo\Database\Doctrine\DBAL\SQLLogger;
 
 /**
- * Database Connector
+ * Doctrine Connector
  *
- * @copyright 2009-2015 Obullo
+ * @copyright 2009-2017 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
-class DatabaseConnector implements ConnectorInterface
+class DoctrineConnector implements ConnectorInterface
 {
     use LoggerAwareTrait;
 
