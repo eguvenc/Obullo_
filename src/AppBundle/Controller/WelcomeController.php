@@ -2,9 +2,6 @@
 
 namespace AppBundle\Controller;
 
-// use Obullo\View\Model\ViewModel;
-// use AppBundle\View\Template\IndexTemplate;
-
 use Obullo\Mvc\View;
 use Obullo\Mvc\Controller;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -55,12 +52,11 @@ class WelcomeController extends Controller
         // $row = $this->db->query("SELECT * FROM users")->row();
         // var_dump($row);
 
-        // $this->subRequest()->getFlush()->path("header", ['userId' => 5]);
+        // $this->subRequest()->flush()->path("header", ['userId' => 5]);
 
 
         // $data['header'] = $this->subRequest()->view('header');
         // $data['footer'] = $this->subRequest()->view('footer');
-
 
         return new HtmlResponse($this->render('welcome.phtml'));
     }

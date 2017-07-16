@@ -70,7 +70,7 @@ class HmvcRequest implements HmvcRequestInterface
      *
      * @return string
      */
-    public function view($filename, $data, $expiration = null)
+    public function view($filename, $data = array(), $expiration = null)
     {
         return $this->get(new ViewComponent($filename), $data, $expiration);
     }
@@ -179,7 +179,7 @@ class HmvcRequest implements HmvcRequestInterface
      *
      * @return object
      */
-    public function getFlush()
+    public function flush()
     {
         return new Flush($this->container);
     }

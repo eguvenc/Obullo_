@@ -130,7 +130,8 @@ class SubRequest
         
         $resolver = new ControllerResolver(
             $this->container,
-            $this->container->get('request')
+            $this->container->get('request'),
+            $this->container->get('response')
         );
         $resolver->setFolder($this->folder);
 
