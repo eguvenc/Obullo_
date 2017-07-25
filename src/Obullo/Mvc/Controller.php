@@ -50,7 +50,7 @@ class Controller
         if (in_array($key, ['request', 'router', 'view'])) {
             self::$instance = &$this;
         }
-        return $this->container->get($key); // ucfirst($key)
+        return $this->container->get($key);
     }
 
     /**
@@ -72,7 +72,7 @@ class Controller
     }
 
     /**
-     * Returns to sub request object
+     * Returns to sub request (HMVC) object
      *
      * @return object
      */

@@ -2,7 +2,8 @@
 
 namespace AppBundle\ServiceProvider;
 
-use Symfony\Component\Cache\Adapter\RedisAdapter;
+use Symfony\Component\Cache\Simple\RedisCache;
+
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
 class Cache extends AbstractServiceProvider
@@ -34,6 +35,6 @@ class Cache extends AbstractServiceProvider
 
         $redis = $container->get('redis:default');
 
-        $container->share('cache', new RedisAdapter($redis));
+        $container->share('cache', new RedisCache($redis));
     }
 }

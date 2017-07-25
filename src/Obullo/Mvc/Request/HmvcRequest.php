@@ -144,12 +144,11 @@ class HmvcRequest implements HmvcRequestInterface
          * Read Cache
          */
         if ($this->params['cache']) {
-            $cacheItem = $this->container->get('cache')->getItem($id);
-
-            if ($cacheItem->isHit()) {
+            $cache = $this->container->get('cache');
+            if ($cache->has($id)) {
                 $subRequest->restore();
                 $this->logger->debug('SubRequest (Cached): '.strtolower($path), ['id' => $id]);
-                return base64_decode($cacheItem->get());
+                return base64_decode($cache->get($id));
             }
         }
         $response = $subRequest->execute($path); // Execute the process
@@ -158,11 +157,7 @@ class HmvcRequest implements HmvcRequestInterface
          * Save Cache
          */
         if (is_numeric($expiration)) {
-            $cache = $this->container->get('cache');
-            $cacheItem = $cache->getItem($id);
-            $cacheItem->set(base64_encode($response));
-            $cacheItem->expiresAfter((int)$expiration);
-            $cache->save($cacheItem);
+            $this->container->get('cache')->set($id, base64_encode($response), (int)$expiration);
         }
         $subRequest->restore();  // Restore controller objects
 

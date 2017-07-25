@@ -136,6 +136,7 @@ class RedisConnector implements ConnectorInterface
      */
     public function __destruct()
     {
-        $this->redis->close();
+        // Try to close connection by register_shutdown
+        // $this->redis->close();
     }
 }

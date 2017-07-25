@@ -5,7 +5,7 @@ namespace Obullo\Mvc\Request;
 use Interop\Container\ContainerInterface as Container;
 
 /**
- * Flush cached layer
+ * Flush cached sub request
  *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
@@ -43,10 +43,10 @@ class Flush
         if (sizeof($data) > 0) {      // We can't use count() in sub layers sizeof gives better results.
             $hashString .= str_replace('"', '', json_encode($data)); // Remove quotes to fix equality problem
         }
-        $KEY = $this->generateId($hashString);
+        $id = $this->generateId($hashString);
 
-        if ($this->cache->hasItem($KEY)) {
-            return $this->cache->deleteItem($KEY);
+        if ($this->cache->has($id)) {
+            return $this->cache->delete($id);
         }
         return false;
     }

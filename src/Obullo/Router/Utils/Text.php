@@ -11,7 +11,7 @@ namespace Obullo\Router\Utils;
 class Text
 {
     /**
-     * Replace underscore to spaces to use ucwords
+     * Replace underscore to spaces using ucwords
      *
      * Before  : widgets\tutorials_a
      * Ucwords : widgets\Tutorials A

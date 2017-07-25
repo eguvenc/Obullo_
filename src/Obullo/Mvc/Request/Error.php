@@ -3,7 +3,7 @@
 namespace Obullo\Mvc\Request;
 
 /**
- * Layer error handler
+ * SubRequest error handler
  *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
