@@ -82,18 +82,17 @@ class App
     }
 
     /**
-     * Set application with path
+     * Set routeable bundles
      *
-     * @param string $name name
-     * @param string $path path
+     * @param object $bundle
      */
-    public function addBundle(Bundle $bundle)
+    public function addRouteableBundle(Bundle $bundle)
     {
         $this->bundles[] = $bundle;
     }
 
     /**
-     * Create application bundles
+     * Create routeable application bundles
      *
      * @return void
      */
@@ -113,7 +112,7 @@ class App
     }
 
     /**
-     * Create bundle
+     * Create routeable bundle
      *
      * @param object Bundle
      *
