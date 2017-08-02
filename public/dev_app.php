@@ -37,8 +37,8 @@ $container->share('router', new Obullo\Router\Router($container, ['autoResolver'
  */
 $application = new Obullo\Mvc\App($container);
 
-$application->addBundle(new AppBundle\IndexBundle('/'));
-// $application->addBundle(new BackendBundle\IndexBundle('/backend'));
+$application->addRouteableBundle(new AppBundle\IndexBundle('/'));
+// $application->addRouteableBundle(new BackendBundle\IndexBundle('/backend'));
 $application->create();
 
 /**
