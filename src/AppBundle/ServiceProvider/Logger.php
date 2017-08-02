@@ -40,7 +40,7 @@ class Logger extends AbstractServiceProvider
 
         $config = $container->get('config')->load('app')->getObject();
 
-        if (false == $config->logger->enabled) {
+        if (false == $config->logger->enabled) { // Allow to disable log service from config/app.ini
             $logger->withMethodCall(
                 'pushHandler',
                 [new NullHandler]

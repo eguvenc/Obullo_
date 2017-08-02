@@ -3,7 +3,6 @@
 namespace Obullo\View;
 
 use Closure;
-use Psr\Log\LoggerInterface as Logger;
 use Obullo\Mvc\Controller;
 use Obullo\Mvc\ViewModelInterface as ViewModel;
 use Interop\Container\ContainerInterface as Container;
@@ -16,13 +15,6 @@ use Interop\Container\ContainerInterface as Container;
  */
 class View implements ViewInterface
 {
-    /**
-     * Logger
-     *
-     * @var object
-     */
-    protected $logger;
-
     /**
      * Container
      *
@@ -62,15 +54,12 @@ class View implements ViewInterface
      * Constructor
      *
      * @param object $container container
-     * @param object $logger    logger
      * @param array  $params    service provider parameters
      */
-    public function __construct(Container $container, $logger, array $params)
+    public function __construct(Container $container, array $params)
     {
-        $this->container = $container;
         $this->params = $params;
-        $this->logger = $logger;
-        $this->logger->debug('View Class Initialized');
+        $this->container = $container;
     }
 
     /**

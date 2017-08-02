@@ -2,13 +2,9 @@
 
 namespace AppBundle\Middleware;
 
-use Zend\Diactoros\Stream;
-use Zend\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use Exception;
-use RuntimeException;
 use Obullo\Mvc\ControllerResolver;
 use Obullo\Container\ContainerAwareTrait;
 use Obullo\Container\ContainerAwareInterface;

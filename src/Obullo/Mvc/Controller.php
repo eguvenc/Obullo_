@@ -45,7 +45,7 @@ class Controller
     public function __get($key)
     {
         /**
-         * Create new layer for each core classes ( Otherwise HMVC does not work )
+         * Create new layer for each core classes ( Otherwise SubRequest does not work well )
          */
         if (in_array($key, ['request', 'router', 'view'])) {
             self::$instance = &$this;
@@ -67,12 +67,12 @@ class Controller
     {
         if (is_object($val)) {
             $this->{$key} = $val; // WARNING : Store only object types otherwise container params
-                                  // variables come in here.
+                                  // variables come here.
         }
     }
 
     /**
-     * Returns to sub request (HMVC) object
+     * Returns to SubRequest service
      *
      * @return object
      */

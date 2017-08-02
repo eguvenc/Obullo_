@@ -25,7 +25,8 @@ class NotFound implements ContainerAwareInterface
     public function __invoke(Request $request, Response $response)
     {
         $stream = new Stream(fopen('php://temp', 'r+'));
-        $stream->write($this->container->get('view')->render('templates::404.phtml'));
+        $stream->write($this->container->get('view')
+            ->render('templates::404.phtml'));
                 
         return $response
             ->withStatus(404)

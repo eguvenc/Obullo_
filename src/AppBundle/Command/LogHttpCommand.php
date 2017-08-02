@@ -22,7 +22,7 @@ class LogHttpCommand extends Command
             ->setName('log:http')
             ->setDescription('Follow log files')
             ->addArgument(
-                'action',
+                'clear',
                 InputArgument::OPTIONAL,
                 'Do you want to clear http log file ?'
             );
@@ -30,14 +30,15 @@ class LogHttpCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $file   = ROOT . 'src/AppBundle/Resources/data/log/http.log';
-        $action = $input->getArgument('action');
-        
+        $file  = ROOT . 'src/AppBundle/Resources/data/log/http.log';
+        $clear = $input->getArgument('clear');
+
         /**
          * Clear log file
          */
-        if ($action == 'clear' && is_file($file)) {
+        if ($clear == 'clear' && is_file($file)) {
             unlink($file);
+            $output->writeln('<info>Log file delete successfully.</info>');
             return;
         }
         /**
