@@ -4,7 +4,6 @@
 
 define('ROOT', __DIR__.'/');
 
-require 'constants.php';
 require 'vendor/autoload.php';
 
 $container = new League\Container\Container;

@@ -20,13 +20,7 @@ chdir(dirname(__DIR__));
  * If you are not using Composer, you need to load Obullo with your own
  * PSR-4 autoloader.
  */
-require 'constants.php';
 require 'vendor/autoload.php';
-
-/**
- * Start benchmark
- */
-Obullo\Benchmark::start();
 
 /**
  * Step 2: Instantiate the container
@@ -63,8 +57,3 @@ $server = Zend\Diactoros\Server::createServerfromRequest(
  * and returns the HTTP response to the HTTP client.
  */
 $server->listen();
-
-/**
- * End Benchmark
- */
-Obullo\Benchmark::end($container);

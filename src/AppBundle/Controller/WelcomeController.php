@@ -18,7 +18,6 @@ class WelcomeController extends Controller
         $this->cache->set('test_cache', 'asdas');
         var_dump($this->cache->get('test_cache'));
 
-
         // $this->session->set('ersin', array('asdas' => 23233434234234));
         // var_dump($this->session->get('ersin'));
 
