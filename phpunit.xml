@@ -17,7 +17,7 @@
 >
     <testsuites>
         <testsuite name="Obullo Test Suite">
-            <directory>./tests/</directory>
+            <directory>./tests/Obullo/</directory>
         </testsuite>
     </testsuites>
     

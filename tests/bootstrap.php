@@ -6,9 +6,6 @@ define('ROOT', dirname(__DIR__).'/');
 // Prevent session cookies
 ini_set('session.use_cookies', 0);
 
-// Include constants
-require ROOT . 'constants.php';
-
 // Enable Composer autoloader
 $autoloader = require ROOT . 'vendor/autoload.php';
 

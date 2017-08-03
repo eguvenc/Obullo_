@@ -28,7 +28,7 @@ class Console
         file_put_contents(
             APP_PATH .'/Data/http.log',
             $message. PHP_EOL,
-            FILE_APPEND | LOCK_EX
+            FILE_APPEND
         );
     }
 }

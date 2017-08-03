@@ -1,4 +1,0 @@
-#!/usr/bin/env php
-<?php
-
-include('vendor/bin/doctrine.php');

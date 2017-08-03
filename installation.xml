@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<install message="This file will be remove after that the installation. If the application could not remove, please delete it by manually for security reason.">
+<install message="This file will be removed after that the installation. If it's not removed, delete it by manually for security reason.">
 
     <serviceproviders>
+        <provider name="Logger"></provider>
         <provider name="Session"></provider>
         <provider name="Cookie"></provider>
         <provider name="Cache">
