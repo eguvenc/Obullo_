@@ -15,7 +15,7 @@ define('ROOT', dirname(__DIR__).'/');
 chdir(dirname(__DIR__));
 
 /**
- * Step 1: Require the Obullo using Composer's autoloader
+ * Step 1: Composer autoloader
  *
  * If you are not using Composer, you need to load Obullo with your own
  * PSR-4 autoloader.

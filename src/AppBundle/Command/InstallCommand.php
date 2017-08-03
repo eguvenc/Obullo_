@@ -5,11 +5,10 @@ namespace AppBundle\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Interop\Container\ContainerInterface as Container;
 
-class GenerateBundleCommand extends Command
+class InstallCommand extends Command
 {
     public function __construct(Container $container)
     {
@@ -19,17 +18,13 @@ class GenerateBundleCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('generate:bundle')
-            ->setDescription('Generate bundles')
-            ->addArgument(
-                'action',
-                InputArgument::OPTIONAL,
-                'Do you want to generate a new bundle ?'
-            );
+            ->setName('install:app')
+            ->setDescription('Install Service Providers.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $clear = $input->getArgument('clear');
 
     }
 }

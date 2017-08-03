@@ -10,12 +10,12 @@ use Obullo\View\Gui\ViewComponent;
 use Obullo\View\Gui\ViewComponentInterface;
 
 /**
- * Hmvc Request
+ * Hmvc
  *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
-class HmvcRequest implements HmvcRequestInterface
+class Hmvc implements HmvcRequestInterface
 {
     protected $logger;
     protected $params;

@@ -43,7 +43,7 @@ class View extends AbstractServiceProvider
                 'addFolder',
                 [
                     'templates',
-                    APP_PATH . 'Resources/templates/'
+                    APP_PATH . 'View/Templates/'
                 ]
             );
     }

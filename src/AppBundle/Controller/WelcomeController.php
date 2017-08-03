@@ -15,14 +15,16 @@ class WelcomeController extends Controller
      */
     public function indexAction($request)
     {
+        \Obullo\Console::log("test", [1,2]);
+
         // $this->cache->set('test_cache', 'asdas');
         // var_dump($this->cache->get('test_cache'));
 
         // $this->session->set('ersin', array('asdas' => 23233434234234));
         // var_dump($this->session->get('ersin'));
 
-        // $this->cookie->withName('name')->withExpire(0)->withValue('1.23')->set(); 
-        // $this->cookie->delete('name'); 
+        // $this->cookie->withName('name')->withExpire(0)->withValue('1.23')->set();
+        // $this->cookie->delete('name');
 
         // $args = $request->getArgs();
         // print_r($args);

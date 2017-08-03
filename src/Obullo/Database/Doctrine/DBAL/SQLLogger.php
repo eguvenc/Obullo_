@@ -7,7 +7,7 @@ use Doctrine\DBAL\Logging\SQLLogger as SQLLoggerInterface;
 
 /**
  * SQLLogger for Doctrine
- * 
+ *
  * @copyright 2009-2016 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
@@ -15,42 +15,42 @@ class SQLLogger implements SQLLoggerInterface
 {
     /**
      * Sql
-     * 
+     *
      * @var string
      */
     protected $sql;
 
     /**
      * Query timer start value
-     * 
+     *
      * @var int
      */
     protected $start;
 
     /**
      * Logger
-     * 
+     *
      * @var object
      */
     protected $logger;
 
     /**
      * Bind parameters
-     * 
+     *
      * @var array
      */
     protected $params;
 
     /**
      * Count number of queries
-     * 
+     *
      * @var integer
      */
     protected $queryNumber = 0;
 
     /**
      * Create pdo statement object
-     * 
+     *
      * @param \Obullo\Log\Logger $logger object
      */
     public function __construct(Logger $logger)
@@ -60,7 +60,7 @@ class SQLLogger implements SQLLoggerInterface
 
     /**
      * Begin sql query timer
-     * 
+     *
      * @return void
      */
     protected function beginTimer()
@@ -94,9 +94,9 @@ class SQLLogger implements SQLLoggerInterface
     public function stopQuery()
     {
         $this->logger->debug(
-            '$_SQL '.$this->queryNumber.' ( Query ):', 
+            'SQL-'.$this->queryNumber.' ( Query ):',
             [
-                'time' => number_format(microtime(true) - $this->start, 4),
+                'time'   => number_format(microtime(true) - $this->start, 4),
                 'output' => $this->format($this->sql)
             ],
             ($this->queryNumber * -1)  // priority
@@ -107,7 +107,7 @@ class SQLLogger implements SQLLoggerInterface
      * Return to last sql query string
      *
      * @param string $sql sql
-     * 
+     *
      * @return void
      */
     public function format($sql)
@@ -128,5 +128,4 @@ class SQLLogger implements SQLLoggerInterface
         }
         return $sql;
     }
-
 }

@@ -29,7 +29,7 @@ use Interop\Container\ContainerInterface as Container;
  */
 class SubRequest
 {
-    const CACHE_KEY = 'Sub_Layer_';
+    const CACHE_KEY = 'Sub_Request_';
 
     protected $router;
     protected $folder;

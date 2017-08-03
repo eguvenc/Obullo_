@@ -30,7 +30,7 @@ class LogHttpCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $file  = ROOT . 'src/AppBundle/Resources/data/log/http.log';
+        $file  = ROOT . 'src/AppBundle/Data/http.log';
         $clear = $input->getArgument('clear');
 
         /**

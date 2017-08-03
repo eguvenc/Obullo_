@@ -13,7 +13,6 @@ $container = new League\Container\Container;
  */
 $container->addServiceProvider('AppBundle\ServiceProvider\Config');
 $container->addServiceProvider('AppBundle\ServiceProvider\Logger');
-$container->addServiceProvider('AppBundle\ServiceProvider\Doctrine');
 
 /**
  * Step 2: Instantiate the container
@@ -25,10 +24,10 @@ $container->share('request', Obullo\ServerRequestFactory::fromGlobals());
  * Create your console commands
  */
 use Symfony\Component\Console\Application;
+use AppBundle\Command\InstallCommand;
 use AppBundle\Command\LogHttpCommand;
-use AppBundle\Command\GenerateBundleCommand;
 
 $application = new Application();
+$application->add(new InstallCommand($container));
 $application->add(new LogHttpCommand($container));
-$application->add(new GenerateBundleCommand($container));
 $application->run();

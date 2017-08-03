@@ -49,7 +49,7 @@ class Logger extends AbstractServiceProvider
         }
         $logger->withMethodCall(
             'pushHandler',
-            [new StreamHandler(APP_PATH .'/Resources/data/log/http.log', Log::DEBUG, true, 0666)]
+            [new StreamHandler(APP_PATH .'/Data/http.log', Log::DEBUG, true, 0666)]
         );
         $logger->withMethodCall(
             'debug',
