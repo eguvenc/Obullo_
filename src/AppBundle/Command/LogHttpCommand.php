@@ -36,8 +36,10 @@ class LogHttpCommand extends Command
         /**
          * Clear log file
          */
-        if ($clear == 'clear' && is_file($file)) {
-            unlink($file);
+        if ($clear == 'clear') {
+            if (is_file($file)) {
+                unlink($file);
+            }
             $output->writeln('<info>Log file delete successfully.</info>');
             return;
         }
@@ -71,7 +73,7 @@ class LogHttpCommand extends Command
                 /**
                  * Colourize errors (red)
                  */
-                if (stripos($line, '.debug') == false && stripos($line, '.info') == false) {
+                if (stripos($line, '.ERROR') !== false) {
                     $line = "<fg=red;options=bold>".$line."</>";
                 }
                 $output->write($line);

@@ -33,7 +33,6 @@ class SubRequest extends AbstractServiceProvider
 
         $container->share('subRequest', 'Obullo\Mvc\Request\Hmvc')
             ->withArgument($container)
-            ->withArgument($container->get('logger'))
             ->withArgument(['cache' => false]);
     }
 }

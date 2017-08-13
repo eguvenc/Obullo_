@@ -3,7 +3,6 @@
 namespace Obullo\Mvc\Request;
 
 use Obullo\ServerRequestFactory;
-use Psr\Log\LoggerInterface as Logger;
 use Interop\Container\ContainerInterface as Container;
 
 use Obullo\View\Gui\ViewComponent;
@@ -17,7 +16,6 @@ use Obullo\View\Gui\ViewComponentInterface;
  */
 class Hmvc implements HmvcRequestInterface
 {
-    protected $logger;
     protected $params;
     protected $container;
 
@@ -25,14 +23,12 @@ class Hmvc implements HmvcRequestInterface
      * Constructor
      *
      * @param object $container ContainerInterface
-     * @param object $logger    LoggerInterface
      * @param array  $params    array parameters
      */
-    public function __construct(Container $container, Logger $logger, array $params)
+    public function __construct(Container $container, array $params)
     {
         $this->container = $container;
         $this->params = $params;
-        $this->logger = $logger;
     }
 
     /**
@@ -145,9 +141,12 @@ class Hmvc implements HmvcRequestInterface
          */
         if ($this->params['cache']) {
             $cache = $this->container->get('cache');
+
             if ($cache->has($id)) {
                 $subRequest->restore();
-                $this->logger->debug('SubRequest (Cached): '.strtolower($path), ['id' => $id]);
+
+                // Create event listener for cached strtolower($path) & $id data
+
                 return base64_decode($cache->get($id));
             }
         }
@@ -164,8 +163,9 @@ class Hmvc implements HmvcRequestInterface
         if (is_array($response) && isset($response['error'])) {
             return Error::getError($response);  // Error template support
         }
+        
+        // Create event listener for strtolower($path) & $id data
 
-        $this->logger->debug('SubRequest: '.strtolower($path), ['id' => $id]);
         return (string)$response;
     }
     

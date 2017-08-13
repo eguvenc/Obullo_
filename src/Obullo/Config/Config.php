@@ -70,7 +70,7 @@ class Config extends Ini
      */
     public function load($filename, $env = 'dev')
     {
-        $env = ($env) ? $env : $this->env;
+        $env = ($env) ? $env : $this->getEnv();
 
         $this->file = ROOT .'config/'.$env.'/'.$filename.'.ini';
         return $this;

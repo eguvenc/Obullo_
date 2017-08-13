@@ -16,9 +16,6 @@ chdir(dirname(__DIR__));
 
 /**
  * Step 1: Composer autoloader
- *
- * If you are not using Composer, you need to load Obullo with your own
- * PSR-4 autoloader.
  */
 require 'vendor/autoload.php';
 
@@ -33,16 +30,16 @@ $container->share('response', new Zend\Diactoros\Response);
 $container->share('router', new Obullo\Router\Router($container, ['autoResolver' => true]));
 
 /**
- * Step 3: Create your mvc applications
+ * Step 3: Create your mvc application
  */
-$application = new Obullo\Mvc\App($container);
+$application = new Obullo\Mvc\BenchmarkableApp($container);
 
 $application->addRouteableBundle(new AppBundle\IndexBundle('/'));
 // $application->addRouteableBundle(new BackendBundle\IndexBundle('/backend'));
 $application->create();
 
 /**
- * Step 4: Define your server using Zend Diactoros & Instantiate the Obullo application
+ * Step 4: Define your server using Zend Diactoros
  */
 $server = Zend\Diactoros\Server::createServerfromRequest(
     $application,
@@ -53,7 +50,12 @@ $server = Zend\Diactoros\Server::createServerfromRequest(
 /**
  * Step 5: Emit output
  *
- * This method should be called last. This executes the Obullo application
+ * This method should be called last. This executes the Http Middlewares
  * and returns the HTTP response to the HTTP client.
  */
 $server->listen();
+
+/**
+ * Step 6: Close application
+ */
+$application->close();

@@ -30,8 +30,7 @@ class View extends AbstractServiceProvider
     public function register()
     {
         $container = $this->getContainer();
-        $container->get('logger')->debug("View Class Initialized.");
-
+        
         $container->share('view', 'Obullo\View\View')
             ->withArgument($container)
             ->withArgument(

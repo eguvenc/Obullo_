@@ -216,4 +216,24 @@ class App
     {
         return $this->container;
     }
+
+    /**
+     * Returns to bundle objects
+     *
+     * @return array
+     */
+    public function getBundles()
+    {
+        return $this->bundles;
+    }
+
+    /**
+     * Dummy close function for who want to
+     * extend it.
+     *
+     * @return void
+     */
+    public function close()
+    {
+    }
 }

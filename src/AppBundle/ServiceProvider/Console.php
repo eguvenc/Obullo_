@@ -4,11 +4,7 @@ namespace AppBundle\ServiceProvider;
 
 use Obullo\Container\ServiceProvider\AbstractServiceProvider;
 
-use Monolog\Logger as Log;
-use Monolog\Handler\NullHandler;
-use Monolog\Handler\StreamHandler;
-
-class Logger extends AbstractServiceProvider
+class Console extends AbstractServiceProvider
 {
     /**
      * The provides array is a way to let the container
@@ -20,7 +16,7 @@ class Logger extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'logger',
+        'console'
     ];
 
     /**
@@ -34,22 +30,7 @@ class Logger extends AbstractServiceProvider
     public function register()
     {
         $container = $this->getContainer();
-
-        $logger = $container->share('logger', 'Monolog\Logger')
-            ->withArgument('system');
-
-        $config = $container->get('config')->load('app')->getObject();
-
-        if (false == $config->app->log) { // Allow to disable log service from config/app.ini
-            $logger->withMethodCall(
-                'pushHandler',
-                [new NullHandler]
-            );
-            return;
-        }
-        $logger->withMethodCall(
-            'pushHandler',
-            [new StreamHandler(APP_PATH .'/Data/http.log', Log::DEBUG, true, 0666)]
-        );
+        
+        $container->share('console', 'Obullo\Console');
     }
 }

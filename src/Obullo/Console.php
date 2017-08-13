@@ -17,17 +17,19 @@ class Console
      * @param array  $extra   paylaod
      * @return void
      */
-    public static function log($message, $extra = array())
+    public function log($message, $extra = array())
     {
+        $text = "[".date("Y-m-d H:i:s")."] console.LOG: ";
+
         if (! empty($extra)) {
             $payload = json_encode($extra, JSON_UNESCAPED_UNICODE);
-            $message = $message." ".$payload." []";
+            $text.= $message." ".$payload." []";
         } else {
-            $message = $message." [] []";
+            $text.= $message." [] []";
         }
         file_put_contents(
             APP_PATH .'/Data/http.log',
-            $message. PHP_EOL,
+            $text. PHP_EOL,
             FILE_APPEND
         );
     }

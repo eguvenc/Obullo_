@@ -5,7 +5,6 @@ namespace Obullo\Mvc\Request;
 use Obullo\Mvc\Controller;
 use Obullo\Mvc\ControllerResolver;
 
-use Psr\Log\LoggerInterface as Logger;
 use Psr\Http\Message\ServerRequestInterface;
 use Interop\Container\ContainerInterface as Container;
 
@@ -55,7 +54,7 @@ class SubRequest
         $this->folder = $folder;
         $this->container = $container;
 
-        register_shutdown_function(array($this, 'close'));  // Close current layer
+        register_shutdown_function(array($this, 'close'));  // Close current request
     }
 
     /**
@@ -70,8 +69,8 @@ class SubRequest
     public function newRequest(ServerRequestInterface $request, $method = 'GET', $data = array())
     {
         $this->controller = Controller::$instance;      // We need get backup object of main controller
-        $this->request = clone Controller::$instance->request;
-        $this->router = clone Controller::$instance->router;  // Create copy of original Router class.
+        $this->request    = clone Controller::$instance->request;
+        $this->router     = clone Controller::$instance->router;  // Create copy of original Router class.
 
         static::$path[] = $this->request->getUri()->getPath();
 
