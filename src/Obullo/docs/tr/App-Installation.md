@@ -19,14 +19,6 @@ Composer projesi hakkında daha detaylı bilgi için <a href="http://getcomposer
     </li>
 
     <li>
-        <a href="#middlewares">Katman Seçimi</a>
-        <ul>
-            <li><a href="#zend">Zend</a></li>
-            <li><a href="#relay">Relay</a></li>
-        </ul>
-    </li>
-
-    <li>
         <a href="#apache">Apache</a>
         <ul>
             <li><a href="#htaccess">.htaccess</a></li>
@@ -100,6 +92,37 @@ composer install
 
 Composer.json konfigürasyonu Linux / Unix / OSX İşletim Sistemlerinde olduğu gibidir, composer paketinin Windows kurulumu için ise <a href="https://getcomposer.org/doc/00-intro.md#installation-windows">bu linkten</a> faydalanabilirsiniz.
 
+
+#### Xampp Altında Kurulum
+
+Uygulamayı örnek olarak "obullo" adıyla  "C:\xampp\htdocs\ klasörüne kopyalayın.
+
+Bu dosyayı açın C:\xampp\apache\conf\extra\httpd-vhosts.conf
+
+<VirtualHost *:80>
+   ServerAdmin webmaster@obullo.com
+   DocumentRoot "C:/xampp/htdocs/obullo/public"
+   ServerName obullo
+<Directory "C:/xampp/htdocs/obullo">
+AllowOverride All
+Require all Granted
+</Directory>
+    ##ErrorLog "logs/dummy-host2.example.com-error.log"
+    ##CustomLog "logs/dummy-host2.example.com-access.log" common
+</VirtualHost>
+
+Windows host dosyanızı açın C:\Windows\System32\Drives\etc\host
+
+127.0.0.1 obullo
+
+yazıp kaydedin.
+
+Xampp uygulamasını yeniden başlatın.
+
+Composer kurulumunu gerçekleştirin.
+
+Tarayıcınıza http://obullo/ yazdığınızda uygulama çalışır.
+
 <a name='dump-autoload'></a>
 
 ### Autoload Önbelleğini Tazeleyin
@@ -110,60 +133,20 @@ Son olarak autoload dosyalarını composer ın yeniden oluşturmasını istememi
 composer dump-autoload
 ```
 
-<a name='middlewares'></a>
-
-### Katman Seçimi
-
-Mevcut sürüm iki adet katman sağlayıcısını destekler. 
-
-* Zend ( Varsayılan )
-* Relay
-
-Aşağıda bu katmanlara ait konfigürasyonlar gösteriliyor.
-
-<a name='zend'></a>
-
-#### Zend Stratigility Konfigürasyonu ( Varsayılan )
+#### deb_app.php dosyası
 
 Zend tarafından sağlanan gelişmiş bir katman çözümüdür.Konfigürasyon için index.php dosyanızı açın ve <kbd>$app</kbd> değişkenini <kbd>Obullo\Http\Zend\Stratigility\MiddlewarePipe</kbd> olarak aşağıdaki gibi güncelleyin.
 
 ```php
-/*
-|--------------------------------------------------------------------------
-| Choose your middleware app
-|--------------------------------------------------------------------------
-*/
-$app = new Obullo\Http\Zend\Stratigility\MiddlewarePipe($container);
-/*
-|--------------------------------------------------------------------------
-| Create your http server
-|--------------------------------------------------------------------------
-*/
-$server = Obullo\Http\Server::createServerFromRequest(
-    $app,
-    Obullo\Log\Benchmark::start($app->getRequest())
-);
-/*
-|--------------------------------------------------------------------------
-| Run
-|--------------------------------------------------------------------------
-*/
+
 $server->listen();
 ```
 
 Katman hakkında detaylı bilgiye <a href="https://github.com/zendframework/zend-stratigility" target="_blank">zend middleware</a> bağlantısından ulaşabilirsiniz.
 
-<a name='relay'></a>
-
-#### Relay
-
-Look at <a href="https://github.com/obullo/relay-middleware" target="_blank">https://github.com/obullo/relay-middleware</a>
-
 <a name="apache"></a>
 
 ### Apache
-
-Projenizi eğer apache http sunucusu altında çalıştırıyorsanız aşağıdaki konfigürasyonların yapıldığında emin olmalısınız.
 
 <a name="htaccess"></a>
 

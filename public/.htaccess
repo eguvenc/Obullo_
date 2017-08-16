@@ -5,10 +5,14 @@ Options -Indexes
 Options +FollowSymLinks
 Options -MultiViews
 
+## Windows xampp fix
+
+DirectoryIndex dev_app.php
+
 RewriteEngine on
 RewriteBase /
 
-# Disables all access to files and directories, sends all request to index.php
+# Disables all access to files and directories, sends all request to dev_app.php
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

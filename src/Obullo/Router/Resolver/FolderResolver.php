@@ -2,7 +2,6 @@
 
 namespace Obullo\Router\Resolver;
 
-use Obullo\Router\Utils\Text;
 use Obullo\Router\RouterInterface as Router;
 
 /**
@@ -49,7 +48,7 @@ class FolderResolver
         $folder = $this->router->getFolder();
         $hasSegmentOne = empty($segments[1]) ? false : true;
 
-        $file = APP_PATH .'/Controller/'.$folder.'/'.Text::ucwords($folder).'.php';
+        $file = APP_PATH .'/Controller/'.$folder.'/'.$folder.'.php';
 
         if (is_file($file)) {
             $index = ($hasSegmentOne && $segments[1] == 'index');

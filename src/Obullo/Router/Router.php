@@ -8,7 +8,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use SplQueue;
 use Obullo\Router\Group;
 use InvalidArgumentException;
-use Obullo\Router\Utils\Text;
 use Obullo\Router\Filter\FilterTrait;
 use Interop\Container\ContainerInterface as Container;
 
@@ -266,7 +265,7 @@ class Router implements RouterInterface
     }
 
     /**
-     * Set the folder name : It must be lowercase otherwise folder does not work
+     * Set the folder name
      *
      * @param string $folder folder
      *
@@ -297,7 +296,7 @@ class Router implements RouterInterface
      */
     public function getClass()
     {
-        return htmlspecialchars(Text::ucwords($this->class));
+        return htmlspecialchars($this->class);
     }
 
     /**
@@ -322,7 +321,7 @@ class Router implements RouterInterface
             $exp = explode("/", $folder);
             $folder = trim(implode("\\", $exp), "\\");
         }
-        $namespace = Text::ucwords($folder);
+        $namespace = $folder;
         $namespace = trim($namespace, '\\');
         return (empty($namespace)) ? '' : $namespace.'\\';
     }
@@ -349,6 +348,5 @@ class Router implements RouterInterface
     {
         $this->class = '';
         $this->folder = '';
-        $this->ancestor = '';
     }
 }
