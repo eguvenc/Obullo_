@@ -15,6 +15,9 @@ class WelcomeController extends Controller
      */
     public function indexAction($request)
     {
+
+        // print_r($request->getArgs());
+
         // $this->console->log("test");
 
         return new HtmlResponse($this->render('welcome.phtml'));

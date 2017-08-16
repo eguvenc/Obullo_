@@ -31,31 +31,27 @@ class Router implements RouterInterface
     protected $method;
     protected $handler;
     protected $request;
-    protected $ancestor;
     protected $response;
     protected $container;
     protected $count = 0;
     protected $routes = array();
+    protected $params = array();
     protected $dispatched = false;
-    protected $autoResolver = false;
 
     /**
      * Constructor
      *
      * @param Container $container container
-     * @param array     $options   options
      *
      * @return void
      */
-    public function __construct(Container $container, array $options)
+    public function __construct(Container $container)
     {
         $uri             = $container->get('request')->getUri();
         $this->path      = $uri->getPath();
         $this->request   = $container->get('request');
         $this->response  = $container->get('response');
         $this->container = $container;
-
-        $this->autoResolver = $options['autoResolver'];
     }
 
     /**
@@ -122,11 +118,14 @@ class Router implements RouterInterface
      */
     protected function dispatch()
     {
+        $this->dispatched = false;
+
         foreach ($this->routes as $r) {
             $handler = $r['handler'];
             $pattern = $r['pattern'];
             
-            if (trim($pattern, "/") == trim($this->path, "/") || preg_match('#^'.$pattern.'$#', $this->path, $params)) {
+            $args = array();
+            if (trim($pattern, "/") == trim($this->path, "/") || preg_match('#^'.$pattern.'$#', $this->path, $args)) {
                 if (! in_array($this->request->getMethod(), (array)$r['method'])) {
                     $notAllowed = '\\'. APP_NAME .'\Middleware\NotAllowed';
                     $this->queue->enqueue(['callable' => new $notAllowed, 'params' => (array)$r['method']]);
@@ -134,31 +133,18 @@ class Router implements RouterInterface
                 }
                 $this->queue($r['middlewares']);
 
+                array_shift($args);
+                $this->params = array_values($args);
+
                 if (is_string($handler)) {
-                    if (strpos($handler, '$') !== false && strpos($pattern, '(') !== false) {
-                        $handler = preg_replace('#^'.$pattern.'$#', $handler, $this->path);
-                    }
                     $this->handler = $handler;
+                    $this->dispatched = true;
                 }
                 if (is_callable($handler)) {
-                    array_shift($params);
-                    $this->handler = $handler($this->request, $this->response, array_values($params));
+                    $this->handler = $handler($this->request, $this->response, $this->params);
+                    $this->dispatched = true;
                 }
             }
-        }
-        $this->setDefaultHandler();
-        $this->dispatched = true;
-    }
-
-    /**
-     * Set default path as handler ( Resolves current path if has no route match )
-     *
-     * @return void
-     */
-    protected function setDefaultHandler()
-    {
-        if ($this->handler == null && $this->autoResolver) {
-            $this->handler = $this->path;
         }
     }
 
@@ -196,6 +182,16 @@ class Router implements RouterInterface
             $this->dispatch();
         }
         return $this->handler;
+    }
+
+    /**
+     * Returns to uri parameters
+     *
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->params;
     }
 
     /**
@@ -283,30 +279,6 @@ class Router implements RouterInterface
     }
 
     /**
-     * Sets top folder http://example.com/api/user/delete/4
-     *
-     * @param string $folder sets top folder
-     *
-     * @return void
-     */
-    public function setAncestor($folder)
-    {
-        $this->ancestor = $folder;
-    }
-
-    /**
-     * Get primary folder
-     *
-     * @param string $separator get folder seperator
-     *
-     * @return void
-     */
-    public function getAncestor($separator = '')
-    {
-        return (empty($this->ancestor)) ? '' : htmlspecialchars($this->ancestor).$separator;
-    }
-
-    /**
      * Get folder
      *
      * @param string $separator get folder seperator
@@ -350,7 +322,7 @@ class Router implements RouterInterface
             $exp = explode("/", $folder);
             $folder = trim(implode("\\", $exp), "\\");
         }
-        $namespace = Text::ucwords($this->getAncestor()).'\\'.Text::ucwords($folder);
+        $namespace = Text::ucwords($folder);
         $namespace = trim($namespace, '\\');
         return (empty($namespace)) ? '' : $namespace.'\\';
     }

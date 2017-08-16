@@ -92,11 +92,11 @@ class App
     }
 
     /**
-     * Create routeable application bundles
+     * Start application & create routeable bundles
      *
      * @return void
      */
-    public function create()
+    public function start()
     {
         if (empty($this->bundles[0])) {
             die("Bundle could not be initialized. Check your '".getenv("APP_ENV")."_app.php' file.");
@@ -157,7 +157,7 @@ class App
                 }
                 $resolver = new ControllerResolver($this->container, $request, $response);
                 $result   = $resolver->dispatch($handler);
-
+                
                 if (! $result) {
                     $notFound = new $notFoundMiddleware;
                     $notFound->setContainer($this->container);

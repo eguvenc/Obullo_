@@ -40,7 +40,7 @@ class LogHttpCommand extends Command
             if (is_file($file)) {
                 unlink($file);
             }
-            $output->writeln('<info>Log file delete successfully.</info>');
+            $output->writeln('<info>Log file deleted successfully.</info>');
             return;
         }
         /**

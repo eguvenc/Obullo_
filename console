@@ -24,10 +24,8 @@ $container->share('request', Obullo\ServerRequestFactory::fromGlobals());
  * Create your console commands
  */
 use Symfony\Component\Console\Application;
-use AppBundle\Command\InstallCommand;
 use AppBundle\Command\LogHttpCommand;
 
 $application = new Application();
-$application->add(new InstallCommand($container));
 $application->add(new LogHttpCommand($container));
 $application->run();

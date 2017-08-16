@@ -19,7 +19,6 @@ class ControllerResolver
 {
     protected $router;
     protected $folder = 'Controller';
-    protected $subfolderLevel = 3;
 
     /**
      * Constructor
@@ -65,13 +64,9 @@ class ControllerResolver
         if (! empty($segments[$method])) {
             $this->router->setMethod($segments[$method]); // A standard method request
         } else {
-            $segments[$method] = 'index';  // This lets the "routed" segment array identify
-                                           // that the default index method is being used.
             $this->router->setMethod('index');
         }
-        $this->arity = (3 + $arity);
-
-        return $this->call($segments);
+        return $this->call();
     }
 
     /**
@@ -87,16 +82,6 @@ class ControllerResolver
     }
 
     /**
-     * Returns to subfolder level
-     *
-     * @return integer
-     */
-    public function getSubfolderLevel()
-    {
-        return $this->subfolderLevel;
-    }
-
-    /**
      * Resolve segments
      *
      * @param array $segments uri parts
@@ -109,13 +94,7 @@ class ControllerResolver
             return null;
         }
         $this->router->setFolder($segments[0]);      // Set first segment as default folder
-        $segments = $this->checkAncestor($segments);
-        $ancestor = $this->router->getAncestor('/');
 
-        if (! empty($ancestor)) {
-            $resolver = new AncestorResolver($this->router, $this->getSubfolderLevel());
-            return $resolver->resolve($segments);
-        }
         if (is_dir(APP_PATH . $this->folder .'/'. $this->router->getFolder())) {
             $resolver = new FolderResolver($this->router);
             return $resolver->resolve($segments);
@@ -123,24 +102,6 @@ class ControllerResolver
         $this->router->setFolder(null);
         $resolver = new ClassResolver($this->router);
         return $resolver->resolve($segments);
-    }
-
-    /**
-     * Check first segment if have a ancestor folder & set it.
-     *
-     * @param array $segments uri segments
-     *
-     * @return array
-     */
-    protected function checkAncestor($segments)
-    {
-        if (! empty($segments[1])
-            && is_dir(APP_PATH . $this->folder .'/'. $segments[0] .'/'. $segments[1].'/')  // Detect ancestor
-        ) {
-            $this->router->setAncestor($segments[0]);
-            array_shift($segments);
-        }
-        return $segments;
     }
 
     /**
@@ -160,7 +121,7 @@ class ControllerResolver
      */
     public function getFilename()
     {
-        return APP_PATH . $this->folder .'/'. $this->router->getAncestor('/') . $this->router->getFolder('/') . $this->router->getClass() . 'Controller.php';
+        return APP_PATH . $this->folder .'/'. $this->router->getFolder('/') . $this->router->getClass() . 'Controller.php';
     }
 
     /**
@@ -176,11 +137,9 @@ class ControllerResolver
     /**
      * Call the controller
      *
-     * @param array $segments path segments
-     *
      * @return string|Response
      */
-    public function call($segments)
+    public function call()
     {
         $request   = $this->container->get('request');
         $file      = $this->getFilename();
@@ -200,8 +159,7 @@ class ControllerResolver
                 return false;
             }
         }
-        $args   = array_slice($segments, $this->getArity());
-        $request->setArgs($args);
+        $request->setArgs($this->router->getParams());
         
         return $controller->$method($request);
     }

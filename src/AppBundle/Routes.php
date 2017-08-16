@@ -21,6 +21,8 @@
 $router->rewrite('GET', '(?:en|de|es|tr)|/(.*)', '$1');  // example.com/en/  (or) // example.com/en
 
 $router->map('GET', '/', 'welcome/index');
+$router->map('GET', '/welcome', 'welcome/index');
+$router->map('GET', '/welcome/index/(\d+)', '/welcome/index/$1');
 // $router->map('GET', '/|welcome', 'welcome/index');
 
 // $router->map('GET', '/users/(\w+)/(\d+)', '/users/$1/$2');
@@ -37,13 +39,13 @@ $router->group(
             'test/',
             function () use ($router) {
 
-                // $router->map('GET', '/users/(\w+)/(\d+)', '/users/$1/$2');
+                // $router->map('GET', '/users/test/(\w+)/(\d+)', '/welcome/index/$1/$2');
 
                 // throw new \Exception("cimcime");
-
+                
                 $router->map(
                     'GET',
-                    '/users/(\w+)/(\d+).*',
+                    '/users/test/(\w+)/(\d+).*',
                     function ($request, $response, $args) {
                         
                         // var_dump($args);
@@ -54,6 +56,7 @@ $router->group(
                     }
                 )->add('Guest');
 
+
                 //->filter('contains', ['/users/test/45'])->add('Guest');
 
                 //->filter('notContains', ['/users/teZ'])->add('Guest');;
@@ -62,9 +65,7 @@ $router->group(
                 // ->ifNotContains(['login', 'payment'])
                 // ->ifRegExp(['welcome/path/index'])
                 // ->ifNotRegExp(['welcome/path/index'])
-
             }
         );
-
     }
 );

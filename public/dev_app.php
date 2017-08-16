@@ -27,16 +27,16 @@ Obullo\ServerRequestFactory::setContainer($container);
 
 $container->share('request', Obullo\ServerRequestFactory::fromGlobals());
 $container->share('response', new Zend\Diactoros\Response);
-$container->share('router', new Obullo\Router\Router($container, ['autoResolver' => true]));
+$container->share('router', new Obullo\Router\Router($container));
 
 /**
  * Step 3: Create your mvc application
  */
-$application = new Obullo\Mvc\BenchmarkableApp($container);
+$application = new Obullo\Mvc\BenchmarkAwareApp($container);
 
 $application->addRouteableBundle(new AppBundle\IndexBundle('/'));
 // $application->addRouteableBundle(new BackendBundle\IndexBundle('/backend'));
-$application->create();
+$application->start();
 
 /**
  * Step 4: Define your server using Zend Diactoros

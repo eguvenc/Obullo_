@@ -32,11 +32,6 @@ class FinalHandler implements ContainerAwareInterface
      */
     public function __invoke(Request $request, Response $response, $err = null, $handler = null)
     {
-        /*
-        if ($err) {
-            return $this->handleError($err);
-        }
-        */
         if ($handler instanceof Response) {
             return $handler;
         }

@@ -10,7 +10,7 @@ use Interop\Container\ContainerInterface as Container;
  * @copyright 2009-2017 Obullo
  * @license   http://opensource.org/licenses/MIT MIT license
  */
-class BenchmarkableApp extends App
+class BenchmarkAwareApp extends App
 {
     /**
      * Benchmark timer
