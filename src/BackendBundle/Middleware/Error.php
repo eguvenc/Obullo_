@@ -63,16 +63,14 @@ class Error implements ErrorMiddlewareInterface, ContainerAwareInterface
     protected function renderHtmlErrorMessage($error)
     {
         $html  = null;
-        $title = 'Application Error';
+        $title = 'Server Error';
 
         if (is_string($error)) {
             $html = $error;
         } elseif (is_object($error)) {
             $html = $this->renderHtmlException($error);
-            while ($exception = $error->getPrevious()) {
-                $html .= '<h2>Previous exception</h2>';
-                $html .= $this->renderHtmlException($exception);
-            }
+
+            // Don't use $exception->getPrevious() if exception object large you can not display it !
         }
         $header = '<style>
         body{ color: #777575 !important; margin:0 !important; padding:20px !important; font-family:Arial,Verdana,sans-serif !important;font-weight:normal;  }
@@ -105,22 +103,22 @@ class Error implements ErrorMiddlewareInterface, ContainerAwareInterface
      */
     protected function renderHtmlException(Exception $exception)
     {
-        $html = sprintf('<tr><td><strong>Type:</strong></td><td>%s</td></tr>', get_class($exception));
+        $html = sprintf('<tr><td style="width:%s">Type</td><td>%s</td></tr>', '15%', get_class($exception));
 
         if (($message = $exception->getMessage())) {
-            $html .= sprintf('<tr><td><strong>Message:</strong></td><td>%s</td></tr>', $message);
+            $html .= sprintf('<tr><td>Message</td><td>%s</td></tr>', $message);
         }
 
         if (($code = $exception->getCode())) {
-            $html .= sprintf('<tr><td><strong>Code:</strong></td><td>%s</td></tr>', $code);
+            $html .= sprintf('<tr><td>Code</td><td>%s</td></tr>', $code);
         }
 
         if (($file = $exception->getFile())) {
-            $html .= sprintf('<tr><td><strong>File:</strong></td><td>%s</td></tr>', $file);
+            $html .= sprintf('<tr><td>File</td><td>%s</td></tr>', $file);
         }
 
         if (($line = $exception->getLine())) {
-            $html .= sprintf('<tr><td><strong>Line:</strong></td><td>%s</td></tr>', $line);
+            $html .= sprintf('<tr><td>Line</td><td>%s</td></tr>', $line);
         }
         $html = "<table>".$html."</table>";
 
@@ -145,18 +143,16 @@ class Error implements ErrorMiddlewareInterface, ContainerAwareInterface
             "success" => 0,
             'message' => 'Rest Api Error',
         ];
-        $error['exception'] = [];
+        $error['exception'] = [
+            'type' => get_class($exception),
+            'code' => $exception->getCode(),
+            'message' => $exception->getMessage(),
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+            'trace' => explode("\n", $exception->getTraceAsString()),
+        ];
 
-        do {
-            $error['exception'][] = [
-                'type' => get_class($exception),
-                'code' => $exception->getCode(),
-                'message' => $exception->getMessage(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-                'trace' => explode("\n", $exception->getTraceAsString()),
-            ];
-        } while ($exception = $exception->getPrevious());
+        // Don't use $exception->getPrevious() if exception object large you can not display it !
     
         return $error;
     }

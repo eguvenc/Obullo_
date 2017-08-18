@@ -177,7 +177,7 @@ class App
                 return call_user_func_array($middleware['callable'], $args);
             }
             return $middleware['callable']($request, $response, $this);
-        } catch (Throwable $throwable) {
+        } catch (Throwable $throwable) {  // Throwable is not problem for older php versions.
             $error = new $errorMiddleware;
             $error->setContainer($this->container);
             return $error($throwable, $request, $response);

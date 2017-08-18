@@ -16,8 +16,8 @@
          bootstrap="tests/bootstrap.php"
 >
     <testsuites>
-        <testsuite name="Obullo Test Suite">
-            <directory>./tests/Obullo/</directory>
+        <testsuite name="Test Suite">
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
     

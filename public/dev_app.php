@@ -35,7 +35,7 @@ $container->share('router', new Obullo\Router\Router($container));
 $application = new Obullo\Mvc\BenchmarkAwareApp($container);
 
 $application->addRouteableBundle(new AppBundle\IndexBundle('/'));
-// $application->addRouteableBundle(new BackendBundle\IndexBundle('/backend'));
+$application->addRouteableBundle(new BackendBundle\IndexBundle('/backend'));
 $application->start();
 
 /**

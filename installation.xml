@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<install message="This file will be removed after that the installation. If it's not removed, delete it by manually for security reason.">
-
+<install>
     <serviceproviders>
         <provider name="Logger"></provider>
         <provider name="Session"></provider>
@@ -31,5 +30,4 @@
             <file name="doctrine" path="/"></file>
         </provider>
     </serviceproviders>
-    
 </install>

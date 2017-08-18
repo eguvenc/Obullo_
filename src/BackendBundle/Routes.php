@@ -7,6 +7,7 @@
 | corresponding ( controller / folder / class ).
 |
 */
+$router->restful(false);
 $router->rewrite(['GET', 'POST'], '/backend(.*)', '/$1');  // Normalize all requests
 
-$router->map('GET', '/', 'home/index');
+// $router->map('GET', '/', 'home/index');

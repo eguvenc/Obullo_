@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Interop\Container\ContainerInterface as Container;
 
-class LogHttpCommand extends Command
+class HttpLogCommand extends Command
 {
     public function __construct(Container $container)
     {
@@ -19,8 +19,8 @@ class LogHttpCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('log:http')
-            ->setDescription('Follow log files')
+            ->setName('http:log')
+            ->setDescription('Follow http log files')
             ->addArgument(
                 'clear',
                 InputArgument::OPTIONAL,
@@ -30,7 +30,7 @@ class LogHttpCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $file  = ROOT . 'src/AppBundle/Data/http.log';
+        $file  = ROOT . 'data/http.log';
         $clear = $input->getArgument('clear');
 
         /**

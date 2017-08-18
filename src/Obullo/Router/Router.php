@@ -35,7 +35,7 @@ class Router implements RouterInterface
     protected $count = 0;
     protected $routes = array();
     protected $params = array();
-    protected $webRouting = false;
+    protected $webRouting = true;  // default web router
     protected $dispatched = false;
 
     /**

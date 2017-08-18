@@ -63,7 +63,7 @@ class Error implements ErrorMiddlewareInterface, ContainerAwareInterface
     protected function renderHtmlErrorMessage($error)
     {
         $html  = null;
-        $title = 'Application Error';
+        $title = 'Server Error';
 
         if (is_string($error)) {
             $html = $error;
@@ -103,22 +103,22 @@ class Error implements ErrorMiddlewareInterface, ContainerAwareInterface
      */
     protected function renderHtmlException(Exception $exception)
     {
-        $html = sprintf('<tr><td><strong>Type:</strong></td><td>%s</td></tr>', get_class($exception));
+        $html = sprintf('<tr><td style="width:%s">Type</td><td>%s</td></tr>', '15%', get_class($exception));
 
         if (($message = $exception->getMessage())) {
-            $html .= sprintf('<tr><td><strong>Message:</strong></td><td>%s</td></tr>', $message);
+            $html .= sprintf('<tr><td>Message</td><td>%s</td></tr>', $message);
         }
 
         if (($code = $exception->getCode())) {
-            $html .= sprintf('<tr><td><strong>Code:</strong></td><td>%s</td></tr>', $code);
+            $html .= sprintf('<tr><td>Code</td><td>%s</td></tr>', $code);
         }
 
         if (($file = $exception->getFile())) {
-            $html .= sprintf('<tr><td><strong>File:</strong></td><td>%s</td></tr>', $file);
+            $html .= sprintf('<tr><td>File</td><td>%s</td></tr>', $file);
         }
 
         if (($line = $exception->getLine())) {
-            $html .= sprintf('<tr><td><strong>Line:</strong></td><td>%s</td></tr>', $line);
+            $html .= sprintf('<tr><td>Line</td><td>%s</td></tr>', $line);
         }
         $html = "<table>".$html."</table>";
 
