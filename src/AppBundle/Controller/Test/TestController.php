@@ -21,4 +21,10 @@ class TestController extends Controller
 
         return new HtmlResponse("Hello Test Folder");
     }
+
+    public function helloAction()
+    {
+        return new HtmlResponse("Hello Test Folder Hello Action");
+    }
+
 }

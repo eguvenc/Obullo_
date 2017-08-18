@@ -7,6 +7,9 @@
 | corresponding ( controller / folder / class ).
 |
 */
+$router->restful(false);  // disable web routing style
+
+
 // $router->map('GET', '/users/(.*)',
 //     function ($request, $response, $args) use($router) {
 
@@ -17,16 +20,27 @@
 //         return $response;
 //     }
 // );
-
 $router->rewrite('GET', '(?:en|de|es|tr)|/(.*)', '$1');  // example.com/en/  (or) // example.com/en
 
 // $router->map('GET', '/newEntry', 'NewEntry/index');
 
 $router->map('GET', '/', 'Welcome/index');
 $router->map('GET', 'welcome', 'Welcome/index');
-$router->map('GET', 'welcome/index/(\d+)', 'Welcome/index/$1');
+// $router->map('GET', 'welcome/index/(\d+)', 'Welcome/index/$1');
 
-$router->map('GET', 'test', 'Test/Test/index');
+// $router->map('GET', 'welcome/index/(?<id>\d+)/(?<month>\w+)', 'Welcome/index/$1/$2');
+
+/*
+$router->map('GET', 'welcome/index/(?<id>\d+)/(?<month>\w+)', function($request, $response) {
+    $response->getBody()->write( print_r($request->getArgs(), true));
+    return $response;
+});
+*/
+
+
+// $router->map('GET', 'test', 'Test/Test/index');
+// $router->map('GET', 'test/test/index', 'Test/Test/index');
+// $router->map('GET', 'test/test/hello', 'Test/Test/hello');
 
 // $router->map('GET', '/users/(\w+)/(\d+)', '/Users/$1/$2');
 // $router->map('GET', '/users/(\w+)/(\d+)', function ($request, $response, $args) {

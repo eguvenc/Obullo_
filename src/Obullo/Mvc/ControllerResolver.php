@@ -52,20 +52,9 @@ class ControllerResolver
         if ($resolver == null) {
             return;
         }
-        $arity    = $resolver->getArity();
-        $segments = $resolver->getSegments();
-
-        $class  = 1 + $arity;
-        $method = 2 + $arity;
-
-        if (! empty($segments[$class])) {
-            $this->router->setClass($segments[$class]);
-        }
-        if (! empty($segments[$method])) {
-            $this->router->setMethod($segments[$method]); // A standard method request
-        } else {
-            $this->router->setMethod('index');
-        }
+        $this->router->setClass($resolver->getClass());
+        $this->router->setMethod($resolver->getMethod());
+        
         return $this->call();
     }
 
@@ -93,25 +82,14 @@ class ControllerResolver
         if (empty($segments[0])) {
             return null;
         }
-        $this->router->setFolder($segments[0]);      // Set first segment as default folder
-
-        if (is_dir(APP_PATH . $this->folder .'/'. $this->router->getFolder())) {
-            $resolver = new FolderResolver($this->router);
+        if (is_dir(APP_PATH . $this->folder .'/'. ucfirst($segments[0]))) {
+            $this->router->setFolder($segments[0]);
+            $resolver = new FolderResolver;
             return $resolver->resolve($segments);
         }
         $this->router->setFolder(null);
-        $resolver = new ClassResolver($this->router);
+        $resolver = new ClassResolver;
         return $resolver->resolve($segments);
-    }
-
-    /**
-     * Returns to arity
-     *
-     * @return integer
-     */
-    public function getArity()
-    {
-        return $this->arity;
     }
 
     /**
@@ -159,8 +137,6 @@ class ControllerResolver
                 return false;
             }
         }
-        $request->setArgs($this->router->getParams());
-        
         return $controller->$method($request);
     }
 }

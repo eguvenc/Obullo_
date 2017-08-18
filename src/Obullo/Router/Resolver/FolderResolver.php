@@ -13,28 +13,11 @@ use Obullo\Router\RouterInterface as Router;
 class FolderResolver
 {
     /**
-     * Router
-     *
-     * @var object
-     */
-    protected $router;
-
-    /**
      * Segments
      *
      * @var array
      */
     protected $segments;
-
-    /**
-     * Constructor
-     *
-     * @param Router $router router
-     */
-    public function __construct(Router $router)
-    {
-        $this->router = $router;
-    }
 
     /**
      * Resolve
@@ -45,7 +28,7 @@ class FolderResolver
      */
     public function resolve(array $segments)
     {
-        $folder = $this->router->getFolder();
+        $folder = $segments[0];
         $hasSegmentOne = empty($segments[1]) ? false : true;
 
         $file = APP_PATH .'/Controller/'.$folder.'/'.$folder.'.php';
@@ -64,22 +47,25 @@ class FolderResolver
     }
 
     /**
-     * Get segment factor
+     * Returns to class name
      *
-     * @return int
+     * @return string
      */
-    public function getArity()
+    public function getClass()
     {
-        return 0;
+        return $this->segments[1];
     }
 
     /**
-     * Get uri segments
+     * Returns to method name
      *
-     * @return array
+     * @return string
      */
-    public function getSegments()
+    public function getMethod()
     {
-        return $this->segments;
+        if (empty($this->segments[2])) {  // default method
+            return 'index';
+        }
+        return $this->segments[2];
     }
 }

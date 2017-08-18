@@ -46,10 +46,15 @@ class ServerRequest extends ZendServerRequest
     /**
      * Returns to uri arguments
      *
+     * @param string $key null
+     *
      * @return array
      */
-    public function getArgs()
+    public function getArgs($key = null)
     {
+        if ($key != null) {
+            return (isset($this->args[$key])) ? $this->args[$key] : false;
+        }
         return $this->args;
     }
 

@@ -13,29 +13,11 @@ use Obullo\Router\RouterInterface as Router;
 class ClassResolver
 {
     /**
-     * Router
-     *
-     * @var object
-     */
-    protected $router;
-
-    /**
      * Segments
      *
      * @var array
      */
     protected $segments;
-
-    /**
-     * Constructor
-     *
-     * @param Router $router router
-     */
-    public function __construct(Router $router)
-    {
-        $this->router = $router;
-    }
-
     /**
      * Resolve
      *
@@ -50,22 +32,25 @@ class ClassResolver
     }
 
     /**
-     * Get segment factor
+     * Returns to class name
      *
-     * @return int
+     * @return string
      */
-    public function getArity()
+    public function getClass()
     {
-        return -1;
+        return $this->segments[0];
     }
 
     /**
-     * Uri segments
+     * Returns to method name
      *
-     * @return array
+     * @return string
      */
-    public function getSegments()
+    public function getMethod()
     {
-        return $this->segments;
+        if (empty($this->segments[1])) {  // default method
+            return 'index';
+        }
+        return $this->segments[1];
     }
 }

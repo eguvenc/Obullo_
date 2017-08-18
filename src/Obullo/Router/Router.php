@@ -35,6 +35,7 @@ class Router implements RouterInterface
     protected $count = 0;
     protected $routes = array();
     protected $params = array();
+    protected $webRouting = false;
     protected $dispatched = false;
 
     /**
@@ -117,13 +118,11 @@ class Router implements RouterInterface
      */
     protected function dispatch()
     {
+        $args = array();
         $this->dispatched = false;
-
         foreach ($this->routes as $r) {
             $handler = $r['handler'];
             $pattern = $r['pattern'];
-            
-            $args = array();
             if (trim($pattern, "/") == trim($this->path, "/") || preg_match('#^'.$pattern.'$#', $this->path, $args)) {
                 if (! in_array($this->request->getMethod(), (array)$r['method'])) {
                     $notAllowed = '\\'. APP_NAME .'\Middleware\NotAllowed';
@@ -133,7 +132,8 @@ class Router implements RouterInterface
                 $this->queue($r['middlewares']);
 
                 array_shift($args);
-                $this->params = array_values($args);
+                $this->params = $args;
+                $this->request->setArgs($args);
 
                 if (is_string($handler)) {
                     $this->handler = $handler;
@@ -144,6 +144,32 @@ class Router implements RouterInterface
                     $this->dispatched = true;
                 }
             }
+        }
+        $this->setDefaultHandler();  // Auto resolve if route not exists.
+    }
+
+    /**
+     * Sets restful routing functionality / Disable web routing
+     *
+     * @param boolean $bool on / off
+     *
+     * @return void
+     */
+    public function restful($bool = true)
+    {
+        $this->webRouting = ($bool) ? false : true;
+    }
+
+    /**
+     * Set default path as handler ( Resolves current path if has no route match )
+     *
+     * @return void
+     */
+    protected function setDefaultHandler()
+    {
+        if ($this->handler == null && $this->webRouting) {
+            $this->dispatched = true;
+            $this->handler = $this->path;
         }
     }
 
@@ -278,7 +304,7 @@ class Router implements RouterInterface
     }
 
     /**
-     * Get folder
+     * Get folder, folder name first letter must be uppercase
      *
      * @param string $separator get folder seperator
      *
@@ -286,7 +312,7 @@ class Router implements RouterInterface
      */
     public function getFolder($separator = '')
     {
-        return (empty($this->folder)) ? '' : htmlspecialchars($this->folder).$separator;
+        return (empty($this->folder)) ? '' : ucfirst($this->folder).$separator;
     }
 
     /**
@@ -296,7 +322,7 @@ class Router implements RouterInterface
      */
     public function getClass()
     {
-        return htmlspecialchars($this->class);
+        return ucfirst($this->class);  // class name first letter must be uppercase
     }
 
     /**
@@ -306,7 +332,7 @@ class Router implements RouterInterface
      */
     public function getMethod()
     {
-        return htmlspecialchars($this->method);
+        return $this->method;
     }
 
     /**
