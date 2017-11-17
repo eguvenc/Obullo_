@@ -30,7 +30,7 @@ class HttpLogCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $file  = ROOT . 'data/http.log';
+        $file  = ROOT . 'log/http.log';
         $clear = $input->getArgument('clear');
 
         /**
