@@ -14,18 +14,13 @@ class NotAllowed
      * @param ServerRequestInterface $request  request
      * @param ResponseInterface      $response respone
      * @param callable               $next     callable
-     * @param array                  $methods  allowed methods
      *
      * @return object ResponseInterface
      */
-    public function __invoke(Request $request, Response $response, callable $next, $methods = array())
+    public function __invoke(Request $request, Response $response, callable $next)
     {
-        $error = sprintf(
-            'Method must be one of : %s',
-            implode(', ', $methods)
-        );
         $stream = new Stream(fopen('php://temp', 'r+'));
-        $stream->write($error);
+        $stream->write('Http Method Not Allowed');
             
         return $response
             ->withStatus(405)
