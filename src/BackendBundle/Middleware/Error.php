@@ -2,6 +2,7 @@
 
 namespace BackendBundle\Middleware;
 
+use Throwable;
 use Exception;
 use RuntimeException;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -42,6 +43,7 @@ class Error implements ErrorMiddlewareInterface, ContainerAwareInterface
         
         if (is_object($err)) {
             switch ($err) {
+                case ($err instanceof Throwable):
                 case ($err instanceof Exception):
                 case ($err instanceof RuntimeException):
                     // error log
@@ -101,7 +103,7 @@ class Error implements ErrorMiddlewareInterface, ContainerAwareInterface
      *
      * @return string
      */
-    protected function renderHtmlException(Exception $exception)
+    protected function renderHtmlException(Throwable $exception)
     {
         $html = sprintf('<tr><td style="width:%s">Type</td><td>%s</td></tr>', '15%', get_class($exception));
 
@@ -137,7 +139,7 @@ class Error implements ErrorMiddlewareInterface, ContainerAwareInterface
      *
      * @return string
      */
-    protected function renderJsonErrorMessage(Exception $exception)
+    protected function renderJsonErrorMessage(Throwable $exception)
     {
         $error = [
             "success" => 0,

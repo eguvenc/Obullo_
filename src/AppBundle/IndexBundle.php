@@ -2,18 +2,11 @@
 
 namespace AppBundle;
 
-use Obullo\Mvc\Bundle\LiteralMatch;
 use Obullo\Mvc\Bundle\BundleInterface;
 
 class IndexBundle implements BundleInterface
 {
     protected $app;
-    protected $match;
-
-    public function __construct($pattern)
-    {
-        $this->match = new LiteralMatch($pattern);
-    }
 
     public function setApplication($app)
     {
@@ -48,11 +41,6 @@ class IndexBundle implements BundleInterface
     {
         $reflection = new \ReflectionClass($this);
         return $reflection->getNamespaceName();
-    }
-
-    public function getMatch()
-    {
-        return $this->match;
     }
 
 }

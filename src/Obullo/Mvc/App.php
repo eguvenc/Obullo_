@@ -25,13 +25,6 @@ use Interop\Container\ContainerInterface as Container;
 class App
 {
     /**
-     * Finale handler
-     *
-     * @var object
-     */
-    protected $done;
-
-    /**
      * Request path
      *
      * @var string
@@ -60,11 +53,11 @@ class App
     protected $container;
 
     /**
-     * App bundles
+     * App bundle
      *
      * @var array
      */
-    protected $bundles = array();
+    protected $bundle;
 
     /**
      * Constructor
@@ -82,13 +75,13 @@ class App
     }
 
     /**
-     * Set routeable bundles
+     * Mount bundle
      *
      * @param object $bundle
      */
-    public function addRouteableBundle(Bundle $bundle)
+    public function mount(Bundle $bundle)
     {
-        $this->bundles[] = $bundle;
+        $this->bundle = $bundle;
     }
 
     /**
@@ -98,17 +91,10 @@ class App
      */
     public function start()
     {
-        if (empty($this->bundles[0])) {
-            die("Bundle could not be initialized. Check your '".getenv("APP_ENV")."_app.php' file.");
+        if (empty($this->bundle)) {
+            die("Bundle could not be initialized. Check your application file.");
         }
-        foreach ($this->bundles as $bundle) {
-            if ($bundle->getMatch()->hasMatch($this->path)) {
-                $this->createBundle($bundle);
-            }
-        }
-        if (! defined('APP_PATH')) {
-            $this->createBundle($this->bundles[0]);  // Create default bundle
-        }
+        $this->createBundle($this->bundle);  // Create default bundle
     }
 
     /**
@@ -120,13 +106,14 @@ class App
      */
     protected function createBundle(Bundle $bundle)
     {
+        $name = $bundle->getName();
+
         $router = $this->router;
-        $name   = $bundle->getName();
 
         define('APP_PATH', ROOT .'src/'.$name.'/');
         define('APP_NAME', $name);
 
-        include APP_PATH .'Routes.php';
+        include APP_PATH .'routes.php';
 
         $bundle->setApplication($this);
         $bundle->addServiceProviders();
@@ -152,15 +139,11 @@ class App
 
             if ($this->queue->isEmpty()) {  // Execute final handler
 
-                if ($handler instanceof Response) {
-                    return $handler;
-                }
                 $resolver = new ControllerResolver($this->container, $request, $response);
                 $result   = $resolver->dispatch($handler);
                 
                 if (! $result) {
                     $notFound = new $notFoundMiddleware;
-                    $notFound->setContainer($this->container);
                     return $notFound($request, $response);
                 }
                 if ($result instanceof $response) {
@@ -218,22 +201,24 @@ class App
     }
 
     /**
-     * Returns to bundle objects
+     * Returns to bundle object
      *
      * @return array
      */
-    public function getBundles()
+    public function getBundle()
     {
-        return $this->bundles;
+        return $this->bundle;
     }
 
     /**
-     * Dummy close function for who want to
-     * extend it.
-     *
+     * Close application
+     * 
      * @return void
      */
     public function close()
     {
+
     }
+
+
 }

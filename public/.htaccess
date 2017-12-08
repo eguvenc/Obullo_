@@ -5,10 +5,6 @@ Options -Indexes
 Options +FollowSymLinks
 Options -MultiViews
 
-## Windows xampp fix
-
-DirectoryIndex dev_app.php
-
 RewriteEngine on
 RewriteBase /
 
@@ -17,4 +13,8 @@ RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-RewriteRule ^(.*)$ dev_app.php/$1 [L]
+DirectoryIndex dev_app.php 
+
+RewriteCond %{REQUEST_URI} !backend
+RewriteRule ^(.*)$ dev_app.php/$1
+RewriteRule ^backend(.*)$ dev_backend.php/$1

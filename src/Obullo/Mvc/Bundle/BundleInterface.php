@@ -39,11 +39,4 @@ interface BundleInterface
      * @return string
      */
     public function getName();
-
-    /**
-     * Returns to bundle match object
-     *
-     * @return object
-     */
-    public function getMatch();
 }

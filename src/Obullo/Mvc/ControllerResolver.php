@@ -55,7 +55,7 @@ class ControllerResolver
         $this->router->setClass($resolver->getClass());
         $this->router->setMethod($resolver->getMethod());
         
-        return $this->call();
+        return $this->call($handler);
     }
 
     /**
@@ -117,9 +117,10 @@ class ControllerResolver
      *
      * @return string|Response
      */
-    public function call()
+    public function call($handler)
     {
         $request   = $this->container->get('request');
+        $response  = $this->container->get('response');
         $file      = $this->getFilename();
         $className = $this->getNamespace();
 
@@ -137,6 +138,6 @@ class ControllerResolver
                 return false;
             }
         }
-        return $controller->$method($request);
+        return $controller->$method($request, $response);
     }
 }

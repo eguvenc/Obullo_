@@ -12,7 +12,7 @@ class NewEntryController extends Controller
      *
      * @return void
      */
-    public function indexAction($request)
+    public function indexAction($request, $response)
     {
 
         // print_r($request->getArgs());

@@ -33,7 +33,7 @@ $container->share('router', new Obullo\Router\Router($container));
  * Step 3: Create your mvc application
  */
 $application = new Obullo\Mvc\BenchmarkAwareApp($container);
-$application->mount(new AppBundle\IndexBundle);
+$application->mount(new BackendBundle\IndexBundle);
 $application->start();
 
 /**

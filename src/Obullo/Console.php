@@ -28,7 +28,7 @@ class Console
             $text.= $message." [] []";
         }
         file_put_contents(
-            ROOT . 'data/http.log',
+            ROOT . 'temp/http.log',
             $text. PHP_EOL,
             FILE_APPEND
         );
